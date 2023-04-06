@@ -129,7 +129,7 @@ CREATE TABLE likes(
   reaction VARCHAR(255) NOT NULL,
   posts_id INT,
   is_deleted SMALLINT DEFAULT 0,
-  FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (posts_id) REFERENCES posts(id) ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
