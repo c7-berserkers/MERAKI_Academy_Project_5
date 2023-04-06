@@ -25,13 +25,13 @@ CREATE TABLE role_permission (
 --users
 CREATE TABLE users(
   id SERIAL NOT NULL,
-  firstName VARCHAR(255) NOT NULL,
-  lastName VARCHAR(255) NOT NULL,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
   age INT NOT NULL,
   country VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
-  created_at DATE DEFAULT NOW(),
+  created_at timestamp  DEFAULT NOW(),
   img TEXT NOT NULL,
   role_id INT,
   is_deleted SMALLINT DEFAULT 0,
@@ -44,7 +44,7 @@ CREATE TABLE posts (
   id SERIAL NOT NULL,
   img VARCHAR NOT NULL,
   description TEXT,
-  created_at DATE DEFAULT NOW(),
+  created_at timestamp DEFAULT NOW(),
   user_id INT,
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -55,12 +55,12 @@ CREATE TABLE posts (
 CREATE TABLE comments(
   id SERIAL NOT NULL,
   comment TEXT,
-  posts_id INT,
-  users_id INT,
-  created_at DATE DEFAULT NOW(),
+  post_id INT,
+  user_id INT,
+  created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
-  FOREIGN KEY (users_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (posts_id) REFERENCES posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
 
@@ -68,7 +68,7 @@ CREATE TABLE comments(
 CREATE TABLE tags (
   id SERIAL NOT NULL,
   tag TEXT,
-  created_at DATE DEFAULT NOW(),
+  created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
   PRIMARY KEY (id)
 );
@@ -78,7 +78,7 @@ CREATE TABLE tag_post(
   id SERIAL NOT NULL,
   tag_id INT,
   post_id INT,
-  created_at DATE DEFAULT NOW(),
+  created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (tag_id) REFERENCES tags(id),
   FOREIGN KEY (post_id) REFERENCES posts(id),
@@ -101,7 +101,7 @@ CREATE TABLE chats(
   id SERIAL NOT NULL,
   sender_user_id INT,
   reserver_user_id INT,
-  created_at DATE DEFAULT NOW(),
+  created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (reserver_user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -114,7 +114,7 @@ CREATE TABLE messages(
   sender_user_id INT,
   chat_id INT,
   message TEXT NOT NULL,
-  created_at DATE DEFAULT NOW(),
+  created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (chat_id) REFERENCES users(id) ON DELETE CASCADE,

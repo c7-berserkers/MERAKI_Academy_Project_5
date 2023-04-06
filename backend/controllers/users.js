@@ -22,7 +22,7 @@ const generateToken = (rows) => {
 
 // This function creates (new user)
 const register = async (req, res) => {
-  const { firstName, lastName, age, country, email, password, role_id, img } =
+  const { first_name, last_name, age, country, email, password, role_id, img } =
     req.body;
   const loweredMail = email.toLowerCase();
   const query = `INSERT INTO users (firstName,
@@ -36,8 +36,8 @@ const register = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, SALT);
     const placeHolders = [
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       age,
       country,
       loweredMail,
@@ -126,7 +126,7 @@ const getUserById = (req, res) => {
 };
 
 const getAllUsers = (req, res) => {
-  const query = `SELECT id, firstname, lastname, age, country, email, created_at, img, is_deleted FROM users ORDER BY created_at DESC`;
+  const query = `SELECT id, first_name, last_name, age, country, email, created_at, img, is_deleted FROM users WHERE is_deleted=0 ORDER BY created_at DESC`;
   pool
     .query(query)
     .then(({ rows }) => {
@@ -153,13 +153,14 @@ const getAllUsers = (req, res) => {
 
 const updateUserById = async (req, res) => {
   const { id } = req.params;
-  const { firstName, lastName, age, country, email, password, img } = req.body;
+  const { first_name, last_name, age, country, email, password, img } =
+    req.body;
   const loweredMail = email?.toLowerCase();
-  const query = `UPDATE users SET firstname = COALESCE($1,firstname), lastname = COALESCE($2,lastname), age=COALESCE($3,age), country=COALESCE($4,country), email=COALESCE($5,email), password=COALESCE($6,password), img=COALESCE($7,img) WHERE id=$8 RETURNING *`;
+  const query = `UPDATE users SET first_name = COALESCE($1,first_name), last_name = COALESCE($2,last_name), age=COALESCE($3,age), country=COALESCE($4,country), email=COALESCE($5,email), password=COALESCE($6,password), img=COALESCE($7,img) WHERE id=$8 RETURNING *`;
   try {
     const placeHolders = [
-      firstName || null,
-      lastName || null,
+      first_name || null,
+      last_name || null,
       age || null,
       country || null,
       loweredMail || null,
@@ -187,4 +188,35 @@ const updateUserById = async (req, res) => {
     });
   }
 };
-module.exports = { register, login, getUserById, getAllUsers, updateUserById };
+
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const query = `UPDATE users SET is_deleted=1 WHERE id=$1 RETURNING *`;
+  try {
+    const { rows } = await pool.query(query, [id]);
+    if (!rows) {
+      return res.status(404).json({
+        success: false,
+        message: `The user with id: ${id} is not found`,
+      });
+    }
+    res.status(201).json({
+      success: true,
+      message: `User with id: ${id} deleted successfully`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      err: err.message,
+    });
+  }
+};
+module.exports = {
+  register,
+  login,
+  getUserById,
+  getAllUsers,
+  updateUserById,
+  deleteUser,
+};
