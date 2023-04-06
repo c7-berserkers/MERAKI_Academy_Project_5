@@ -2,7 +2,7 @@ const express = require("express");
 
 const roleRouter = express.Router();
 
-
+const { createRole , createPermission , createRolePermission } = require('../controllers/roles')
 
 //end point
 
