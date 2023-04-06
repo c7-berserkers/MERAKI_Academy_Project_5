@@ -9,6 +9,7 @@ const {
   getAllUsers,
   updateUserById,
   deleteUser,
+  searchUsers,
 } = require("../controllers/users");
 
 const { authentication } = require("../middleware/authentication");
@@ -22,6 +23,7 @@ userRouter.get("/:id", getUserById);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);
 userRouter.get("/", getAllUsers);
+userRouter.get("/search/:name", searchUsers);
 
 module.exports = userRouter;
 
