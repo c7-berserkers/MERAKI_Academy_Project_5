@@ -6,7 +6,6 @@ const SECRET = process.env.SECRET;
 // This function checks if the user has a permission the passed permission
 const authorization = (string) => {
   return (req, res, next) => {
-    //TODO: write your code here
     const parsedToken = jwt.verify(req.token, SECRET);
     const role_id = parsedToken.payload.role;
     const placeHolders = [string, role_id];
