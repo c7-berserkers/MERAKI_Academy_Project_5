@@ -32,6 +32,7 @@ CREATE TABLE users(
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   created_at DATE DEFAULT NOW(),
+  img TEXT NOT NULL,
   role_id INT,
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (role_id) REFERENCES roles(id),
