@@ -25,8 +25,8 @@ const register = async (req, res) => {
   const { first_name, last_name, age, country, email, password, role_id, img } =
     req.body;
   const loweredMail = email.toLowerCase();
-  const query = `INSERT INTO users (firstName,
-    lastName,
+  const query = `INSERT INTO users (first_name,
+    last_name,
     age,
     country,
     email,
@@ -212,6 +212,33 @@ const deleteUser = async (req, res) => {
     });
   }
 };
+
+const searchUsers = async (req, res) => {
+  const { name } = req.params;
+
+  const query = `SELECT * FROM users WHERE first_name LIKE $1'%' ;`;
+  try {
+    const { rows } = await pool.query(query, [name]);
+    if (!rows) {
+      return res.status(404).json({
+        success: false,
+        message: `no users user with name: ${name}`,
+      });
+    }
+    res.status(201).json({
+      success: true,
+      message: `users with the name ${name}`,
+      users: rows,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      err: err.message,
+      name,
+    });
+  }
+};
 module.exports = {
   register,
   login,
@@ -219,4 +246,5 @@ module.exports = {
   getAllUsers,
   updateUserById,
   deleteUser,
+  searchUsers,
 };
