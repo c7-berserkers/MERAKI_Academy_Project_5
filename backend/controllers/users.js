@@ -124,4 +124,67 @@ const getUserById = (req, res) => {
       });
     });
 };
-module.exports = { register, login, getUserById };
+
+const getAllUsers = (req, res) => {
+  const query = `SELECT id, firstname, lastname, age, country, email, created_at, img, is_deleted FROM users ORDER BY created_at DESC`;
+  pool
+    .query(query)
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `No users found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `all users`,
+        users: rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
+const updateUserById = async (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, age, country, email, password, img } = req.body;
+  const loweredMail = email?.toLowerCase();
+  const query = `UPDATE users SET firstname = COALESCE($1,firstname), lastname = COALESCE($2,lastname), age=COALESCE($3,age), country=COALESCE($4,country), email=COALESCE($5,email), password=COALESCE($6,password), img=COALESCE($7,img) WHERE id=$8 RETURNING *`;
+  try {
+    const placeHolders = [
+      firstName || null,
+      lastName || null,
+      age || null,
+      country || null,
+      loweredMail || null,
+      password ? await bcrypt.hash(password, SALT) : null,
+      img || null,
+      id,
+    ];
+    const { rows } = await pool.query(query, placeHolders);
+    if (!rows) {
+      return res.status(404).json({
+        success: false,
+        message: `The user with id: ${id} is not found`,
+      });
+    }
+    res.status(201).json({
+      success: true,
+      message: `User with id: ${id} updated successfully`,
+      user: rows[0],
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      err: err.message,
+    });
+  }
+};
+module.exports = { register, login, getUserById, getAllUsers, updateUserById };
