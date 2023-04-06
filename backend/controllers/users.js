@@ -66,7 +66,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const query = `SELECT * FROM users FULL OUTER JOIN roles
+  const query = `SELECT * FROM users LEFT JOIN roles
   ON users.role_id = roles.id WHERE email=$1 ;`;
   const placeHolders = [email.toLowerCase()];
   try {
@@ -79,9 +79,9 @@ const login = async (req, res) => {
         massage: "Valid login credentials",
         token,
         userId: rows[0].id,
-        firstName: rows[0].firstName,
+        firstName: rows[0].firstname,
         img: rows[0].img,
-        rows,
+        role: rows[0].role,
       });
     } else {
       res.status(403).json({
@@ -98,4 +98,30 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const getUserById = (req, res) => {
+  const { id } = req.params;
+  const query = `SELECT id, firstname, lastname, age, country, email, created_at, img, is_deleted FROM users WHERE users.id =$1 AND is_deleted=0`;
+  pool
+    .query(query, [id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `No user with the id: ${id}`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `user with the id: ${id}`,
+        user: rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+module.exports = { register, login, getUserById };
