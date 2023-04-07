@@ -2,19 +2,27 @@ const express = require("express");
 
 const commentRouter = express.Router();
 
+
 const { createComment , deleteComment , getAllCommentForPostComment , updateComment } = require('../controllers/comments')
+
+const authentication = require("../middleware/authentication");
+const authorization = require("../middleware/authorization");
+
+
 
 //end point
 
-commentRouter.post("/:id", createComment );
+commentRouter.post("/:id", createComment);
 
-commentRouter.delete("/:id", deleteComment );
+commentRouter.delete("/:id", deleteComment);
+
 
 // get all comment for specific post (descending)
 commentRouter.get("/:id", getAllCommentForPostComment );
 
 
 commentRouter.put("/:id", updateComment );
+
 
 
 
