@@ -12,8 +12,8 @@ const {
   searchUsers,
 } = require("../controllers/users");
 
-const { authentication } = require("../middleware/authentication");
-const { authorization } = require("../middleware/authorization");
+const authentication = require("../middleware/authentication");
+const authorization = require("../middleware/authorization");
 
 //end point
 
@@ -22,7 +22,7 @@ userRouter.post("/login", login);
 userRouter.get("/:id", getUserById);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);
-userRouter.get("/", getAllUsers);
+userRouter.get("/", authentication, authorization("ADMIN"), getAllUsers);
 userRouter.get("/search/:name", searchUsers);
 
 module.exports = userRouter;

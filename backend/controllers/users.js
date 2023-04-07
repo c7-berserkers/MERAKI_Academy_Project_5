@@ -11,7 +11,8 @@ const generateToken = (rows) => {
   const payload = {
     userId: rows[0].id,
     country: rows[0].country,
-    role: rows[0].role_id,
+    role: rows[0].role,
+    role_id: rows[0].role_id,
   };
   const options = {
     expiresIn: TOKEN_EXP_Time,
@@ -45,11 +46,14 @@ const register = async (req, res) => {
       role_id,
       img,
     ];
-    await pool.query(query, placeHolders);
-    res.status(201).json({
-      success: true,
-      message: "Account created successfully",
-    });
+    const { rows } = await pool.query(query, placeHolders);
+    if (rows) {
+      res.status(201).json({
+        success: true,
+        message: "Account created successfully",
+        rows,
+      });
+    } else throw Error;
   } catch (err) {
     if (err.code === "23505") {
       return res.status(409).json({
@@ -66,8 +70,8 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const query = `SELECT * FROM users LEFT JOIN roles
-  ON users.role_id = roles.id WHERE email=$1 ;`;
+  const query = `SELECT users.id,users.first_name,users.country,users.password,users.email, users.img, roles.role,roles.id as role_id FROM users JOIN roles
+  ON users.role_id = roles.id WHERE users.email=$1 ;`;
   const placeHolders = [email.toLowerCase()];
   try {
     const { rows } = await pool.query(query, placeHolders);
@@ -79,9 +83,10 @@ const login = async (req, res) => {
         massage: "Valid login credentials",
         token,
         userId: rows[0].id,
-        firstName: rows[0].firstname,
+        first_name: rows[0].first_name,
         img: rows[0].img,
         role: rows[0].role,
+        rows,
       });
     } else {
       res.status(403).json({
