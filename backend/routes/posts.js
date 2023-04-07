@@ -20,7 +20,7 @@ postRouter.post("/",authentication,createNewPost)
 postRouter.get("/",authentication,authorization("CREATE"),getAllPost)
 postRouter.get("/user/:id",authentication,authorization("CREATE"),getPostByUser)
 postRouter.get("/:id",authentication,authorization("CREATE"),getPostById)
-postRouter.delete("/post/:id",authentication,authorization("CREATE"),deletePost)
+postRouter.delete("/:id",authentication,authorization("CREATE"),deletePost)
 
 
 

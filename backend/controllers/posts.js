@@ -4,12 +4,11 @@ const { pool } = require("../models/db");
 const createNewPost = async (req, res)=>{
     const {
       img,
-description,
-user_id
+description
     } = req.body
-    //  const user_id =req.token.userId;
+     const user_id =req.token.userId;
 
-    //  console.log(user_id)
+     console.log(user_id)
   
     const query = `INSERT INTO posts (img,
         description,
@@ -41,7 +40,10 @@ user_id
   
 const getAllPost = async (req, res)=>{
   
-    const query = `SELECT * FROM posts WHERE is_deleted=0; `
+    const query = `SELECT p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+    LEFT JOIN likes l ON p.id=l.posts_id
+    LEFT JOIN comments c ON p.id=c.post_id
+    GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id ; `
     
     pool.query(query)
       .then((result) => {
@@ -68,10 +70,14 @@ const getAllPost = async (req, res)=>{
   
   const getPostByUser = (req, res)=>{
   const user_id =req.params.id
-  console.log(user_id)
     
-
-  const query = `SELECT * FROM posts WHERE user_id= $1 AND is_deleted=0;`;
+  const query = `
+  SELECT p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+  LEFT JOIN likes l ON p.id=l.posts_id
+  LEFT JOIN comments c ON p.id=c.post_id
+  WHERE p.user_id=$1 AND p.is_deleted=0
+  GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id;
+`;
   const data = [user_id];
 
   pool
@@ -105,7 +111,13 @@ const getAllPost = async (req, res)=>{
     console.log(id)
       
   
-    const query = `SELECT * FROM posts WHERE id= $1 AND is_deleted=0;`;
+    const query = `
+    SELECT p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+    LEFT JOIN likes l ON p.id=l.posts_id
+    LEFT JOIN comments c ON p.id=c.post_id
+    WHERE p.id=$1 AND p.is_deleted=0
+    GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id;`;
+
     const data = [id];
   
     pool
@@ -137,14 +149,14 @@ const getAllPost = async (req, res)=>{
     
   const deletePost = (req, res)=>{
     const id =req.params.id
-    console.log(id)
-  
+    const user_id =req.token.userId;
+
     const query = `
     UPDATE posts 
     SET is_deleted = 1
-    WHERE user_id=1 AND id= 2 AND is_deleted=0;`;
-    const data = [id];
-  
+    WHERE user_id=$2 AND id=$1 AND is_deleted=0 RETURNING *;`;
+    const data = [id*1,user_id*1];
+  console.log(data)
     pool
       .query(query, data)
       .then((result) => {

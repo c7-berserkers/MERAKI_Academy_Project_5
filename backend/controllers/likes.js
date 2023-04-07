@@ -3,12 +3,12 @@ const { pool } = require("../models/db");
     const addLike = (req, res) => {
     const  post_id   = req.params.id;
 
-    const {user_id,
+    const {
         reaction} = req.body;
 
-         //  const user_id =req.token.userId;
+        const user_id =req.token.userId;
 
-    //  console.log(user_id)
+     console.log(user_id)
 
     const data = [reaction , user_id ,post_id];
     const data1 = [ user_id ,post_id];
