@@ -11,6 +11,8 @@ const userRouter = require("./routes/users");
 const postRouter = require("./routes/posts");
 const roleRouter = require("./routes/roles");
 const commentRouter = require("./routes/comments");
+const tagRouter = require("./routes/tags");
+const likeRouter = require("./routes/likes");
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +22,8 @@ app.use("/posts", postRouter);
 app.use("/roles", roleRouter);
 app.use("/comments", commentRouter);
 app.use("/users", userRouter);
+app.use("/tags", tagRouter);
+app.use("/likes", likeRouter);
 
 // Handles any other endpoints [unassigned - endpoints]
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));

@@ -7,18 +7,20 @@ const{
     createNewPost,
 getAllPost,
 getPostByUser,
-getPostById
+getPostById,
+deletePost
   } = require('../controllers/posts')
 
 
-const { authentication } = require('../middleware/authentication');
-const { authorization } = require('../middleware/authorization');
+const  authentication  = require('../middleware/authentication');
+const authorization  = require('../middleware/authorization');
 
 
-postRouter.post("/",createNewPost)
-postRouter.get("/",getAllPost)
-postRouter.get("/user/:id",getPostByUser)
-postRouter.get("/post/:id",getPostById)
+postRouter.post("/",authentication,createNewPost)
+postRouter.get("/",authentication,authorization("CREATE"),getAllPost)
+postRouter.get("/user/:id",authentication,authorization("CREATE"),getPostByUser)
+postRouter.get("/:id",authentication,authorization("CREATE"),getPostById)
+postRouter.delete("/post/:id",authentication,authorization("CREATE"),deletePost)
 
 
 

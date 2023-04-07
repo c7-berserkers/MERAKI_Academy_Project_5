@@ -2,20 +2,19 @@ const { pool } = require("../models/db");
 
 
 const createNewPost = async (req, res)=>{
-    console.log("hi osama")
-
     const {
       img,
 description,
 user_id
     } = req.body
-    // const user_id =req.token.user_id;
-  
-    // console.log(user_id)
+    //  const user_id =req.token.userId;
+
+    //  console.log(user_id)
   
     const query = `INSERT INTO posts (img,
         description,
         user_id) VALUES ($1,$2,$3) RETURNING *;`
+        
     const data = [
         img,
         description,
@@ -139,7 +138,6 @@ const getAllPost = async (req, res)=>{
   const deletePost = (req, res)=>{
     const id =req.params.id
     console.log(id)
-    user_id
   
     const query = `
     UPDATE posts 
@@ -176,5 +174,6 @@ module.exports = {
     createNewPost,
     getAllPost,
     getPostByUser,
-    getPostById
+    getPostById,
+    deletePost
 }
