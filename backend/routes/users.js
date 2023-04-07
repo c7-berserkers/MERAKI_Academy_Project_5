@@ -2,26 +2,30 @@ const express = require("express");
 
 const userRouter = express.Router();
 
+const {
+  register,
+  login,
+  getUserById,
+  getAllUsers,
+  updateUserById,
+  deleteUser,
+  searchUsers,
+} = require("../controllers/users");
 
-const{
-    register,
-    login,
-  } = require('../controllers/users')
-
-
-const { authentication } = require('../middleware/authentication');
-const { authorization } = require('../middleware/authorization');
+const authentication = require("../middleware/authentication");
+const authorization = require("../middleware/authorization");
 
 //end point
 
-userRouter.post("/register", register );
-userRouter.post("/login", login );
+userRouter.post("/register", register);
+userRouter.post("/login", login);
+userRouter.get("/:id", getUserById);
+userRouter.put("/:id", updateUserById);
+userRouter.delete("/:id", deleteUser);
+userRouter.get("/", authentication, authorization("ADMIN"), getAllUsers);
+userRouter.get("/search/:name", searchUsers);
 
-
-module.exports = userRouter
-
-
-
+module.exports = userRouter;
 
 /*
  * Testing Object for register:
@@ -36,7 +40,6 @@ module.exports = userRouter
     "img":"https://www.aljazeera.net/wp-content/uploads/2020/05/33d7db29-189c-445f-8f80-3882c67c1993.jpeg?resize=1200%2C675"
 }
 */
-
 
 /*
  * Testing Object for login:
