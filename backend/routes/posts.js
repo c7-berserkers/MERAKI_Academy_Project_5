@@ -2,19 +2,29 @@ const express = require("express");
 
 const postRouter = express.Router();
 
-const {
-  createNewPost,
-  getAllPost,
-  getPostByUser,
-  getPostById,
-} = require("../controllers/posts");
 
-const authentication = require("../middleware/authentication");
-const authorization = require("../middleware/authorization");
+const{
+    createNewPost,
+getAllPost,
+getPostByUser,
+getPostById,
+deletePost
+  } = require('../controllers/posts')
 
-postRouter.post("/", createNewPost);
-postRouter.get("/", authentication, authorization("ADMIN"), getAllPost);
-postRouter.get("/user/:id", getPostByUser);
-postRouter.get("/post/:id", getPostById);
+
+const  authentication  = require('../middleware/authentication');
+const authorization  = require('../middleware/authorization');
+
+
+postRouter.post("/",authentication,createNewPost)
+postRouter.get("/",authentication,authorization("CREATE"),getAllPost)
+postRouter.get("/user/:id",authentication,authorization("CREATE"),getPostByUser)
+postRouter.get("/:id",authentication,authorization("CREATE"),getPostById)
+postRouter.delete("/post/:id",authentication,authorization("CREATE"),deletePost)
+
+
+
+
+
 
 module.exports = postRouter;
