@@ -105,7 +105,25 @@ const login = async (req, res) => {
 
 const getUserById = (req, res) => {
   const { id } = req.params;
-  const query = `SELECT id, firstname, lastname, age, country, email, created_at, img, is_deleted FROM users WHERE users.id =$1 AND is_deleted=0`;
+  const query = `SELECT 
+  u.id, 
+  u.first_name, 
+  u.last_name, 
+  u.age, 
+  u.country, 
+  u.email, 
+  r.role, 
+  r.id AS role_id, 
+  COUNT(DISTINCT f1.id) AS followers_count, 
+  COUNT(DISTINCT f2.id) AS following_count, 
+  ARRAY_AGG(p.id) AS posts
+FROM users u 
+JOIN roles r ON u.role_id = r.id
+LEFT JOIN follows f1 ON u.id = f1.followed_user_id AND f1.is_deleted = 0
+LEFT JOIN follows f2 ON u.id = f2.following_user_id AND f2.is_deleted = 0
+LEFT JOIN posts p ON u.id = p.user_id AND p.is_deleted = 0
+WHERE u.id = ($1) AND u.is_deleted = 0
+GROUP BY u.id, r.role, r.id`;
   pool
     .query(query, [id])
     .then(({ rows }) => {
