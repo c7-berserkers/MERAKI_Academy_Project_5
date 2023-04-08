@@ -10,6 +10,8 @@ const {
   updateUserById,
   deleteUser,
   searchUsers,
+  followUser,
+  unFollowUser,
 } = require("../controllers/users");
 
 const authentication = require("../middleware/authentication");
@@ -19,6 +21,8 @@ const authorization = require("../middleware/authorization");
 
 userRouter.post("/register", register);
 userRouter.post("/login", login);
+userRouter.post("/follow/:id", authentication, followUser);
+userRouter.post("/unfollow/:id", authentication, unFollowUser);
 userRouter.get("/:id", getUserById);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);

@@ -240,10 +240,66 @@ const searchUsers = async (req, res) => {
       success: false,
       message: "Server error",
       err: err.message,
-      name,
     });
   }
 };
+
+const followUser = (req, res) => {
+  const { id } = req.params;
+  const userId = req.token.userId;
+  const placeHolders = [userId, id];
+  const query = `INSERT INTO follows (following_user_id,followed_user_id) VALUES ($1,$2) RETURNING *`;
+  pool
+    .query(query, placeHolders)
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `no users user with id: ${id}`,
+        });
+      }
+      res.status(201).json({
+        success: true,
+        message: `users with the id ${id} has been followed`,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
+const unFollowUser = (req, res) => {
+  const { id } = req.params;
+  const userId = req.token.userId;
+  const placeHolders = [userId, id];
+  const query = `UPDATE follows SET is_deleted=1 WHERE following_user_id = $1 AND followed_user_id = $2 RETURNING *`;
+  pool
+    .query(query, placeHolders)
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `no users user with id: ${id}`,
+        });
+      }
+      res.status(201).json({
+        success: true,
+        message: `users with the id ${id} has been unFollowed`,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   register,
   login,
@@ -252,4 +308,6 @@ module.exports = {
   updateUserById,
   deleteUser,
   searchUsers,
+  followUser,
+  unFollowUser,
 };
