@@ -12,6 +12,8 @@ const {
   searchUsers,
   followUser,
   unFollowUser,
+  getFollowersByUserId,
+  getFollowingByUserId,
 } = require("../controllers/users");
 
 const authentication = require("../middleware/authentication");
@@ -24,6 +26,8 @@ userRouter.post("/login", login);
 userRouter.post("/follow/:id", authentication, followUser);
 userRouter.post("/unfollow/:id", authentication, unFollowUser);
 userRouter.get("/:id", getUserById);
+userRouter.get("/followers/:id", getFollowersByUserId);
+userRouter.get("/following/:id", getFollowingByUserId);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);
 userRouter.get("/", authentication, authorization("ADMIN"), getAllUsers);
