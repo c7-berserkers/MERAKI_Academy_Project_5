@@ -318,6 +318,56 @@ const unFollowUser = (req, res) => {
     });
 };
 
+const getFollowersByUserId = (req, res) => {
+  const { id } = req.params;
+  const query = `SELECT u.id, u.first_name, u.last_name
+  FROM follows f
+  INNER JOIN users u ON f.following_user_id = u.id
+  WHERE f.followed_user_id = $1 AND f.is_deleted = 0;
+  `;
+  pool
+    .query(query, [id])
+    .then(({ rows }) => {
+      res.status(201).json({
+        success: true,
+        message: `users with the id ${id} has been followers`,
+        followers: rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
+const getFollowingByUserId = (req, res) => {
+  const { id } = req.params;
+  const query = `SELECT u.id, u.first_name, u.last_name
+  FROM follows f
+  INNER JOIN users u ON f.followed_user_id = u.id
+  WHERE f.following_user_id = $1 AND f.is_deleted = 0;
+  `;
+  pool
+    .query(query, [id])
+    .then(({ rows }) => {
+      res.status(201).json({
+        success: true,
+        message: `users with the id ${id} following`,
+        followers: rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   register,
   login,
@@ -328,4 +378,6 @@ module.exports = {
   searchUsers,
   followUser,
   unFollowUser,
+  getFollowersByUserId,
+  getFollowingByUserId,
 };
