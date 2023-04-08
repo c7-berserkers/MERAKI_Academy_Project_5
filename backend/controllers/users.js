@@ -105,7 +105,25 @@ const login = async (req, res) => {
 
 const getUserById = (req, res) => {
   const { id } = req.params;
-  const query = `SELECT id, firstname, lastname, age, country, email, created_at, img, is_deleted FROM users WHERE users.id =$1 AND is_deleted=0`;
+  const query = `SELECT 
+  u.id, 
+  u.first_name, 
+  u.last_name, 
+  u.age, 
+  u.country, 
+  u.email, 
+  r.role, 
+  r.id AS role_id, 
+  COUNT(DISTINCT f1.id) AS followers_count, 
+  COUNT(DISTINCT f2.id) AS following_count, 
+  ARRAY_AGG(p.id) AS posts
+FROM users u 
+JOIN roles r ON u.role_id = r.id
+LEFT JOIN follows f1 ON u.id = f1.followed_user_id AND f1.is_deleted = 0
+LEFT JOIN follows f2 ON u.id = f2.following_user_id AND f2.is_deleted = 0
+LEFT JOIN posts p ON u.id = p.user_id AND p.is_deleted = 0
+WHERE u.id = ($1) AND u.is_deleted = 0
+GROUP BY u.id, r.role, r.id`;
   pool
     .query(query, [id])
     .then(({ rows }) => {
@@ -240,10 +258,66 @@ const searchUsers = async (req, res) => {
       success: false,
       message: "Server error",
       err: err.message,
-      name,
     });
   }
 };
+
+const followUser = (req, res) => {
+  const { id } = req.params;
+  const userId = req.token.userId;
+  const placeHolders = [userId, id];
+  const query = `INSERT INTO follows (following_user_id,followed_user_id) VALUES ($1,$2) RETURNING *`;
+  pool
+    .query(query, placeHolders)
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `no users user with id: ${id}`,
+        });
+      }
+      res.status(201).json({
+        success: true,
+        message: `users with the id ${id} has been followed`,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
+const unFollowUser = (req, res) => {
+  const { id } = req.params;
+  const userId = req.token.userId;
+  const placeHolders = [userId, id];
+  const query = `UPDATE follows SET is_deleted=1 WHERE following_user_id = $1 AND followed_user_id = $2 RETURNING *`;
+  pool
+    .query(query, placeHolders)
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `no users user with id: ${id}`,
+        });
+      }
+      res.status(201).json({
+        success: true,
+        message: `users with the id ${id} has been unFollowed`,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   register,
   login,
@@ -252,4 +326,6 @@ module.exports = {
   updateUserById,
   deleteUser,
   searchUsers,
+  followUser,
+  unFollowUser,
 };
