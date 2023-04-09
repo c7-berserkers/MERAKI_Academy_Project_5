@@ -47,7 +47,9 @@ CREATE TABLE posts (
   created_at timestamp DEFAULT NOW(),
   user_id INT,
   is_deleted SMALLINT DEFAULT 0,
+  tag_id INT,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags(id),
   PRIMARY KEY (id)
 );
 
@@ -73,17 +75,7 @@ CREATE TABLE tags (
   PRIMARY KEY (id)
 );
 
---tag_post
-CREATE TABLE tag_post(
-  id SERIAL NOT NULL,
-  tag_id INT,
-  post_id INT,
-  created_at timestamp DEFAULT NOW(),
-  is_deleted SMALLINT DEFAULT 0,
-  FOREIGN KEY (tag_id) REFERENCES tags(id),
-  FOREIGN KEY (post_id) REFERENCES posts(id),
-  PRIMARY KEY (id)
-);
+
 
 --follows
 CREATE TABLE follows(
