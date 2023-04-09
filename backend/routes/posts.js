@@ -9,6 +9,7 @@ const {
   getPostById,
   deletePost,
   updatePostById,
+  getPostsByTag,
 } = require("../controllers/posts");
 
 const authentication = require("../middleware/authentication");
@@ -23,6 +24,12 @@ postRouter.get(
   getPostByUser
 );
 postRouter.get("/:id", authentication, authorization("CREATE"), getPostById);
+postRouter.get(
+  "/tag/:tag",
+  authentication,
+  authorization("CREATE"),
+  getPostsByTag
+);
 postRouter.put("/:id", authentication, authorization("CREATE"), updatePostById);
 postRouter.delete("/:id", authentication, authorization("CREATE"), deletePost);
 
