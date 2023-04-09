@@ -117,7 +117,7 @@ CREATE TABLE messages(
   created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (chat_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
 
