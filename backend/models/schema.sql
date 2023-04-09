@@ -1,3 +1,12 @@
+--tag_
+CREATE TABLE tags (
+  id SERIAL NOT NULL,
+  tag TEXT,
+  created_at timestamp DEFAULT NOW(),
+  is_deleted SMALLINT DEFAULT 0,
+  PRIMARY KEY (id)
+);
+
 --roles
 CREATE TABLE roles (
   id SERIAL NOT NULL,
@@ -66,14 +75,6 @@ CREATE TABLE comments(
   PRIMARY KEY (id)
 );
 
---tag_
-CREATE TABLE tags (
-  id SERIAL NOT NULL,
-  tag TEXT,
-  created_at timestamp DEFAULT NOW(),
-  is_deleted SMALLINT DEFAULT 0,
-  PRIMARY KEY (id)
-);
 
 
 
@@ -125,6 +126,9 @@ CREATE TABLE likes(
   FOREIGN KEY (posts_id) REFERENCES posts(id) ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
+
+
+
 
 
 
