@@ -59,7 +59,7 @@ const createChat = (req, res) => {
                 .then((result) => {
                     res.status(201).json({
                         success: true,
-                        message: "Get all  message on specific chat created successfully",
+                        message: "Get all  message on specific chat  successfully",
                         result: result.rows,
                     });
                 })
@@ -71,12 +71,35 @@ const createChat = (req, res) => {
                     });
                 });
             }
+
+            const deleteChat  = (req, res) => {
+                const  id   = req.params.id;
+                const data = [ id ];
+                const query = `DELETE FROM  chats WHERE  id=$1  RETURNING  * ;`;
+                pool.query(query, data)
+                    .then((result) => {
+                        res.status(201).json({
+                            success: true,
+                            message: "Chat delete  successfully",
+                            result: result.rows,
+                        });
+                    })
+                    .catch((err) => {
+                        res.status(500).json({
+                            success: false,
+                            message: "Server error",
+                            err: err,
+                        });
+                    });
+                }
+        
     
 
     module.exports = {
         createChat,
         createMessage,
         getAllMessageOnSpecificChat,
+        deleteChat
     };
 
 
