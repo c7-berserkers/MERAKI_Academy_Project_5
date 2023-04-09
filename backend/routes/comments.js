@@ -12,16 +12,16 @@ const authorization = require("../middleware/authorization");
 
 //end point
 
-commentRouter.post("/:id", createComment);
+commentRouter.post("/:id",authentication, createComment);
 
-commentRouter.delete("/:id", deleteComment);
+commentRouter.delete("/:id",authentication, deleteComment);
 
 
 // get all comment for specific post (descending)
-commentRouter.get("/:id", getAllCommentForPostComment );
+commentRouter.get("/:id",authentication, getAllCommentForPostComment );
 
 
-commentRouter.put("/:id", updateComment );
+commentRouter.put("/:id",authentication, updateComment );
 
 
 

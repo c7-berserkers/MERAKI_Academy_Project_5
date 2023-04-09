@@ -1,16 +1,16 @@
 const { pool } = require("../models/db");
 
 const createNewPost = async (req, res) => {
-  const { img, description } = req.body;
+  const { img, description,tag_id } = req.body;
   const user_id = req.token.userId;
 
   console.log(user_id);
 
   const query = `INSERT INTO posts (img,
         description,
-        user_id) VALUES ($1,$2,$3) RETURNING *;`;
+        user_id,tag_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
 
-  const data = [img, description, user_id];
+  const data = [img, description, user_id,tag_id];
 
   pool
     .query(query, data)
@@ -32,10 +32,9 @@ const createNewPost = async (req, res) => {
 };
 
 const getAllPost = async (req, res) => {
-  const query = `SELECT p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+  const query = `SELECT p.id,p.img ,p.description,COUNT(l.posts_id) AS likes FROM posts p
     LEFT JOIN likes l ON p.id=l.posts_id
-    LEFT JOIN comments c ON p.id=c.post_id
-    GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id ; `;
+    GROUP BY p.img ,p.description ,p.id ; `;
 
   pool
     .query(query)
@@ -66,11 +65,10 @@ const getPostByUser = (req, res) => {
   const user_id = req.params.id;
 
   const query = `
-  SELECT p.created_at,p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+  SELECT p.created_at,p.id,p.img ,p.description ,COUNT(l.posts_id) AS likes FROM posts p
   LEFT JOIN likes l ON p.id=l.posts_id
-  LEFT JOIN comments c ON p.id=c.post_id
   WHERE p.user_id=$1 AND p.is_deleted=0
-  GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id ORDER BY p.created_at DESC;
+  GROUP BY p.img ,p.description ,p.id ORDER BY p.created_at DESC;
 `;
   const data = [user_id];
 
@@ -104,11 +102,10 @@ const getPostById = (req, res) => {
   console.log(id);
 
   const query = `
-    SELECT p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+    SELECT p.id,p.img ,p.description,COUNT(l.posts_id) AS likes FROM posts p
     LEFT JOIN likes l ON p.id=l.posts_id
-    LEFT JOIN comments c ON p.id=c.post_id
     WHERE p.id=$1 AND p.is_deleted=0
-    GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id;`;
+    GROUP BY p.img ,p.description ,p.id;`;
 
   const data = [id];
 
@@ -206,7 +203,7 @@ const getPostsByTag = (req, res) => {
   SELECT p.*
 FROM posts p
 INNER JOIN tags t ON p.tag_id = t.id
-WHERE t.tag = 'your_tag'
+WHERE t.tag = $1
 AND p.is_deleted = 0;
 `;
   pool
