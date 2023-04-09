@@ -205,9 +205,9 @@ const getPostsByTag = (req, res) => {
   const query = `
   SELECT p.*
 FROM posts p
-INNER JOIN tag_post tp ON p.id = tp.post_id
-INNER JOIN tags t ON tp.tag_id = t.id
-WHERE t.tag = '$1';
+INNER JOIN tags t ON p.tag_id = t.id
+WHERE t.tag = 'your_tag'
+AND p.is_deleted = 0;
 `;
   pool
     .query(query, [tag])
