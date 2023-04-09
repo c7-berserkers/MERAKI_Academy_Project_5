@@ -25,8 +25,36 @@ const createChat = (req, res) => {
     }
 
     
+
+
+    const createMessage = (req, res) => {
+        const  chat_id   = req.params.id;
+        const {sender_user_id , message} = req.body;
+        const data = [sender_user_id , chat_id,message];
+        console.log(data);
+        const query = `INSERT INTO messages (sender_user_id , chat_id , message) VALUES ($1,$2,$3) RETURNING  *;`;
+        pool.query(query, data)
+            .then((result) => {
+                res.status(201).json({
+                    success: true,
+                    message: "Message created successfully",
+                    result: result.rows,
+                });
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    success: false,
+                    message: "Server error",
+                    err: err,
+                });
+            });
+        }
+
+    
+
     module.exports = {
         createChat,
+        createMessage
 
     };
 
