@@ -50,12 +50,33 @@ const createChat = (req, res) => {
             });
         }
 
+
+        const getAllMessageOnSpecificChat  = (req, res) => {
+            const  chat_id   = req.params.id;
+            const data = [ chat_id ];
+            const query = `SELECT * FROM messages WHERE  chat_id=$1  ORDER BY created_at DESC ;`;
+            pool.query(query, data)
+                .then((result) => {
+                    res.status(201).json({
+                        success: true,
+                        message: "Get all  message on specific chat created successfully",
+                        result: result.rows,
+                    });
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        success: false,
+                        message: "Server error",
+                        err: err,
+                    });
+                });
+            }
     
 
     module.exports = {
         createChat,
-        createMessage
-
+        createMessage,
+        getAllMessageOnSpecificChat,
     };
 
 

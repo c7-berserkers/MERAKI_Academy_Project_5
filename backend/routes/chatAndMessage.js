@@ -3,7 +3,7 @@ const express = require("express");
 const chatAndMessageRouter = express.Router();
 
 
-const { createChat , createMessage } = require('../controllers/chatAndMessage')
+const { createChat , createMessage , getAllMessageOnSpecificChat} = require('../controllers/chatAndMessage')
 
 const authentication = require("../middleware/authentication");
 const authorization = require("../middleware/authorization");
@@ -14,6 +14,8 @@ const authorization = require("../middleware/authorization");
 
 chatAndMessageRouter.post("", createChat);
 chatAndMessageRouter.post("/Message/:id", createMessage);
+chatAndMessageRouter.get("/allMessage/:id", getAllMessageOnSpecificChat);
+
 
 
 
