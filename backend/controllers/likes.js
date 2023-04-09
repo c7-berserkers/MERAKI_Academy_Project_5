@@ -91,10 +91,40 @@ const { pool } = require("../models/db");
                 });
             }
 
+            
+        const getAllLikeForUser = (req, res) => {
+            const user_id =req.token.userId;
+            const data = [user_id];
+            const query = `SELECT * FROM likes WHERE user_id=$1;`;       
+            pool.query(query, data)
+                .then((result) => {
+                    if(result.rows.length>0){
+                    res.status(201).json({
+                        success: true,
+                        message: "Get all likes for this user successfully",
+                        result: result.rows,
+                    });
+                    }else{
+                        res.status(201).json({
+                            success: true,
+                            message: "This user don't have any like",
+                        });
+                    }
+                    
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        success: false,
+                        message: "Server error",
+                        err: err,
+                    });
+                });
+            }
 
 
     module.exports = {
         addLike,
         getAllLikeForPost,
+        getAllLikeForUser
     };
 
