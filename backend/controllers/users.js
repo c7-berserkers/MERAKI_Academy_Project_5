@@ -124,19 +124,22 @@ LEFT JOIN follows f2 ON u.id = f2.following_user_id AND f2.is_deleted = 0
 LEFT JOIN posts p ON u.id = p.user_id AND p.is_deleted = 0
 WHERE u.id = ($1) AND u.is_deleted = 0
 GROUP BY u.id, r.role, r.id`;
+
+  const query_2 = `SELECT * FROM posts WHERE is_deleted = 0 AND user_id =$1`;
   pool
     .query(query, [id])
-    .then(({ rows }) => {
-      if (rows.length === 0) {
+    .then((user) => {
+      if (user.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: `No user with the id: ${id}`,
         });
       }
+
       res.status(200).json({
         success: true,
         message: `user with the id: ${id}`,
-        user: rows[0],
+        user: user[0],
       });
     })
     .catch((err) => {
@@ -239,7 +242,7 @@ const deleteUser = async (req, res) => {
 const searchUsers = async (req, res) => {
   const { name } = req.params;
 
-  const query = `SELECT * FROM users WHERE first_name LIKE $1'%' ;`;
+  const query = `SELECT * FROM users WHERE first_name LIKE $1'%' AND is_deleted = 0;`;
   try {
     const { rows } = await pool.query(query, [name]);
     if (!rows) {
