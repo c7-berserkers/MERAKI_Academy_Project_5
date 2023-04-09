@@ -66,11 +66,11 @@ const getPostByUser = (req, res) => {
   const user_id = req.params.id;
 
   const query = `
-  SELECT p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
+  SELECT p.created_at,p.id,p.img ,p.description,c.id,c.comment,c.user_id ,COUNT(l.posts_id) AS likes FROM posts p
   LEFT JOIN likes l ON p.id=l.posts_id
   LEFT JOIN comments c ON p.id=c.post_id
   WHERE p.user_id=$1 AND p.is_deleted=0
-  GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id;
+  GROUP BY p.img ,p.description ,p.id ,c.id,c.comment,c.user_id ORDER BY p.created_at DESC;
 `;
   const data = [user_id];
 
@@ -78,7 +78,7 @@ const getPostByUser = (req, res) => {
     .query(query, data)
     .then((result) => {
       if (result.rows.length === 0) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: `The user: ${user_id} has no posts`,
         });
@@ -116,7 +116,7 @@ const getPostById = (req, res) => {
     .query(query, data)
     .then((result) => {
       if (result.rows.length === 0) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: `The post with id: ${id} is not found`,
         });
@@ -151,7 +151,7 @@ const deletePost = (req, res) => {
     .query(query, data)
     .then((result) => {
       if (result.rows.length === 0) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: `The post with id: ${id} is not found`,
         });
@@ -172,10 +172,73 @@ const deletePost = (req, res) => {
     });
 };
 
+const updatePostById = (req, res) => {
+  const { id } = req.params;
+  const { description } = req.body;
+  const placeHolders = [description || null, id];
+  const query = `UPDATE posts SET description = COALESCE($1,description) WHERE id=$2 AND is_deleted=0 RETURNING *`;
+  pool
+    .query(query, placeHolders)
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `The post with id: ${id} is not found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `update the post with id: ${id} successfully`,
+        result: rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+const getPostsByTag = (req, res) => {
+  const { tag } = req.params;
+  const query = `
+  SELECT p.*
+FROM posts p
+INNER JOIN tags t ON p.tag_id = t.id
+WHERE t.tag = 'your_tag'
+AND p.is_deleted = 0;
+`;
+  pool
+    .query(query, [tag])
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `The posts with tag: ${tag} is not found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `the post with tag: ${tag}`,
+        result: rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   createNewPost,
   getAllPost,
   getPostByUser,
   getPostById,
   deletePost,
+  updatePostById,
+  getPostsByTag,
 };

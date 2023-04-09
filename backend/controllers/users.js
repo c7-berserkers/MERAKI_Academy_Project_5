@@ -51,7 +51,6 @@ const register = async (req, res) => {
       res.status(201).json({
         success: true,
         message: "Account created successfully",
-        rows,
       });
     } else throw Error;
   } catch (err) {
@@ -86,7 +85,6 @@ const login = async (req, res) => {
         first_name: rows[0].first_name,
         img: rows[0].img,
         role: rows[0].role,
-        rows,
       });
     } else {
       res.status(403).json({
@@ -115,28 +113,31 @@ const getUserById = (req, res) => {
   r.role, 
   r.id AS role_id, 
   COUNT(DISTINCT f1.id) AS followers_count, 
-  COUNT(DISTINCT f2.id) AS following_count, 
-  ARRAY_AGG(p.id) AS posts
+  COUNT(DISTINCT f2.id) AS following_count
 FROM users u 
 JOIN roles r ON u.role_id = r.id
 LEFT JOIN follows f1 ON u.id = f1.followed_user_id AND f1.is_deleted = 0
 LEFT JOIN follows f2 ON u.id = f2.following_user_id AND f2.is_deleted = 0
-LEFT JOIN posts p ON u.id = p.user_id AND p.is_deleted = 0
 WHERE u.id = ($1) AND u.is_deleted = 0
 GROUP BY u.id, r.role, r.id`;
+
+  const query_2 = `SELECT * FROM posts WHERE is_deleted = 0 AND user_id =$1 ORDER BY created_at DESC`;
   pool
     .query(query, [id])
-    .then(({ rows }) => {
-      if (rows.length === 0) {
+    .then((user) => {
+      if (user.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: `No user with the id: ${id}`,
         });
       }
-      res.status(200).json({
-        success: true,
-        message: `user with the id: ${id}`,
-        user: rows[0],
+      pool.query(query_2, [id]).then((posts) => {
+        res.status(200).json({
+          success: true,
+          message: `user with the id: ${id}`,
+          user: user.rows[0],
+          userPosts: posts.rows,
+        });
       });
     })
     .catch((err) => {
@@ -239,7 +240,7 @@ const deleteUser = async (req, res) => {
 const searchUsers = async (req, res) => {
   const { name } = req.params;
 
-  const query = `SELECT * FROM users WHERE first_name LIKE $1'%' ;`;
+  const query = `SELECT * FROM users WHERE first_name LIKE $1'%' AND is_deleted = 0;`;
   try {
     const { rows } = await pool.query(query, [name]);
     if (!rows) {
@@ -323,7 +324,7 @@ const getFollowersByUserId = (req, res) => {
   const query = `SELECT u.id, u.first_name, u.last_name
   FROM follows f
   INNER JOIN users u ON f.following_user_id = u.id
-  WHERE f.followed_user_id = $1 AND f.is_deleted = 0;
+  WHERE f.followed_user_id = $1 AND f.is_deleted = 0 ;
   `;
   pool
     .query(query, [id])
