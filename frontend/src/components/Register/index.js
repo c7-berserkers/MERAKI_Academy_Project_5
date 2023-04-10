@@ -166,7 +166,7 @@ export default function Register() {
             <Row className="mb-3">
               <Form.Group as={Col} controlId="registerAge">
                 <Form.Label>Age</Form.Label>
-                <Form.Control placeholder="Age" name="age" onChange={handleChange} type="number"   class="noscroll" />
+                <Form.Control placeholder="Age" name="age" onChange={handleChange} type="number" />
               </Form.Group>
 
               <Form.Group as={Col} controlId="registerPhoneNumber">
@@ -178,7 +178,7 @@ export default function Register() {
             {done? <Alert key="success" variant="success">{done}</Alert>:<> </>} 
 
             
-            <Button variant="warning" type="submit">
+            <Button variant="primary" type="submit">
             Register
             </Button>
             <div
