@@ -19,8 +19,8 @@ export const authSlice = createSlice({
     setUserInfo: (state, { payload }) => {
       state.userId = payload.userId;
       state.role = payload.role;
-      state.pfp = payload.pfp;
-      state.userName = payload.userName;
+      state.pfp = payload.img;
+      state.userName = payload.first_name;
       localStorage.setItem("userId", state.userId);
       localStorage.setItem("role", state.role);
       localStorage.setItem("pfp", state.pfp);
@@ -50,5 +50,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setLogin, setUserInfo, setLogout,setUserLikes } = authSlice.actions;
+export const { setLogin, setUserInfo, setLogout, setUserLikes } =
+  authSlice.actions;
 export default authSlice.reducer;

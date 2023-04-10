@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   NavDropdown,
@@ -21,11 +21,16 @@ export default function NavBar() {
     dispatch(setLogout());
     navigate("/login");
   };
-  const { userName, role } = useSelector((state) => {
+  const { userName, role, isLoggedIn } = useSelector((state) => {
     return {
       userName: state.auth.userName,
+      isLoggedIn: state.auth.isLoggedIn,
       role: state.auth.role,
     };
+  });
+  useEffect(() => {
+    !isLoggedIn && navigate("/login");
+    console.log(userName, role);
   });
   return (
     <>
@@ -51,7 +56,7 @@ export default function NavBar() {
           </Navbar.Brand>{" "}
           <Navbar.Toggle className="my-2" aria-controls="nav-menu" />
           <Navbar.Collapse id="nav-menu">
-            <Nav className="me-auto">
+            <Nav className="ms-auto">
               <Form
                 onSubmit={(e) => {
                   e.preventDefault();
