@@ -9,6 +9,8 @@ import axios from 'axios';
 
 export default function Register() {
 
+  const navigate=useNavigate()
+
   let useStateTestValue={
     first_name: undefined ,
     last_name: undefined,
@@ -71,8 +73,13 @@ export default function Register() {
       setErrors(errors);
       return;
     }
-
-
+        axios.post('http://localhost:5000/user/register', userData)
+      .then(function (response) {
+        navigate("/Login")
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
     
 
