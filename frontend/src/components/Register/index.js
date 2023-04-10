@@ -13,6 +13,7 @@ import {
   Row,
   Card,
 } from "react-bootstrap";
+import "./index.css";
 
 
 export default function Register() {
@@ -95,7 +96,7 @@ export default function Register() {
         if(response.data.message=="Account created successfully"){
         setDone("Account created successfully")
         setOneError(false)
-        setTimeout(()=>{ navigate("/Login")},25000)
+        setTimeout(()=>{ navigate("/Login")},3000)
         }
         else{
           setOneError("Email is already used")
@@ -162,15 +163,10 @@ export default function Register() {
               </Form.Text>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="registerAddress">
-              <Form.Label>Country</Form.Label>
-              <Form.Control placeholder="XXXX"  name="xxxxx"  className=''  />
-            </Form.Group>
-
             <Row className="mb-3">
               <Form.Group as={Col} controlId="registerAge">
                 <Form.Label>Age</Form.Label>
-                <Form.Control placeholder="Age" name="age" onChange={handleChange} type="number"  />
+                <Form.Control placeholder="Age" name="age" onChange={handleChange} type="number"   class="noscroll" />
               </Form.Group>
 
               <Form.Group as={Col} controlId="registerPhoneNumber">
@@ -179,7 +175,7 @@ export default function Register() {
               </Form.Group>
             </Row>
             {oneError?<Alert variant="danger">{oneError}</Alert>:<> </>} 
-            {done? <Alert key="success" variant="success">ssss</Alert>:<> </>} 
+            {done? <Alert key="success" variant="success">{done}</Alert>:<> </>} 
 
             
             <Button variant="warning" type="submit">
