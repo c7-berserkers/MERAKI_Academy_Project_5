@@ -1,0 +1,19 @@
+.login{
+    margin-top: 50px;
+   width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.SuccessMessage{
+background-color: rgba(7, 252, 27, 0.646);
+}
+
+
+.ErrorMessage{
+    border-radius: 7px;
+    background-color: rgba(252, 7, 7, 0.714);
+
+}
