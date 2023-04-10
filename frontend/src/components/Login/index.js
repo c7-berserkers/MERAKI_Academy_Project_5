@@ -33,8 +33,6 @@ const Login = () => {
   //===============================================================
 
   const login = async (e) => {
-    console.log(email,
-      password,)
     e.preventDefault();
     try {
       const result = await axios.post("http://localhost:5000/users/login", {
@@ -66,7 +64,7 @@ const Login = () => {
 
   return (
     <div className="login" >
-      <Card className="text-center" >
+      <Card className="text-center" style={{minWidth: "500px"}} >
       <Card.Header>login</Card.Header>
       <Card.Body>
         <Form>
@@ -81,9 +79,6 @@ const Login = () => {
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
         <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
       </Form.Group>
       <Button variant="primary" type="submit" onClick={(e) => {
               login(e);
