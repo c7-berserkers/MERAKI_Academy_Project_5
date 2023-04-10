@@ -1,16 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 import axios from "axios";
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
 
-import {setLogin,setUserInfo,setLogout} from "../redux/reducers/auth/index";
+import {setLogin,setUserInfo,setLogout,setUserLikes} from "../redux/reducers/auth/index";
 import { useDispatch, useSelector } from "react-redux";
 
-
+import { Button, Container, Form, Alert, Card } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 //===============================================================
 
 const Login = () => {
@@ -33,67 +30,105 @@ const Login = () => {
   //===============================================================
 
   const login = async (e) => {
+    
     e.preventDefault();
+    console.log(e)
+    console.log(email,
+      password)
     try {
       const result = await axios.post("http://localhost:5000/users/login", {
         email,
         password,
       });
       if (result.data) {
+        console.log(result.data)
         setMessage("");
         dispatch(setLogin(result.data.token))
+        dispatch(setUserLikes(result.data.likes))
         dispatch(setUserInfo(result.data))
+        setStatus(false)
       } else throw Error;
     } catch (error) {
       if (error.response && error.response.data) {
+        setStatus(true)
         return setMessage(error.response.data.message);
       }
+      setStatus(true)
       setMessage("Error happened while Login, please try again");
     }
   };
 
   //===============================================================
 
-  // useEffect(() => {
-  //   if (state.isLoggedIn) {
-  //     navigate("/");
-  //   }
-  // });
+  useEffect(() => {
+    if (state.isLoggedIn) {
+      navigate("/");
+    }
+  });
 
   //===============================================================
-
+  
   return (
     <div className="login" >
-      <Card className="text-center" style={{minWidth: "500px"}} >
-      <Card.Header>login</Card.Header>
-      <Card.Body>
-        <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)}/>
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
-      </Form.Group>
-      <Button variant="primary" type="submit" onClick={(e) => {
+      <Container style={{minWidth: "400px"}}>
+        <Card style={{ padding: "10px" }}>
+          {" "}
+          <Container
+            style={{
+              padding: "10px 50px",
+              marginBottom: "10px",
+            }}
+          >
+            <Card.Title style={{ fontSize: "50px" }}>Sign In</Card.Title>
+          </Container>
+          <Form>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)}/>
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+            </Form.Group>
+            {status && <Alert variant="danger">{message}</Alert>}
+            <Button  type="submit"  onClick={(e) => {
               login(e);
             }}>
-        Submit
-      </Button>
-    </Form>
-      </Card.Body>
-      <Card.Footer className="text-muted">{status
-          ? message && <div className="SuccessMessage">{message}</div>
-          : message && <div className="ErrorMessage">{message}</div>}</Card.Footer>
-    </Card>
-    </div>
-    
+              Sign In
+            </Button>{" "}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "10px",
+              }}
+            >
+           
+            </div>
+            <Card.Text
+              style={{ fontSize: "15px", padding: "5px", margin: "5px" }}
+            >
+              Don't have an account ? <Link to="/register">Register</Link>
+            </Card.Text>
+          </Form>
+        </Card>
+      </Container>
+    </div>    
   );
 };
 
 export default Login;
+
+
+
+
+
+
+
+
+
+
+

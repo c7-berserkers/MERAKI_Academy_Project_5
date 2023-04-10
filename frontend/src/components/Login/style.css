@@ -1,9 +1,6 @@
 .login{
-    margin-top: 50px;
-   width: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-left: 30%;
+   width: 40%;
     
     
 }
@@ -16,3 +13,5 @@
     background-color: rgba(252, 7, 7, 0.714);
 
 }
+
+
