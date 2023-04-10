@@ -48,9 +48,9 @@ export default function Register() {
       errors.password = "A vialed strong password is required";
     }
     
-    if(!validator.isDate(age)){
+    if(isNaN(age)){
       
-      errors.age = "Date is required";
+      errors.age = "age in number is required";
     }
     if(!country){
       
@@ -66,6 +66,7 @@ export default function Register() {
     console.log(userData)
   }
 
+  const [done, setDone] = useState("")
   const submit = () => {
 
     const errors = validateData();  
@@ -73,9 +74,12 @@ export default function Register() {
       setErrors(errors);
       return;
     }
-        axios.post('http://localhost:5000/user/register', userData)
+        axios.post('http://localhost:5000/users/register', userData)
       .then(function (response) {
-        navigate("/Login")
+        console.log(response)
+        setDone("Account created successfully")
+        setTimeout(()=>{ navigate("/Login")},5000)
+        
       })
       .catch(function (error) {
         console.log(error);
@@ -95,24 +99,25 @@ export default function Register() {
     <input name="last_name"  className=''  onChange={handleChange} ></input><br/>
     <div style={{ color: "red" }}>{errors.last_name}</div>
     <label >age: </label>
-    <input name="age"  className='' onChange={handleChange}  ></input><br/>
+    <input name="age"  className='' onChange={handleChange} type="number" ></input><br/>
     <div style={{ color: "red" }}>{errors.age}</div>
     <label >country: </label>
     <input name="country"  className=''  onChange={handleChange} ></input><br/>
     <div style={{ color: "red" }}>{errors.country}</div>
     <label >Email: </label>
-    <input name="email"  className='' onChange={handleChange}  ></input><br/>
+    <input name="email"  className='' onChange={handleChange} type="email" ></input><br/>
     <div style={{ color: "red" }}>{errors.email}</div>
     <label >password: </label>
-    <input name="password"  className=''  onChange={handleChange} ></input><br/>
+    <input name="password"  className=''  onChange={handleChange} type="password" ></input><br/>
     <div style={{ color: "red" }}>{errors.password}</div>
-    <label >img: </label>
-    <input name="img"  className=''  onChange={handleChange} ></input><br/>
+
 
 
     <div>
     <Button variant="primary" className='' onClick={submit}  >submit</Button>
+    <div style={{ color: "green" }}>{done}</div>
     </div>
+
 
 
   </div>
