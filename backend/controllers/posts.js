@@ -1,7 +1,7 @@
 const { pool } = require("../models/db");
 
 const createNewPost = async (req, res) => {
-  const { img, description,tag_id } = req.body;
+  const { img, description, tag_id } = req.body;
   const user_id = req.token.userId;
 
   console.log(user_id);
@@ -10,7 +10,7 @@ const createNewPost = async (req, res) => {
         description,
         user_id,tag_id) VALUES ($1,$2,$3,$4) RETURNING *;`;
 
-  const data = [img, description, user_id,tag_id];
+  const data = [img, description, user_id, tag_id];
 
   pool
     .query(query, data)
@@ -107,6 +107,7 @@ const getPostById = (req, res) => {
     WHERE p.id=$1 AND p.is_deleted=0
     GROUP BY p.img ,p.description ,p.id;`;
 
+  const query_2 = `SELECT * FROM comments WHERE comments.post_id = $1`;
   const data = [id];
 
   pool
@@ -118,10 +119,13 @@ const getPostById = (req, res) => {
           message: `The post with id: ${id} is not found`,
         });
       } else {
-        res.status(200).json({
-          success: true,
-          message: `get the post with id: ${id} successfully`,
-          result: result.rows,
+        pool.query(query_2, data).then((comments) => {
+          res.status(200).json({
+            success: true,
+            message: `get the post with id: ${id} successfully`,
+            post: result.rows[0],
+            comments: comments.rows,
+          });
         });
       }
     })
@@ -200,9 +204,10 @@ const updatePostById = (req, res) => {
 const getPostsByTag = (req, res) => {
   const { tag } = req.params;
   const query = `
-  SELECT p.*
+  SELECT p.*, COUNT(l.posts_id) AS likes
 FROM posts p
 INNER JOIN tags t ON p.tag_id = t.id
+LEFT JOIN likes l ON p.id=l.posts_id
 WHERE t.tag = $1
 AND p.is_deleted = 0;
 `;
