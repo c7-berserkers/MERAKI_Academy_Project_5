@@ -14,7 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 export default function NavBar() {
   const navigate = useNavigate();
-
+  const accountFunc = () => console.log("x");
+  const logOutFunc = () => console.log("x");
   return (
     <>
       <Navbar
@@ -37,6 +38,23 @@ export default function NavBar() {
             /> */}
             <strong>LOGO</strong>
           </Navbar.Brand>
+          <>
+            {" "}
+            <Navbar.Toggle className="my-2" aria-controls="nav-menu" />
+            <Navbar.Collapse id="nav-menu">
+              <NavDropdown.Item onClick={accountFunc}>Account</NavDropdown.Item>
+              <NavDropdown.Item
+                onClick={(e) => {
+                  // navigate("/dashboard");
+                  console.log("x");
+                }}
+              >
+                Admin Dashboard
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={logOutFunc}>Sign out</NavDropdown.Item>
+            </Navbar.Collapse>
+          </>
         </Container>
       </Navbar>
     </>

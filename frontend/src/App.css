@@ -3,6 +3,11 @@
   margin: 0;
   box-sizing: border-box;
 }
+body::before {
+  display: block;
+  content: "";
+  height: 90px;
+}
 body {
   text-align: center;
   font-family: "Open Sans", sans-serif;
