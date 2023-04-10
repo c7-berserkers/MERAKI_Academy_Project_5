@@ -20,9 +20,11 @@ export const authSlice = createSlice({
       state.userId = payload.userId;
       state.role = payload.role;
       state.pfp = payload.pfp;
+      state.userName = payload.userName;
       localStorage.setItem("userId", state.userId);
       localStorage.setItem("role", state.role);
       localStorage.setItem("pfp", state.pfp);
+      localStorage.setItem("userName", payload.userName);
     },
     setUserLikes: (state, { payload }) => {
       state.userLikes = payload;
@@ -42,6 +44,7 @@ export const authSlice = createSlice({
       state.role = null;
       state.pfp = null;
       state.isLoggedIn = false;
+      state.userName = null;
       localStorage.clear();
     },
   },

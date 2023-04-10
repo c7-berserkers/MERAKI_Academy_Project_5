@@ -1,10 +1,11 @@
 import React from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import WelcomePage from "./components/WelcomePage";
+
 import Register from "./components/Register";
 import Login from "./components/Login";
 import NavBar from "./components/NavBar";
+import Home from "./components/Home";
 function App() {
   return (
     <>
@@ -14,7 +15,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <WelcomePage />
+              <Home />
             </>
           }
         />
