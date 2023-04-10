@@ -12,7 +12,6 @@ import {
   Col,
   Row,
   Card,
-  
 } from "react-bootstrap";
 
 
@@ -75,25 +74,33 @@ export default function Register() {
     console.log(userData)
   }
 
-  const [done, setDone] = useState("")
+  const [oneError, setOneError] = useState(false)
+  const [done, setDone] = useState(false)
 
 
-const [oneError, setOneError] = useState("")
 
   const submit = () => {
 
     const errors = validateData(); 
-     
+    
+    console.log(errors);
     if (Object.keys(errors).length) {
       setOneError(Object.values(errors)[0])
-      setErrors(oneError);
+        setErrors(oneError);
       return;
     }
         axios.post('http://localhost:5000/users/register', userData)
       .then(function (response) {
-        console.log(response)
+        console.log(response.data.message)
+        if(response.data.message=="Account created successfully"){
         setDone("Account created successfully")
-        // setTimeout(()=>{ navigate("/Login")},5000)
+        setOneError(false)
+        setTimeout(()=>{ navigate("/Login")},25000)
+        }
+        else{
+          setOneError("Email is already used")
+        }
+
         
       })
       .catch(function (error) {
@@ -104,46 +111,7 @@ const [oneError, setOneError] = useState("")
 
 
   return (<>
-  {/* <div>Register</div>
-  <div> 
 
-    <label >first_name: </label>
-    <input name="first_name"  className=''  onChange={handleChange} ></input><br/>
-    <div style={{ color: "red" }}>{errors.first_name}</div>
-    <label >last_name: </label>
-    <input name="last_name"  className=''  onChange={handleChange} ></input><br/>
-    <div style={{ color: "red" }}>{errors.last_name}</div>
-
-
-
-
-    <label >age: </label>
-    <input name="age"  className='' onChange={handleChange} type="number" ></input><br/>
-    <div style={{ color: "red" }}>{errors.age}</div>
-    <label >country: </label>
-    <input name="country"  className=''  onChange={handleChange} ></input><br/>
-    <div style={{ color: "red" }}>{errors.country}</div>
-
-
-
-    <label >Email: </label>
-    <input name="email"  className='' onChange={handleChange} type="email" ></input><br/>
-    <div style={{ color: "red" }}>{errors.email}</div>
-    <label >password: </label>
-    <input name="password"  className=''  onChange={handleChange} type="password" ></input><br/>
-    <div style={{ color: "red" }}>{errors.password}</div>
-
-
-
-    <div>
-    <Button variant="primary" className='' onClick={submit}  >submit</Button>
-    <div style={{ color: "green" }}>{done}</div>
-    </div>
-
-
-
-  </div>
- */}
 
   <div className="register">
       {" "}
@@ -210,8 +178,10 @@ const [oneError, setOneError] = useState("")
                 <Form.Control  placeholder="Qatar"   name="country"  className=''  onChange={handleChange} />
               </Form.Group>
             </Row>
-            {oneError?<Alert variant="danger">{oneError}</Alert>:<></>} 
+            {oneError?<Alert variant="danger">{oneError}</Alert>:<> </>} 
+            {done? <Alert key="success" variant="success">ssss</Alert>:<> </>} 
 
+            
             <Button variant="warning" type="submit">
             Register
             </Button>
