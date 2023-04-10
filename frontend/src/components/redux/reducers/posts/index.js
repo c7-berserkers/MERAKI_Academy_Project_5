@@ -23,9 +23,9 @@ export const postsSlice = createSlice({
       });
     },
     setComments: (state, { payload }) => {
-      state.posts = state.posts.map((article) => {
-        if (article.id === payload.article_id) {
-          article.comments = payload.comments;
+      state.posts = state.posts.map((post) => {
+        if (post.id === payload.post_id) {
+          post.comments = payload.comments;
         }
         return post;
       });
@@ -52,5 +52,5 @@ export const {
   deletePosts,
   setComments,
   addComment,
-} = articleSlice.actions;
+} = postsSlice.actions;
 export default postsSlice.reducer;
