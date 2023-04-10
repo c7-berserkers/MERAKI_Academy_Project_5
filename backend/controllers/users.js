@@ -71,12 +71,14 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const query = `SELECT users.id,users.first_name,users.country,users.password,users.email, users.img, roles.role,roles.id as role_id FROM users JOIN roles
   ON users.role_id = roles.id WHERE users.email=$1 ;`;
+  const query_2 = `SELECT * FROM likes WHERE user_id=$1;`;
   const placeHolders = [email.toLowerCase()];
   try {
     const { rows } = await pool.query(query, placeHolders);
     const isValid = await bcrypt.compare(password, rows[0].password);
     if (isValid) {
       const token = generateToken(rows);
+      const likes = await pool.query(query_2, [rows[0].id]);
       res.status(200).json({
         success: true,
         massage: "Valid login credentials",
@@ -85,6 +87,7 @@ const login = async (req, res) => {
         first_name: rows[0].first_name,
         img: rows[0].img,
         role: rows[0].role,
+        likes: likes.rows,
       });
     } else {
       res.status(403).json({
