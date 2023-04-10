@@ -1,11 +1,14 @@
+import React from "react";
 import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import WelcomePage from "./components/WelcomePage";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Project 4 </h1>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+      </Routes>
+    </>
   );
 }
 
