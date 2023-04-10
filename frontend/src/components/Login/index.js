@@ -46,8 +46,10 @@ const Login = () => {
       } else throw Error;
     } catch (error) {
       if (error.response && error.response.data) {
+        setStatus(true)
         return setMessage(error.response.data.message);
       }
+      setStatus(true)
       setMessage("Error happened while Login, please try again");
     }
   };
@@ -61,11 +63,11 @@ const Login = () => {
   // });
 
   //===============================================================
-
+  
   return (
     <div className="login" >
       <Card className="text-center" style={{minWidth: "500px"}} >
-      <Card.Header>login</Card.Header>
+      <Card.Header style={{ fontSize: "50px" }} >login</Card.Header>
       <Card.Body>
         <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -80,16 +82,14 @@ const Login = () => {
         <Form.Label>Password</Form.Label>
         <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
       </Form.Group>
-      <Button variant="primary" type="submit" onClick={(e) => {
+      <Button variant={status?"danger":"primary"} type="submit" onClick={(e) => {
               login(e);
             }}>
         Submit
       </Button>
     </Form>
       </Card.Body>
-      <Card.Footer className="text-muted">{status
-          ? message && <div className="SuccessMessage">{message}</div>
-          : message && <div className="ErrorMessage">{message}</div>}</Card.Footer>
+      {status? <Card.Footer className="text-muted">{status? message && <div className="ErrorMessage">{message}</div>:message &&""}</Card.Footer>:""}
     </Card>
     </div>
     
