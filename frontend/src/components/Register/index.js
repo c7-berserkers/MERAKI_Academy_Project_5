@@ -16,7 +16,7 @@ export default function Register() {
     country: undefined,
     email: undefined,
     password: undefined,
-    img: undefined,
+    img: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg" ,
     role_id: "1",
   }
 
@@ -27,7 +27,7 @@ export default function Register() {
   
   const validateData = () => {
     let errors = {};
-
+    console.log(first_name, last_name, age, country ,email, password, img)
     if(!first_name){
       
       errors.first_name = "first name is required";
@@ -52,15 +52,29 @@ export default function Register() {
     }
     if(!country){
       
-      errors.first_name = "first name is required";
+      errors.country = "country is required";
     }
-    if(!validator.isURL(img)){
-      errors.urlMyPhoto = "Url is required";
-    }
+    
     return errors
   }
 
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setUserData((preData) => ({ ...preData, [name]: value }))
+    console.log(userData)
+  }
 
+  const submit = () => {
+
+    const errors = validateData();  
+    if (Object.keys(errors).length) {
+      setErrors(errors);
+      return;
+    }
+
+
+    }
+    
 
 
   return (<>
@@ -68,21 +82,32 @@ export default function Register() {
   <div> 
 
     <label >first_name: </label>
-    <input name="first_name"  className=''  ></input><br/>
+    <input name="first_name"  className=''  onChange={handleChange} ></input><br/>
+    <div style={{ color: "red" }}>{errors.first_name}</div>
     <label >last_name: </label>
-    <input name="last_name"  className=''  ></input><br/>
+    <input name="last_name"  className=''  onChange={handleChange} ></input><br/>
+    <div style={{ color: "red" }}>{errors.last_name}</div>
     <label >age: </label>
-    <input name="age"  className=''  ></input><br/>
+    <input name="age"  className='' onChange={handleChange}  ></input><br/>
+    <div style={{ color: "red" }}>{errors.age}</div>
     <label >country: </label>
-    <input name="country"  className=''  ></input><br/>
+    <input name="country"  className=''  onChange={handleChange} ></input><br/>
+    <div style={{ color: "red" }}>{errors.country}</div>
     <label >Email: </label>
-    <input name="email"  className=''  ></input><br/>
+    <input name="email"  className='' onChange={handleChange}  ></input><br/>
+    <div style={{ color: "red" }}>{errors.email}</div>
     <label >password: </label>
-    <input name="password"  className=''  ></input><br/>
+    <input name="password"  className=''  onChange={handleChange} ></input><br/>
+    <div style={{ color: "red" }}>{errors.password}</div>
     <label >img: </label>
-    <input name="img"  className=''  ></input><br/>
-    <Button variant="primary" className='' >submit</Button>
-  
+    <input name="img"  className=''  onChange={handleChange} ></input><br/>
+
+
+    <div>
+    <Button variant="primary" className='' onClick={submit}  >submit</Button>
+    </div>
+
+
   </div>
 
   </>);
