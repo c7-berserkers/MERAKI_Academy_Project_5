@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 
-import {setLogin,setUserInfo,setLogout} from "../redux/reducers/auth/index";
+import {setLogin,setUserInfo,setLogout,setUserLikes} from "../redux/reducers/auth/index";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -40,8 +40,10 @@ const Login = () => {
         password,
       });
       if (result.data) {
+        console.log(result.data)
         setMessage("");
         dispatch(setLogin(result.data.token))
+        dispatch(setUserLikes(result.data.likes))
         dispatch(setUserInfo(result.data))
       } else throw Error;
     } catch (error) {
