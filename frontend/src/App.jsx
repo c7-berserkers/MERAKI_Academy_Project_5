@@ -6,6 +6,8 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
+import Profile from "./components/Profile";
+
 function App() {
   return (
     <>
@@ -21,6 +23,7 @@ function App() {
         />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/Profile" element={<Profile />} />
       </Routes>
     </>
   );
