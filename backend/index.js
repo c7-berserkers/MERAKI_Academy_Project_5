@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const socket = require("socket.io");
 require("dotenv").config();
 require("./models/db");
 
@@ -14,7 +15,6 @@ const commentRouter = require("./routes/comments");
 const tagRouter = require("./routes/tags");
 const likeRouter = require("./routes/likes");
 const chatAndMessageRouter = require("./routes/chatAndMessage");
-
 
 app.use(cors());
 app.use(express.json());
@@ -31,6 +31,23 @@ app.use("/chats", chatAndMessageRouter);
 // Handles any other endpoints [unassigned - endpoints]
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
+});
+
+const io = socket(server, { cors: { origin: "*" } });
+io.on("CONNECTION", (socket) => {
+  console.log(`${socket} is connected`);
+
+  socket.on(`JOIN_ROOM`, (data) => {
+    console.log(data);
+    socket.join(data);
+  });
+  socket.on("SEND_MESSAGE", (data) => {
+    console.log(data);
+    socket.to(data.room).emit("RECEIVE_MESSAGE", data.content);
+  });
+  socket.on("disconnect", () => {
+    console.log(`User left...`);
+  });
 });
