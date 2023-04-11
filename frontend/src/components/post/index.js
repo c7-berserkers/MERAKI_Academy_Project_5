@@ -27,23 +27,31 @@ const Post = () => {
 
   //===============================================================
 
-  useEffect( async()=>{
+  const postFunction = async () => {
     try {
-      const result = await axios.post("http://localhost:5000/posts/post/2");
-      if (result.data) {
+      const result = await axios.get("http://localhost:5000/posts/2", {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      if (result.data.success) {
         console.log(result.data)
-        setMessage("")
+        setMessage("");
         setStatus(false)
       } else throw Error;
     } catch (error) {
-      if (error.response && error.response.data) {
+      if (!error.response.data.success) {
         setStatus(true)
         return setMessage(error.response.data.message);
       }
       setStatus(true)
-      setMessage("Error happened while Login, please try again");
+      setMessage("Error happened while Get Data, please try again");
     }
-  },[])
+  };
+
+
+
+  useEffect( postFunction(),[])
     
 
   //===============================================================
