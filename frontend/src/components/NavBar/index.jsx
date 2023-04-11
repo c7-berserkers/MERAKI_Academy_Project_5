@@ -1,4 +1,19 @@
 import React, { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
+
+import { MdAdminPanelSettings } from "react-icons/md";
+
 import {
   Button,
   NavDropdown,
@@ -16,13 +31,24 @@ export default function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const accountFunc = () => console.log("x");
-  const logOutFunc = (e) => {
-    e.preventDefault();
+  const logOutFunc = () => {
     dispatch(setLogout());
     navigate("/login");
   };
-  const { userName, role, isLoggedIn } = useSelector((state) => {
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const { userName, role, isLoggedIn, userId, pfp } = useSelector((state) => {
     return {
+      userId: state.auth.userId,
+      pfp: state.auth.pfp,
       userName: state.auth.userName,
       isLoggedIn: state.auth.isLoggedIn,
       role: state.auth.role,
@@ -54,65 +80,113 @@ export default function NavBar() {
             /> */}
             <strong>LOGO</strong>
           </Navbar.Brand>{" "}
-          <Navbar.Toggle className="my-2" aria-controls="nav-menu" />
-          <Navbar.Collapse id="nav-menu">
-            <Nav className="ms-auto">
-              <Form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (e.target[0].value !== "") {
-                    navigate(`/search/${e.target[0].value}`);
-                  }
-                }}
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (e.target[0].value !== "") {
+                navigate(`/search/${e.target[0].value}`);
+              }
+            }}
+          >
+            <InputGroup className="mb-auto">
+              <Form.Control
+                placeholder="Search"
+                aria-label="Search"
+                aria-describedby="basic-addon2"
+              />
+              <Button
+                type="submit"
+                variant="outline-secondary"
+                id="button-addon2"
               >
-                <InputGroup className="mb-auto">
-                  <Form.Control
-                    placeholder="Search"
-                    aria-label="Search"
-                    aria-describedby="basic-addon2"
-                  />
-                  <Button
-                    type="submit"
-                    variant="outline-secondary"
-                    id="button-addon2"
-                  >
-                    <BsSearch style={{ marginBottom: "2px" }} />
-                  </Button>
-                </InputGroup>
-              </Form>
-              <NavDropdown
-                title={userName || "UserName"}
-                id="basic-nav-dropdown"
-              >
-                <NavDropdown.Item onClick={accountFunc}>
-                  Profile
-                </NavDropdown.Item>
-                {role === "admin" && (
-                  <NavDropdown.Item
-                    onClick={(e) => {
-                      navigate("/dashboard");
-                      console.log("x");
-                    }}
-                  >
-                    Admin Dashboard
-                  </NavDropdown.Item>
-                )}
+                <BsSearch style={{ marginBottom: "2px" }} />
+              </Button>
+            </InputGroup>
+          </Form>
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <Avatar src={pfp} sx={{ width: 32, height: 32 }}></Avatar>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem
+              onClick={() => {
+                navigate(`profile/${userId}`);
+                handleClose();
+              }}
+            >
+              <Avatar src={pfp} /> Profile
+            </MenuItem>
 
-                <NavDropdown.Item
-                  onClick={(e) => {
-                    // navigate("/profile");
-                    console.log("x");
-                  }}
-                >
-                  Account Settings
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={logOutFunc}>
-                  Sign out
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
+            <Divider />
+            {role === "admin" && (
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <MdAdminPanelSettings fontSize="x-large" />
+                </ListItemIcon>
+                Dashboard
+              </MenuItem>
+            )}
+
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                logOutFunc();
+                handleClose();
+              }}
+            >
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Menu>
         </Container>
       </Navbar>
     </>

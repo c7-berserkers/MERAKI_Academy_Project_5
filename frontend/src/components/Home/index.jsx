@@ -18,12 +18,14 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../redux/reducers/posts";
 
+import { MdComment } from "react-icons/md";
+
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  transform: !expand ? "rotate(0deg)" : "rotate(0deg)",
   marginLeft: "auto",
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
@@ -115,7 +117,7 @@ export default function Home() {
                     aria-expanded={expanded}
                     aria-label="show more"
                   >
-                    <ExpandMoreIcon />
+                    <MdComment />
                   </ExpandMore>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
