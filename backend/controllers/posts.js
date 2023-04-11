@@ -32,9 +32,22 @@ const createNewPost = async (req, res) => {
 };
 
 const getAllPost = async (req, res) => {
-  const query = `SELECT p.id,p.img ,p.description,COUNT(l.posts_id) AS likes FROM posts p
-    LEFT JOIN likes l ON p.id=l.posts_id
-    GROUP BY p.img ,p.description ,p.id ; `;
+  const query = `SELECT 
+  posts.*, 
+  COUNT(likes.id) AS likes_count, 
+  users.img AS user_img, 
+  users.first_name AS user_first_name 
+FROM 
+  posts 
+  LEFT JOIN likes ON posts.id = likes.posts_id 
+  LEFT JOIN users ON posts.user_id = users.id 
+GROUP BY 
+  posts.id, 
+  users.img, 
+  users.first_name 
+ORDER BY 
+  posts.created_at DESC;
+`;
 
   pool
     .query(query)
