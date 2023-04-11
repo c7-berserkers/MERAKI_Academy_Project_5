@@ -22,6 +22,30 @@ function App() {
             </>
           }
         />
+        {/* <Route
+          path="/post/:id"
+          element={
+            <>
+              <NavBar />
+            </>
+          }
+        />
+         <Route
+          path="/profile/:id"
+          element={
+            <>
+              <NavBar />
+            </>
+          }
+        />
+        <Route
+          path="/user/:id"
+          element={
+            <>
+              <NavBar />
+            </>
+          }
+        /> */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
