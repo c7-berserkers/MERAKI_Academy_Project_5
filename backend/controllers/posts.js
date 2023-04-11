@@ -102,10 +102,11 @@ const getPostById = (req, res) => {
   console.log(id);
 
   const query = `
-    SELECT p.id,p.img ,p.description,COUNT(l.posts_id) AS likes FROM posts p
-    LEFT JOIN likes l ON p.id=l.posts_id
-    WHERE p.id=$1 AND p.is_deleted=0
-    GROUP BY p.img ,p.description ,p.id;`;
+  SELECT u.first_name,u.img,p.id,p.img ,p.description,COUNT(l.posts_id) AS likes FROM posts p
+  LEFT JOIN likes l ON p.id=l.posts_id
+  LEFT JOIN users u ON p.user_id=u.id
+  WHERE p.id=$1 AND p.is_deleted=0
+  GROUP BY p.img ,p.description ,p.id,u.first_name,u.img;`;
 
   const query_2 = `SELECT * FROM comments WHERE comments.post_id = $1`;
   const data = [id];
