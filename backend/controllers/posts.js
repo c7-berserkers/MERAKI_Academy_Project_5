@@ -121,7 +121,10 @@ const getPostById = (req, res) => {
   WHERE p.id=$1 AND p.is_deleted=0
   GROUP BY p.img ,p.description ,p.id,u.first_name,u.img;`;
 
-  const query_2 = `SELECT * FROM comments WHERE comments.post_id = $1`;
+  const query_2 = `SELECT c.id,c.comment,c.post_id,c.created_at,u.first_name,u.img FROM comments c
+  LEFT JOIN users u ON c.user_id=u.id
+  WHERE post_id=$1
+  ORDER BY created_at DESC  ;`;
   const data = [id];
 
   pool

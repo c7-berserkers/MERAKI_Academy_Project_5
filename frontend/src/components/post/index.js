@@ -112,11 +112,11 @@ const Post = () => {
 
     return comments.length>0? comments.map((e,i)=>{
         return (
-        <Card sx={{ minWidth: 275 }}>
+        <Card key={e.id} sx={{ minWidth: 275 }}>
         <CardContent>
         <CardActions>
-        <Avatar alt="Remy Sharp" src={post.user_img} />
-          <Button size="small">{e.user_id}</Button>
+        <Avatar alt="Remy Sharp" src={e.user_img} />
+          <Button size="small">{e.first_name}</Button>
         </CardActions>
         <Typography variant="body2">
           {e.comment}
