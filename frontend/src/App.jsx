@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
+import Post from "./components/post";
 import Profile from "./components/Profile";
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
         />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/post" element={<Post />} />
         <Route path="/Profile" element={<Profile />} />
       </Routes>
     </>
