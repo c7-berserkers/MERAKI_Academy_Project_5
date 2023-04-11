@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import "./style.css";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, Form, Alert, Card } from "react-bootstrap";
@@ -30,7 +29,7 @@ const Post = () => {
 
   useEffect( async()=>{
     try {
-      const result = await axios.post("http://localhost:5000/users/login");
+      const result = await axios.post("http://localhost:5000/posts/post/2");
       if (result.data) {
         console.log(result.data)
         setMessage("")
