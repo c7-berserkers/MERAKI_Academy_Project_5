@@ -3,13 +3,13 @@ import axios from 'axios';
 import "./index.css"
 
 export default function Profile() {
-
+    const BACKEND = process.env.REACT_APP_BACKEND;
     const [dataUser, setDataUser] = useState(undefined)
     const [dataUserPost, setDataUserPost] = useState(undefined)
 
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/users/${localStorage.getItem("userId")}`, {
+        axios.get(`${BACKEND}/${localStorage.getItem("userId")}`, {
             headers: {
                 'Authorization': `${localStorage.getItem("userId")}`
             }
