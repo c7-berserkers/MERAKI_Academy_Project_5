@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import Post from "./components/post";
 import Profile from "./components/Profile";
 
+
 function App() {
   return (
     <>
@@ -30,14 +31,7 @@ function App() {
             </>
           }
         />
-         <Route
-          path="/profile/:id"
-          element={
-            <>
-              <NavBar />
-            </>
-          }
-        />
+        
         <Route
           path="/user/:id"
           element={
@@ -48,9 +42,8 @@ function App() {
         /> */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-
         <Route path="/post" element={<Post />} />
-        <Route path="/Profile" element={<Profile />} />
+        <Route path="/Profile/:id" element={<>  <NavBar /> <Profile /> </>} />
       </Routes>
     </>
   );

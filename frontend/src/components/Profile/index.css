@@ -1,7 +1,7 @@
 
 .flex {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     margin: 0px 110px;
 }
 
@@ -10,7 +10,7 @@
     /* margin-top: 35px; */
     width: 200px;
     height: 200px;
-    border-radius: 50%;
+    border-radius: 55%;
     background-size: cover;
 }
 
@@ -69,4 +69,21 @@
     font-size: 17px;
 }
 
+.userData{
+    margin-left: 70px;
+    padding-top: 60px;
+    display: grid;
+    flex-direction: column;
+    align-content: space-evenly;
+    justify-content: start;
+    align-items: end;
+}
 
+
+@media screen and (max-width: 818px) {
+    #wrapper{
+
+        margin-left: 120px;
+    }
+    
+  }
