@@ -75,7 +75,7 @@ export default function Home() {
         <Container>
           {posts.map((post) => {
             return (
-              <Card key={post.id} style={{ margin: "10px 0" }}>
+              <Card key={post.id} sx={{ margin: "10px 0" }}>
                 <CardHeader
                   avatar={
                     <Avatar
@@ -90,8 +90,9 @@ export default function Home() {
                     </IconButton>
                   }
                   title={post.user_first_name}
-                  // subheader="September 14, 2016"
+                  subheader={post.created_at}
                 />
+
                 <CardMedia
                   component="img"
                   // height="194"
