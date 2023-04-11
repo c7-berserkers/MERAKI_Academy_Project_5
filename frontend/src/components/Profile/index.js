@@ -3,13 +3,13 @@ import axios from 'axios';
 import "./index.css"
 
 export default function Profile() {
-    const BACKEND = process.env.REACT_APP_BACKEND;
+
     const [dataUser, setDataUser] = useState(undefined)
     const [dataUserPost, setDataUserPost] = useState(undefined)
 
 
     useEffect(() => {
-        axios.get(`${BACKEND}/${localStorage.getItem("userId")}`, {
+        axios.get(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, {
             headers: {
                 'Authorization': `${localStorage.getItem("userId")}`
             }
@@ -38,10 +38,16 @@ export default function Profile() {
                     <div id="wrapper">
                         <div id="image_div">
                             <p className="img_wrapper">
-                                <img className="MyProfileImg" src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?cs=srgb&dl=pexels-mohamed-abdelghaffar-771742.jpg&fm=jpg" alt="no photo found" />
+                                <img className="MyProfileImg" src={dataUser.img}/>
                                 <span><input onClick={() => {}} type="button" value="+" /></span>
                             </p>
                         </div>
+                    </div>
+                    <div className="userData">
+                    <h3> Name : {dataUser.first_name}  {dataUser.last_name}  </h3>
+                    <h3>Email : {dataUser.email}</h3>
+                    <h3>Age : {dataUser.age}</h3>
+                    <h3>Country : {dataUser.country}</h3>
                     </div>
                 </div>
             </> : <p>noData</p>}
