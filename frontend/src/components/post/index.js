@@ -20,6 +20,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -32,6 +34,16 @@ const ExpandMore = styled((props) => {
     }),
   }));
 
+  
+
+const bull = (
+  <Box
+    component="span"
+    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
+  >
+    •
+  </Box>
+);
 
 //===============================================================
 
@@ -67,7 +79,7 @@ const Post = () => {
 
   //===============================================================
 
-  const postFunction = async () => {
+  const getPostFunction = async () => {
     try {
       const result = await axios.get("http://localhost:5000/posts/2", {
         headers: {
@@ -93,19 +105,42 @@ const Post = () => {
 
   //===============================================================
 
-   useEffect( ()=>{postFunction()},[])
+   useEffect( ()=>{getPostFunction()},[])
+
+  //===============================================================
+ const commentFunction= ()=>{
+
+    return comments.length>0? comments.map((e,i)=>{
+        return (
+        <Card sx={{ minWidth: 275 }}>
+        <CardContent>
+        <CardActions>
+        <Avatar alt="Remy Sharp" src={post.user_img} />
+          <Button size="small">{e.user_id}</Button>
+        </CardActions>
+        <Typography variant="body2">
+          {e.comment}
+          </Typography>
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          {e.created_at}
+          </Typography>
+        </CardContent>
+      </Card>
+        )
+    }):<p>no comment yet</p>
+ }
 
   //===============================================================
   
   return (
-    <div className="login" >
+    <div className="post" >
       <Container>
        
-    <Card sx={{ maxWidth: 345 }}>
+    <Card>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+            <Avatar alt="Remy Sharp" src={post.user_img} />
           </Avatar>
         }
         action={
@@ -113,20 +148,17 @@ const Post = () => {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Shrimp and Chorizo Paella"
+        title={post.first_name}
         subheader="September 14, 2016"
       />
       <CardMedia
         component="img"
         height="194"
-        image="/static/images/cards/paella.jpg"
-        alt="Paella dish"
+        image={post.img}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+          {post.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -147,31 +179,8 @@ const Post = () => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-            aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-            large plate and set aside, leaving chicken and chorizo in the pan. Add
-            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-            stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is absorbed,
-            15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-            mussels, tucking them down into the rice, and cook again without
-            stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don&apos;t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
+          <Typography paragraph>comment:</Typography>
+          {commentFunction()}
         </CardContent>
       </Collapse>
     </Card>
