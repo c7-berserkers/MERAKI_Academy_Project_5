@@ -92,8 +92,8 @@ export default function Register() {
     }
         axios.post('http://localhost:5000/users/register', userData)
       .then(function (response) {
-        console.log(response.data.message)
-        if(response.data.message=="Account created successfully"){
+        console.log(response.data)
+        if(response.data.success){
         setDone("Account created successfully")
         setOneError(false)
         setTimeout(()=>{ navigate("/Login")},3000)
@@ -106,6 +106,7 @@ export default function Register() {
       })
       .catch(function (error) {
         console.log(error);
+        setOneError("Email is already used")
       });
     }
     
