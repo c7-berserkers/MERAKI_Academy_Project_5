@@ -50,7 +50,10 @@ const createComment = (req, res) => {
         const getAllCommentForPostComment = (req, res) => {
             const {id} = req.params;
             const data = [id];
-            const query = `SELECT * FROM comments WHERE post_id=$1 ORDER BY created_at DESC  ;`;       
+            const query = `SELECT c.id,c.comment,c.post_id,c.created_at,u.first_name,u.img FROM comments c
+            LEFT JOIN users u ON c.user_id=u.id
+            WHERE post_id=$1
+            ORDER BY created_at DESC  ;`;       
             pool.query(query, data)
                 .then((result) => {
 
