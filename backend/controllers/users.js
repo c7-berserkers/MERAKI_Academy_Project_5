@@ -109,6 +109,7 @@ const getUserById = (req, res) => {
   const query = `SELECT 
   u.id, 
   u.first_name, 
+  u.img,
   u.last_name, 
   u.age, 
   u.country, 
