@@ -118,10 +118,10 @@ const getPostForUser = (req, res) => {
 
   const query = `
   SELECT 
-  p.id as post_id, 
-  p.img as post_img, 
-  p.description as post_description, 
-  p.created_at as post_created_at, 
+  p.id as id, 
+  p.img as img, 
+  p.description as description, 
+  p.created_at as created_at, 
   u.id as user_id, 
   u.img as user_img, 
   u.first_name as user_first_name, 
@@ -135,8 +135,8 @@ WHERE
   f.following_user_id = $1 AND p.is_deleted = 0 AND u.is_deleted = 0 
 GROUP BY 
   p.id, 
-  u.id;
-
+  u.id
+  ORDER BY created_at DESC;
 `;
   const data = [user_id];
 

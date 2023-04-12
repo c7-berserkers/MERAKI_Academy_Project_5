@@ -24,9 +24,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ImageIcon from "@mui/icons-material/Image";
-import WorkIcon from "@mui/icons-material/Work";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import Form from "react-bootstrap/Form";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -43,7 +41,6 @@ const ExpandMore = styled((props) => {
 export default function Home() {
   const dispatch = useDispatch();
   const ref = useRef(null);
-  const [comment, setComment] = useState("");
 
   const { token, posts, pfp, userId } = useSelector((state) => {
     return {
@@ -87,7 +84,7 @@ export default function Home() {
             post_id: id,
           })
         );
-      }
+      } else throw Error;
     } catch (err) {
       console.log(err.response.data.message);
     }
@@ -107,9 +104,6 @@ export default function Home() {
     getPosts();
   }, []);
 
-  const funTest = () => {
-    ref.current.value = "";
-  };
   return (
     <div>
       {" "}
@@ -118,7 +112,7 @@ export default function Home() {
         <Container>
           {posts.map((post) => {
             return (
-              <Card key={post.post_id} sx={{ margin: "10px 0" }}>
+              <Card key={post.id} sx={{ margin: "10px 0" }}>
                 <CardHeader
                   avatar={
                     <Avatar
@@ -133,18 +127,18 @@ export default function Home() {
                     </IconButton>
                   }
                   title={post.user_first_name}
-                  subheader={post.post_created_at}
+                  subheader={post.created_at}
                 />
 
                 <CardMedia
                   component="img"
                   // height="194"
-                  image={post.post_img}
+                  image={post.img}
                   alt="post"
                 />
                 <CardContent>
                   <Typography variant="body2" color="text.secondary">
-                    {post.post_description}
+                    {post.description}
                   </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
@@ -153,16 +147,16 @@ export default function Home() {
                   </IconButton>
 
                   <ExpandMore
-                    expand={expanded === post.post_id}
-                    onClick={handleExpandClick(post.post_id)}
-                    aria-expanded={expanded === post.post_id}
+                    expand={expanded === post.id}
+                    onClick={handleExpandClick(post.id)}
+                    aria-expanded={expanded === post.id}
                     aria-label="show more"
                   >
                     <MdComment />
                   </ExpandMore>
                 </CardActions>
                 <Collapse
-                  in={expanded === post.post_id}
+                  in={expanded === post.id}
                   timeout="auto"
                   unmountOnExit
                 >
@@ -173,52 +167,67 @@ export default function Home() {
                         alt="user"
                         src={pfp}
                       />
-                      <TextField
-                        ref={ref}
-                        onChange={(e) => {
-                          setComment(e.target.value);
+                      <Form
+                        style={{ display: "flex", width: "100%" }}
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          try {
+                            const result = await axios.post(
+                              `${BACKEND}/comments/${post.id}`,
+                              { comment: e.target[0].value },
+                              {
+                                headers: { Authorization: `Bearer ${token}` },
+                              }
+                            );
+                            if (result.data.success) {
+                              console.log(result.data.result);
+                            } else throw Error;
+                          } catch (err) {
+                            console.log(err);
+                          }
                         }}
-                        style={{ margin: "0 10px", width: "85%" }}
-                        id="outlined-basic"
-                        label="Add a comment..."
-                        variant="outlined"
-                      />
-                      <Button
-                        onClick={funTest}
-                        variant="contained"
-                        endIcon={<SendIcon />}
                       >
-                        Send
-                      </Button>
+                        <Form.Control
+                          style={{ margin: "0 10px", width: "95%" }}
+                          type="text"
+                          placeholder="Add a comment.."
+                        />
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          endIcon={<SendIcon />}
+                        >
+                          Send
+                        </Button>
+                      </Form>
                     </div>
                     <div>
-                      {post.comments ? (
-                        <List
-                          sx={{
-                            width: "100%",
-                            maxWidth: 360,
-                            bgcolor: "background.paper",
-                          }}
-                        >
-                          {post.comments.map((comment) => {
+                      {" "}
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxWidth: 360,
+                          bgcolor: "background.paper",
+                        }}
+                      >
+                        {post.comments ? (
+                          post.comments.map((comment) => {
                             return (
-                              <ListItem>
+                              <ListItem key={comment.id}>
                                 <ListItemAvatar>
                                   <Avatar src={comment.img} />
                                 </ListItemAvatar>
                                 <ListItemText
                                   primary={comment.comment}
-                                  secondary={comment.created_at}
+                                  secondary={`By ${comment.first_name}`}
                                 />
                               </ListItem>
                             );
-                          })}
-                        </List>
-                      ) : (
-                        <>
-                          <h4>No comments Yet</h4>
-                        </>
-                      )}
+                          })
+                        ) : (
+                          <></>
+                        )}
+                      </List>
                     </div>
                   </CardContent>
                 </Collapse>
