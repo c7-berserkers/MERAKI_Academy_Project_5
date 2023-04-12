@@ -30,28 +30,24 @@ const Popup_Comment_Edit = (props) => {
   //===============================================================
 
     const updateComment = async(e) => {
-        console.log(e.target.value)
-        console.log(comment)
-        console.log(addComment)
-        // try {
-        //   const result = await axios.delete(`http://localhost:5000/comments/${e.target.value}`,{
-        //     headers: {
-        //       Authorization: `Bearer ${state.token}`,
-        //     },
-        //   });
-        //   if (result.data.success) {
-        //     console.log(result.data)
-        //     setMessage("");
-        //     setStatus(false)
-        //   } else throw Error;
-        // } catch (error) {
-        //   if (!error.response.data.success) {
-        //     setStatus(true)
-        //     return setMessage(error.response.data.message);
-        //   }
-        //   setStatus(true)
-        //   setMessage("Error happened while delete Comment, please try again");
-        // }
+        try {
+          const result = await axios.put(`http://localhost:5000/comments/${e.target.value}`,{comment:addComment},{
+            headers: {
+              Authorization: `Bearer ${state.token}`,
+            },
+          });
+          if (result.data.success) {
+            setMessage("");
+            setStatus(false)
+          } else throw Error;
+        } catch (error) {
+          if (!error.response.data.success) {
+            setStatus(true)
+            return setMessage(error.response.data.message);
+          }
+          setStatus(true)
+          setMessage("Error happened while update Comment, please try again");
+        }
     }
 
   //===============================================================
@@ -79,11 +75,11 @@ const Popup_Comment_Edit = (props) => {
                     </div>
                     <Button className="shadowButton" onClick={props.onHide}>Close</Button>
                 </Modal.Footer>
-            </Modal>
-            
+                
         <Container>
                   {status && <Alert variant="danger">{message}</Alert>}
         </Container>
+            </Modal>
         </div>
     )
 }
