@@ -15,7 +15,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../redux/reducers/posts";
+import { setPosts, setComments } from "../redux/reducers/posts";
 import TextField from "@mui/material/TextField";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
@@ -37,7 +37,6 @@ export default function Home() {
   const dispatch = useDispatch();
 
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
 
   const { token, posts, pfp } = useSelector((state) => {
     return {
@@ -74,6 +73,12 @@ export default function Home() {
       if (result.data.success) {
         const comments = result.data.result;
         console.log(comments);
+        dispatch(
+          setComments({
+            comments,
+            post_id: id,
+          })
+        );
       }
     } catch (err) {
       console.log(err.response.data.message);
