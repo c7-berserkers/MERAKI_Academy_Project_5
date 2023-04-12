@@ -1,25 +1,77 @@
 import Button from 'react-bootstrap/Button';
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-import "./popup.css"
+import "./style.css"
+import validator from 'validator';
+//===============================================================
+
+
+import { useDispatch  } from "react-redux";
+import { updateUserImage} from "../../redux/reducers/profile/index";
+
+//=========================posts======================================
 
 const Popup_Image_Edit = (props) => {
+
+        //===============================================================
+
+        const dispatch = useDispatch();
+
+        //===============================================================
     
 
-  //===============================================================
+    let TestValue = {
+        img: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
+    }
+
+    const [userData, setUserData] = useState(TestValue)
+    const { img } = userData
+
+    const [errors, setErrors] = useState({})
+
+
+    const validateData = () => {
+        let errors = {};
+        if (!validator.isURL(img)) {
+        errors.img = "Url is required";
+        }
+        return errors
+    }
+
+
+    //===============================================================
     const handleChange = (e) => {
         const { name, value } = e.target
-        // setUser((preData) => ({ ...preData, [name]: value }))
+        setUserData((preData) => ({ ...preData, [name]: value }))
     }
-  //===============================================================
+    //===============================================================
 
     const add_image = () => {
+        const errors = validateData();
+        if (Object.keys(errors).length) {
+            setErrors(errors);
+            return;
+        }
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`,userData, {
+            headers: {
+                'Authorization': `${localStorage.getItem("userId")}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data.user.img, "my data")
+                dispatch(updateUserImage(response.data.user.img))
+
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
-  //===============================================================
+    //===============================================================
 
     return (
         <div>

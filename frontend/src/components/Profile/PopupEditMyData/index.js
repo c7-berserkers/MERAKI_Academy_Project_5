@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import validator from 'validator';
-import "./index.css";
+import "./style.css";
 import axios from 'axios';
 
 const Popup_Edit_Data = (props) => {
