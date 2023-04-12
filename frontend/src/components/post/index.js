@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { Container } from "react-bootstrap";
+import { Container,Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 
@@ -26,6 +26,8 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
+import TextField from "@mui/material/TextField";
+import Popup_Comment_Edit from './PopupUpdatePost/index'
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -38,7 +40,7 @@ const ExpandMore = styled((props) => {
     }),
   }));
 
-  
+   
 
 const bull = (
   <Box
@@ -52,6 +54,9 @@ const bull = (
 //===============================================================
 
 const Post = () => {
+
+  const [modalShowEditPopup, setModalShowEditPopup] = useState(false)
+ 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -62,6 +67,7 @@ const Post = () => {
         userId: state.auth.userId,
         token: state.auth.token,
         userLikes: state.auth.userLikes,
+        pfp: state.auth.pfp,
         
       };
     });
@@ -116,6 +122,7 @@ const Post = () => {
 
     return comments.length>0? comments.map((e,i)=>{
         return (
+          <div key={e.id}>
         <Card key={e.id} sx={{ minWidth: 275 }}>
         <CardContent>
         <CardActions>
@@ -128,20 +135,30 @@ const Post = () => {
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {e.created_at}
           </Typography>
-          {e.user_id == state.userId?<Button variant="outlined" startIcon={<DeleteIcon />}onClick={(e) => {
+          {e.user_id == state.userId?
+          <Stack direction="row" spacing={2}>
+      <Button value={e.id} variant="outlined" onClick={(e) => {
               deleteCommentFunction(e);
-            }} value={e.id}>
-  Delete
-</Button>:""}
+            }} startIcon={<DeleteIcon />}>Delete</Button>
+      <Button variant="contained" onClick={(e) => {
+              setModalShowEditPopup(!modalShowEditPopup);
+            }}>update</Button>
+    </Stack>:""}
         </CardContent>
       </Card>
+      <br></br>
+      </div>
         )
     }):<p>no comment yet</p>
  }
    //===============================================================
 
    const addCommentFunction = async(e)=>{
-
+    if(!addComment){
+      setMessage("please enter you'r comment");
+      setStatus(true)
+      return
+    }
     try {
       const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:addComment},{
         headers: {
@@ -163,8 +180,27 @@ const Post = () => {
     }
    }
 
-   const deleteCommentFunction =(e)=>{
+   const deleteCommentFunction = async(e)=>{
     console.log(e.target.value)
+    try {
+      const result = await axios.delete(`http://localhost:5000/comments/${e.target.value}`,{
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      if (result.data.success) {
+        console.log(result.data)
+        setMessage("");
+        setStatus(false)
+      } else throw Error;
+    } catch (error) {
+      if (!error.response.data.success) {
+        setStatus(true)
+        return setMessage(error.response.data.message);
+      }
+      setStatus(true)
+      setMessage("Error happened while delete Comment, please try again");
+    }
    }
 
   //===============================================================
@@ -182,7 +218,7 @@ const Post = () => {
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVertIcon />
+            <MoreVertIcon/>
           </IconButton>
         }
         title={post.first_name}
@@ -219,21 +255,33 @@ const Post = () => {
           <Typography paragraph>comment:</Typography>
           {commentFunction()}
           <br></br>
-          <Form style={{maxWidth: "400px",alignSelf: "center"}}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Comment</Form.Label>
-        <Form.Control type="text" placeholder="Enter you'r comment"  onChange={(e) => setAddComment(e.target.value)}/>
-      </Form.Group>
-      <Button variant="contained" endIcon={<SendIcon />} value={post.id} onClick={(e) => {
+    <div style={{ display: "flex", marginBottom: "20px" }}>
+                      <Avatar
+                        style={{ height: "55px", width: "55px" }}
+                        alt="user"
+                        src={state.pfp}
+                      />
+                      <TextField
+                          onChange={(e) => setAddComment(e.target.value)}
+                        style={{ margin: "0 10px", width: "85%" }}
+                        id="outlined-basic"
+                        label="Add a comment..."
+                        variant="outlined"
+                      />
+                      <Button value={post.id} variant="contained" endIcon={<SendIcon />} onClick={(e) => {
               addCommentFunction(e);
             }}>
-        Send
-      </Button>
-    </Form>
+                        Send
+                      </Button>
+                    </div>
         </CardContent>
+        <Container>
+                  {status && <Alert variant="danger">{message}</Alert>}
+        </Container>
       </Collapse>
     </Card>
       </Container>
+      <Popup_Comment_Edit show={modalShowEditPopup} onHide={() => setModalShowEditPopup(false)} />
     </div>    
   );
 };
