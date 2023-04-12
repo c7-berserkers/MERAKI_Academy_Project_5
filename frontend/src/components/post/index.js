@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import Form from 'react-bootstrap/Form';
 
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -20,8 +21,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -124,11 +128,44 @@ const Post = () => {
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {e.created_at}
           </Typography>
+          {e.user_id == state.userId?<Button variant="outlined" startIcon={<DeleteIcon />}onClick={(e) => {
+              deleteCommentFunction(e);
+            }} value={e.id}>
+  Delete
+</Button>:""}
         </CardContent>
       </Card>
         )
     }):<p>no comment yet</p>
  }
+   //===============================================================
+
+   const addCommentFunction = async(e)=>{
+
+    try {
+      const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:addComment},{
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      if (result.data.success) {
+        console.log(result.data)
+        setMessage("");
+        setStatus(false)
+      } else throw Error;
+    } catch (error) {
+      if (!error.response.data.success) {
+        setStatus(true)
+        return setMessage(error.response.data.message);
+      }
+      setStatus(true)
+      setMessage("Error happened while Add Comment, please try again");
+    }
+   }
+
+   const deleteCommentFunction =(e)=>{
+    console.log(e.target.value)
+   }
 
   //===============================================================
   
@@ -181,6 +218,18 @@ const Post = () => {
         <CardContent>
           <Typography paragraph>comment:</Typography>
           {commentFunction()}
+          <br></br>
+          <Form style={{maxWidth: "400px",alignSelf: "center"}}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Comment</Form.Label>
+        <Form.Control type="text" placeholder="Enter you'r comment"  onChange={(e) => setAddComment(e.target.value)}/>
+      </Form.Group>
+      <Button variant="contained" endIcon={<SendIcon />} value={post.id} onClick={(e) => {
+              addCommentFunction(e);
+            }}>
+        Send
+      </Button>
+    </Form>
         </CardContent>
       </Collapse>
     </Card>
