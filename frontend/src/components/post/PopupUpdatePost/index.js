@@ -1,13 +1,27 @@
 import Button from 'react-bootstrap/Button';
-import React, { useContext } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./style.css"
+import { useDispatch, useSelector } from "react-redux";
+import { Container,Alert } from "react-bootstrap";
+import { useContext, useState, useEffect } from "react";
+
 
 const Popup_Comment_Edit = (props) => {
-    
-
+    const [message, setMessage] = useState("");
+    const [status, setStatus] = useState(false);
+  
+    const state = useSelector((state) => {
+      
+        return {
+          userId: state.auth.userId,
+          token: state.auth.token,
+          userLikes: state.auth.userLikes,
+          pfp: state.auth.pfp,
+          
+        };
+      });
   //===============================================================
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -15,8 +29,27 @@ const Popup_Comment_Edit = (props) => {
     }
   //===============================================================
 
-    const add_image = () => {
-
+    const updateComment = async(e) => {
+        console.log(e.target.value)
+        try {
+          const result = await axios.delete(`http://localhost:5000/comments/${e.target.value}`,{
+            headers: {
+              Authorization: `Bearer ${state.token}`,
+            },
+          });
+          if (result.data.success) {
+            console.log(result.data)
+            setMessage("");
+            setStatus(false)
+          } else throw Error;
+        } catch (error) {
+          if (!error.response.data.success) {
+            setStatus(true)
+            return setMessage(error.response.data.message);
+          }
+          setStatus(true)
+          setMessage("Error happened while delete Comment, please try again");
+        }
     }
 
   //===============================================================
@@ -41,11 +74,15 @@ const Popup_Comment_Edit = (props) => {
 
                 <Modal.Footer>
                     <div className="addSubmit">
-                        <Button variant="primary" onClick={add_image}>submit</Button>
+                        <Button variant="primary" onClick={updateComment}>submit</Button>
                     </div>
                     <Button className="shadowButton" onClick={props.onHide}>Close</Button>
                 </Modal.Footer>
             </Modal>
+            
+        <Container>
+                  {status && <Alert variant="danger">{message}</Alert>}
+        </Container>
         </div>
     )
 }
