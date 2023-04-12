@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import Post from "./components/post";
-import Profile from "./components/Profile";
+import Profile from "./components/Profile/index";
 
 
 function App() {

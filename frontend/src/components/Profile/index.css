@@ -2,13 +2,13 @@
     display: flex;
     flex-wrap: wrap;
     margin: 0px 110px;
-  
+
 }
 
 .flex:hover {
     border-radius: 8px;
     box-shadow: 25px -29px 15px 0px rgba(0,150,250,0.1),0px 0px 19px -3px rgba(0,0,0,0.1);
-  }
+}
 
 .MyProfileImg {
     /* margin-top: 35px; */
@@ -80,7 +80,7 @@
     display: flex;
     flex-direction: column;
     align-content: space-evenly;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: flex-start;
     margin-bottom: 69px;
 }
@@ -91,7 +91,7 @@
     display: flex;
     flex-direction: column;
     align-content: space-evenly;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: flex-start;
     padding-bottom: 18px;
 }

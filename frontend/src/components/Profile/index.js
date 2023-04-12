@@ -5,20 +5,35 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import Popup_Image from './PopupImgChange/popup'
+
+  //===============================================================
+
+
 import { useDispatch, useSelector } from "react-redux";
+import {setUserData, setUserPosts}from "../redux/reducers/profile/index";
+
+
+  //===============================================================
 
 export default function Profile() {
 
-    const [dataUser, setDataUser] = useState(undefined)
-    const [dataUserPost, setDataUserPost] = useState(undefined)
+//===============================================================
+
+    const [modalShowEditPopup, setModalShowEditPopup] = useState(false)
+
+//===============================================================
 
     const dispatch = useDispatch();
     const state = useSelector((state) => {
         
         return {
-        
+            dataUser : state.profile.UserData,
+            postsUser : state.profile.UserPosts,
         };
     });
+
+  //===============================================================
 
 
     useEffect(() => {
@@ -28,9 +43,10 @@ export default function Profile() {
             }
         })
             .then(function (response) {
-                console.log(response.data)
-                setDataUser(response.data.user)
-                setDataUserPost(response.data.userPosts)
+                console.log(response.data,"my data")
+                dispatch(setUserData(response.data.user))
+                dispatch(setUserPosts(response.data.userPosts))
+                
             })
             .catch(function (error) {
                 console.log(error);
@@ -38,23 +54,23 @@ export default function Profile() {
     }, []);
 
 
-
+  //===============================================================
 
     return (
 
         <div>
 
 
-            {dataUser ? <>
+            {state.dataUser ? <>
                 <CardContent>
                     <div className="flex">
                         <div id="wrapper">
                             <div id="image_div">
                                 <p className="img_wrapper">
-                                    <img className="MyProfileImg" src={dataUser.img} />
+                                    <img className="MyProfileImg" src={state.dataUser.img} />
                                     
                                         <span  className="MyProfileImgButton">
-                                            <Button onClick={()=>{console.log("a")}} variant="contained">
+                                            <Button onClick={() => { setModalShowEditPopup(true) }} variant="contained">
                                                     <EditNoteIcon />
                                             </Button>
                                         </span>
@@ -63,10 +79,11 @@ export default function Profile() {
                             </div>
                         </div>
                         <div className="userData">
-                            <h4> {dataUser.first_name}  {dataUser.last_name}  </h4>
-                            <h4>Email : {dataUser.email}</h4>
-                            <h4>Age : {dataUser.age}</h4>
-                            <h4>Country : {dataUser.country}</h4>
+                        <Popup_Image show={modalShowEditPopup} onHide={() => setModalShowEditPopup(false)} />
+                            <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
+                            <h4>Email : {state.dataUser.email}</h4>
+                            <h4>Age : {state.dataUser.age}</h4>
+                            <h4>Country : {state.dataUser.country}</h4>
                         </div>
                         <div className="userDataEdit">
                             <Stack direction="row" spacing={2}>
@@ -84,4 +101,6 @@ export default function Profile() {
 
         </div>
     )
+
+      //===============================================================
 }
