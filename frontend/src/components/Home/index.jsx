@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -42,7 +42,7 @@ const ExpandMore = styled((props) => {
 
 export default function Home() {
   const dispatch = useDispatch();
-
+  const ref = useRef(null);
   const [comment, setComment] = useState("");
 
   const { token, posts, pfp, userId } = useSelector((state) => {
@@ -107,6 +107,9 @@ export default function Home() {
     getPosts();
   }, []);
 
+  const funTest = () => {
+    ref.current.value = "";
+  };
   return (
     <div>
       {" "}
@@ -171,8 +174,8 @@ export default function Home() {
                         src={pfp}
                       />
                       <TextField
+                        ref={ref}
                         onChange={(e) => {
-                          e.preventDefault();
                           setComment(e.target.value);
                         }}
                         style={{ margin: "0 10px", width: "85%" }}
@@ -180,7 +183,11 @@ export default function Home() {
                         label="Add a comment..."
                         variant="outlined"
                       />
-                      <Button variant="contained" endIcon={<SendIcon />}>
+                      <Button
+                        onClick={funTest}
+                        variant="contained"
+                        endIcon={<SendIcon />}
+                      >
                         Send
                       </Button>
                     </div>
