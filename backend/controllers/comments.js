@@ -13,7 +13,7 @@ const createComment = (req, res) => {
       res.status(201).json({
         success: true,
         message: "Comment created successfully",
-        result: result.rows,
+        result: result.rows[0],
       });
     })
     .catch((err) => {
@@ -50,7 +50,7 @@ const deleteComment = (req, res) => {
 const getAllCommentForPostComment = (req, res) => {
   const { id } = req.params;
   const data = [id];
-  const query = `SELECT c.id,c.comment,c.post_id,c.created_at,u.first_name,u.img FROM comments c
+  const query = `SELECT c.id,c.comment,c.post_id,c.created_at,u.first_name,u.img,u.id AS user_id FROM comments c
             LEFT JOIN users u ON c.user_id=u.id
             WHERE post_id=$1
             ORDER BY created_at DESC  ;`;

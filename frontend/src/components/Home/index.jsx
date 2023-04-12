@@ -20,6 +20,13 @@ import TextField from "@mui/material/TextField";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
 import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ImageIcon from "@mui/icons-material/Image";
+import WorkIcon from "@mui/icons-material/Work";
+import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -38,9 +45,10 @@ export default function Home() {
 
   const [comment, setComment] = useState("");
 
-  const { token, posts, pfp } = useSelector((state) => {
+  const { token, posts, pfp, userId } = useSelector((state) => {
     return {
       token: state.auth.token,
+      userId: state.auth.userId,
       pfp: state.auth.pfp,
       posts: state.posts.posts,
     };
@@ -51,7 +59,7 @@ export default function Home() {
   // ---------------------------------------
   const getPosts = async () => {
     try {
-      const result = await axios.get(`${BACKEND}/posts`, {
+      const result = await axios.get(`${BACKEND}/posts/following/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
@@ -107,7 +115,7 @@ export default function Home() {
         <Container>
           {posts.map((post) => {
             return (
-              <Card key={post.id} sx={{ margin: "10px 0" }}>
+              <Card key={post.post_id} sx={{ margin: "10px 0" }}>
                 <CardHeader
                   avatar={
                     <Avatar
@@ -122,18 +130,18 @@ export default function Home() {
                     </IconButton>
                   }
                   title={post.user_first_name}
-                  subheader={post.created_at}
+                  subheader={post.post_created_at}
                 />
 
                 <CardMedia
                   component="img"
                   // height="194"
-                  image={post.img}
+                  image={post.post_img}
                   alt="post"
                 />
                 <CardContent>
                   <Typography variant="body2" color="text.secondary">
-                    {post.description}
+                    {post.post_description}
                   </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
@@ -142,16 +150,16 @@ export default function Home() {
                   </IconButton>
 
                   <ExpandMore
-                    expand={expanded === post.id}
-                    onClick={handleExpandClick(post.id)}
-                    aria-expanded={expanded === post.id}
+                    expand={expanded === post.post_id}
+                    onClick={handleExpandClick(post.post_id)}
+                    aria-expanded={expanded === post.post_id}
                     aria-label="show more"
                   >
                     <MdComment />
                   </ExpandMore>
                 </CardActions>
                 <Collapse
-                  in={expanded === post.id}
+                  in={expanded === post.post_id}
                   timeout="auto"
                   unmountOnExit
                 >
@@ -176,10 +184,35 @@ export default function Home() {
                         Send
                       </Button>
                     </div>
-                    <Typography paragraph>
-                      Heat 1/2 cup of the broth in a pot until simmering, add
-                      saffron and set aside for 10 minutes.
-                    </Typography>
+                    <div>
+                      {post.comments ? (
+                        <List
+                          sx={{
+                            width: "100%",
+                            maxWidth: 360,
+                            bgcolor: "background.paper",
+                          }}
+                        >
+                          {post.comments.map((comment) => {
+                            return (
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar src={comment.img} />
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={comment.comment}
+                                  secondary={comment.created_at}
+                                />
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                      ) : (
+                        <>
+                          <h4>No comments Yet</h4>
+                        </>
+                      )}
+                    </div>
                   </CardContent>
                 </Collapse>
               </Card>
