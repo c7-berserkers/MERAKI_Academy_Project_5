@@ -46,9 +46,18 @@ const Popup_Edit_Data = (props) => {
             setErrors(errors);
             return;
         }
-        const token = JSON.parse(localStorage.getItem('user')).token
-        const idUser = JSON.parse(localStorage.getItem('user')).user._id
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`,userData, {
+            headers: {
+                'Authorization': `${localStorage.getItem("userId")}`
+            }
+        })
+            .then(function (response) {
 
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        
     }
 
     return (

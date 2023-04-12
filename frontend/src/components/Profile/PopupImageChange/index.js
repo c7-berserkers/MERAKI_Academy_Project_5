@@ -8,19 +8,19 @@ import validator from 'validator';
 //===============================================================
 
 
-import { useDispatch  } from "react-redux";
-import { updateUserImage} from "../../redux/reducers/profile/index";
+import { useDispatch } from "react-redux";
+import { updateUserImage } from "../../redux/reducers/profile/index";
 
 //=========================posts======================================
 
 const Popup_Image_Edit = (props) => {
 
-        //===============================================================
+    //===============================================================
 
-        const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-        //===============================================================
-    
+    //===============================================================
+
 
     let TestValue = {
         img: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
@@ -35,7 +35,7 @@ const Popup_Image_Edit = (props) => {
     const validateData = () => {
         let errors = {};
         if (!validator.isURL(img)) {
-        errors.img = "Url is required";
+            errors.img = "Url is required";
         }
         return errors
     }
@@ -54,7 +54,7 @@ const Popup_Image_Edit = (props) => {
             setErrors(errors);
             return;
         }
-        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`,userData, {
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userData, {
             headers: {
                 'Authorization': `${localStorage.getItem("userId")}`
             }
