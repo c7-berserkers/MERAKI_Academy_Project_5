@@ -15,8 +15,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts, setComments } from "../redux/reducers/posts";
-import TextField from "@mui/material/TextField";
+import { setPosts, setComments, addComment } from "../redux/reducers/posts";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -25,6 +24,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Form from "react-bootstrap/Form";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -40,14 +41,22 @@ const ExpandMore = styled((props) => {
 
 export default function Home() {
   const dispatch = useDispatch();
-  const ref = useRef(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const { token, posts, pfp, userId } = useSelector((state) => {
+  const { token, posts, pfp, userId, userName } = useSelector((state) => {
     return {
       token: state.auth.token,
       userId: state.auth.userId,
       pfp: state.auth.pfp,
       posts: state.posts.posts,
+      userName: state.auth.userName,
     };
   });
   const [expanded, setExpanded] = useState(false);
@@ -122,7 +131,12 @@ export default function Home() {
                     ></Avatar>
                   }
                   action={
-                    <IconButton aria-label="settings">
+                    <IconButton
+                      aria-controls={open ? "long-menu" : undefined}
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClick}
+                      aria-label="settings"
+                    >
                       <MoreVertIcon />
                     </IconButton>
                   }
@@ -180,7 +194,15 @@ export default function Home() {
                               }
                             );
                             if (result.data.success) {
-                              console.log(result.data.result);
+                              const comment = result.data.result;
+                              comment.img = pfp;
+                              comment.first_name = userName;
+                              dispatch(
+                                addComment({
+                                  post_id: post.id,
+                                  comment,
+                                })
+                              );
                             } else throw Error;
                           } catch (err) {
                             console.log(err);

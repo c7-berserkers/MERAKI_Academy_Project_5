@@ -4,6 +4,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: localStorage.getItem("token") || null,
+    userName: localStorage.getItem("userName") || null,
     userId: localStorage.getItem("userId") || null,
     pfp: localStorage.getItem("pfp") || null,
     role: localStorage.getItem("role") || null,
@@ -31,8 +32,13 @@ export const authSlice = createSlice({
       localStorage.setItem("userLikes", JSON.stringify(payload));
     },
     addLike: (state, { payload }) => {
-      state.userLikes.push(payload);
-      localStorage.setItem("userLikes", JSON.stringify(state.userLikes));
+      if (!state.userLikes) {
+        state.userLikes = [payload];
+        localStorage.setItem("userLikes", JSON.stringify(state.userLikes));
+      } else {
+        state.userLikes.push(payload);
+        localStorage.setItem("userLikes", JSON.stringify(state.userLikes));
+      }
     },
     removeLike: (state, { payload }) => {
       state.userLikes = state.userLikes.filter((e) => e.id !== payload);
