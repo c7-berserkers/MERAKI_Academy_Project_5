@@ -1,0 +1,11 @@
+.myProfileAreaEdit{
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+}  
+
+.submitNewButton{
+    margin-right: 270px;
+}

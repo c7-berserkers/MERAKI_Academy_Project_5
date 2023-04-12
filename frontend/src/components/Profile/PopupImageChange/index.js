@@ -5,17 +5,21 @@ import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./popup.css"
 
-const Popup_Image = (props) => {
+const Popup_Image_Edit = (props) => {
     
 
+  //===============================================================
     const handleChange = (e) => {
         const { name, value } = e.target
         // setUser((preData) => ({ ...preData, [name]: value }))
     }
+  //===============================================================
 
     const add_image = () => {
 
     }
+
+  //===============================================================
 
     return (
         <div>
@@ -46,4 +50,4 @@ const Popup_Image = (props) => {
     )
 }
 
-export default Popup_Image
+export default Popup_Image_Edit

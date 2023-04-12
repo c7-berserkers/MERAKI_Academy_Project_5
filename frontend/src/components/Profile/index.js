@@ -5,7 +5,11 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import Popup_Image from './PopupImgChange/popup'
+
+  //===============================================================
+
+import Popup_Image_Edit from './PopupImageChange'
+import Popup_Edit_Data from './PopupEditMyData/index'
 
   //===============================================================
 
@@ -20,7 +24,8 @@ export default function Profile() {
 
 //===============================================================
 
-    const [modalShowEditPopup, setModalShowEditPopup] = useState(false)
+    const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false)
+    const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] = useState(false)
 
 //===============================================================
 
@@ -70,7 +75,7 @@ export default function Profile() {
                                     <img className="MyProfileImg" src={state.dataUser.img} />
                                     
                                         <span  className="MyProfileImgButton">
-                                            <Button onClick={() => { setModalShowEditPopup(true) }} variant="contained">
+                                            <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
                                                     <EditNoteIcon />
                                             </Button>
                                         </span>
@@ -79,7 +84,8 @@ export default function Profile() {
                             </div>
                         </div>
                         <div className="userData">
-                        <Popup_Image show={modalShowEditPopup} onHide={() => setModalShowEditPopup(false)} />
+                        <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
+                        <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
                             <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
                             <h4>Email : {state.dataUser.email}</h4>
                             <h4>Age : {state.dataUser.age}</h4>
@@ -87,7 +93,7 @@ export default function Profile() {
                         </div>
                         <div className="userDataEdit">
                             <Stack direction="row" spacing={2}>
-                                <Button variant="contained" onClick={()=>{console.log("z")}}  endIcon={<EditNoteIcon />}>
+                                <Button variant="contained" onClick={() => { setModalShowEditPopupMyProfile(true) }}  endIcon={<EditNoteIcon />}>
                                     Edit
                                 </Button>
                             </Stack>
