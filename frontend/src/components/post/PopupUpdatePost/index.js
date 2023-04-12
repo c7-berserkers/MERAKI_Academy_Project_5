@@ -30,12 +30,12 @@ const Popup_Comment_Edit = (props) => {
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Add New Image
+                        update you'r comment
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
 
-                    <Form.Label>Image:</Form.Label>
+                    <Form.Label>new comment:</Form.Label>
                     <Form.Control name="img" onChange={handleChange} placeholder="img url" />
                 </Modal.Body>
 
