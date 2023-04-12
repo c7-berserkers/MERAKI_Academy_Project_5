@@ -1,6 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import "./index.css"
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 export default function Profile() {
 
@@ -33,24 +37,40 @@ export default function Profile() {
 
 
             {dataUser ? <>
-
-                <div className="flex">
-                    <div id="wrapper">
-                        <div id="image_div">
-                            <p className="img_wrapper">
-                                <img className="MyProfileImg" src={dataUser.img}/>
-                                <span><input onClick={() => {}} type="button" value="+" /></span>
-                            </p>
+                <CardContent>
+                    <div className="flex">
+                        <div id="wrapper">
+                            <div id="image_div">
+                                <p className="img_wrapper">
+                                    <img className="MyProfileImg" src={dataUser.img} />
+                                    
+                                        <span  className="MyProfileImgButton">
+                                            <Button onClick={()=>{console.log("a")}} variant="contained">
+                                                    <EditNoteIcon />
+                                            </Button>
+                                        </span>
+                                
+                                </p>
+                            </div>
+                        </div>
+                        <div className="userData">
+                            <h4> {dataUser.first_name}  {dataUser.last_name}  </h4>
+                            <h4>Email : {dataUser.email}</h4>
+                            <h4>Age : {dataUser.age}</h4>
+                            <h4>Country : {dataUser.country}</h4>
+                        </div>
+                        <div className="userDataEdit">
+                            <Stack direction="row" spacing={2}>
+                                <Button variant="contained" onClick={()=>{console.log("z")}}  endIcon={<EditNoteIcon />}>
+                                    Edit
+                                </Button>
+                            </Stack>
                         </div>
                     </div>
-                    <div className="userData">
-                    <h3> Name : {dataUser.first_name}  {dataUser.last_name}  </h3>
-                    <h3>Email : {dataUser.email}</h3>
-                    <h3>Age : {dataUser.age}</h3>
-                    <h3>Country : {dataUser.country}</h3>
-                    </div>
-                </div>
+                </CardContent>
             </> : <p>noData</p>}
+
+            <hr style={{ backgroundColor: "black", fontSize: "2em" }} />
 
 
         </div>

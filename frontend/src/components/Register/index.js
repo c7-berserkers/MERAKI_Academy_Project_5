@@ -106,6 +106,7 @@ export default function Register() {
       })
       .catch(function (error) {
         console.log(error);
+        setOneError("Email is already used")
       });
     }
     

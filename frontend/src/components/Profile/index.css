@@ -1,17 +1,22 @@
-
 .flex {
     display: flex;
     flex-wrap: wrap;
     margin: 0px 110px;
+  
 }
 
+.flex:hover {
+    border-radius: 8px;
+    box-shadow: 25px -29px 15px 0px rgba(0,150,250,0.1),0px 0px 19px -3px rgba(0,0,0,0.1);
+  }
 
 .MyProfileImg {
     /* margin-top: 35px; */
     width: 200px;
     height: 200px;
-    border-radius: 55%;
+    border-radius: 50%;
     background-size: cover;
+    margin-left: 18px;
 }
 
 #wrapper {
@@ -46,19 +51,19 @@
     -webkit-filter: blur(1.7px);
 }
 
-#image_div .img_wrapper span {
+#image_div .img_wrapper .MyProfileImgButton {
     margin-top: 35px;
     display: none;
     position: absolute;
-    top: 40px;
-    left: 30px;
+    top: 50px;
+    left: 68px;
 }
 
-#image_div .img_wrapper:hover span {
+#image_div .img_wrapper:hover .MyProfileImgButton {
     display: table-cell;
 }
 
-#image_div .img_wrapper span input[type="button"] {
+#image_div .img_wrapper .MyProfileImgButton input[type="button"] {
     width: 120px;
     height: 40px;
     border-radius: 18px;
@@ -69,21 +74,113 @@
     font-size: 17px;
 }
 
-.userData{
+.userData {
     margin-left: 70px;
     padding-top: 60px;
-    display: grid;
+    display: flex;
     flex-direction: column;
     align-content: space-evenly;
     justify-content: start;
-    align-items: end;
+    align-items: flex-start;
+    margin-bottom: 69px;
+}
+
+.userDataEdit {
+    margin-left: 70px;
+    padding-top: 110px;
+    display: flex;
+    flex-direction: column;
+    align-content: space-evenly;
+    justify-content: start;
+    align-items: flex-start;
+    padding-bottom: 18px;
+}
+
+@media screen and (max-width: 1005px) and (min-width: 818px) {
+    .userDataEdit {
+        padding-top: 1px;
+        margin-left: 276px;
+        padding-bottom: 12px;
+        margin-bottom: 19px;
+    }
+
+    .userData{
+        margin-bottom: 20px;
+    }
+
+}
+
+@media screen and (max-width: 818px) {
+    #wrapper {
+        margin-left: 10px;
+    }
+    .flex{
+        justify-content: center;
+    }
+
+    .userDataEdit {
+        padding-top: 20px;
+        margin-left: 1px;
+        padding-bottom: 12px;
+    }
+
+    .userData {
+        margin-left: 20px;
+        padding-top: 20px;
+        margin-bottom: auto;
+    }
+    h4 {
+        white-space: nowrap;
+    }
 }
 
 
-@media screen and (max-width: 818px) {
-    #wrapper{
-
-        margin-left: 120px;
+@media screen and (max-width: 700px) {
+    #wrapper {
+        margin-left: 75px;
     }
-    
-  }
+    .userData {
+        margin-left: 55px;
+        padding-top: 20px;
+        margin-bottom: auto;
+    }
+    .userDataEdit {
+        margin-left: 85px;
+        padding-bottom: 12px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #wrapper {
+        margin-left: 55px;
+    }
+    .userData {
+        margin-left: 30px;
+        padding-top: 20px;
+        margin-bottom: auto;
+    }
+    .userDataEdit {
+        margin-left: 85px;
+        padding-bottom: 12px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #wrapper {
+        margin-left: 0px;
+    }
+    .userData {
+        margin-left: 0px;
+        margin-bottom: auto;
+    }
+    .userDataEdit {
+        margin-left: 0px;
+        padding-bottom: 12px;
+    }
+}
+
+hr{ 
+    border-top: 2px solid black;
+    margin: 0.2rem 0;
+}
+
