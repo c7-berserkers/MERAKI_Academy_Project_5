@@ -138,6 +138,16 @@
 }
 
 
+@media screen and (max-width: 550px) {
+
+.MyProfileImg {
+    width: 200px;
+    height: 200px;
+    border-radius: 5%;
+    background-size: cover;
+}
+}
+
 @media screen and (max-width: 540px) {
     .flex {
         display: flex;

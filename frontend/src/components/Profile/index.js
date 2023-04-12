@@ -5,11 +5,20 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Profile() {
 
     const [dataUser, setDataUser] = useState(undefined)
     const [dataUserPost, setDataUserPost] = useState(undefined)
+
+    const dispatch = useDispatch();
+    const state = useSelector((state) => {
+        
+        return {
+        
+        };
+    });
 
 
     useEffect(() => {
