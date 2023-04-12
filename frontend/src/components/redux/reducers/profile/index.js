@@ -13,12 +13,16 @@ export const profileSlice = createSlice({
         setUserPosts: (state, action) => {
             state.UserPosts = action.payload;
         },
+        updateUserImage: (state, action) => {
+            state.UserData.img = action.payload;
+        },
     },
     
 });
 
 export const {
     setUserData,
-    setUserPosts
+    setUserPosts,
+    updateUserImage,
 } = profileSlice.actions;
 export default profileSlice.reducer;
