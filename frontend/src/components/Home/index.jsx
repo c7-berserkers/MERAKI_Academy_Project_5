@@ -11,14 +11,15 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../redux/reducers/posts";
-
+import TextField from "@mui/material/TextField";
+import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
+import Button from "@mui/material/Button";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -35,23 +36,18 @@ const ExpandMore = styled((props) => {
 export default function Home() {
   const dispatch = useDispatch();
 
-  const { token, posts } = useSelector((state) => {
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+
+  const { token, posts, pfp } = useSelector((state) => {
     return {
       token: state.auth.token,
+      pfp: state.auth.pfp,
       posts: state.posts.posts,
     };
   });
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
-  const handleExpandClick = (str) => {
-    return () => {
-      if (expanded) {
-        setExpanded(false);
-      } else {
-        setExpanded(str);
-      }
-    };
-  };
 
   // ---------------------------------------
   const getPosts = async () => {
@@ -70,9 +66,32 @@ export default function Home() {
     }
   };
 
+  const getCommentsForPost = async (id) => {
+    try {
+      const result = await axios.get(`${BACKEND}/comments/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.data.success) {
+        const comments = result.data.result;
+        console.log(comments);
+      }
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const handleExpandClick = (id) => {
+    return () => {
+      if (expanded) {
+        setExpanded(false);
+      } else {
+        setExpanded(id);
+        getCommentsForPost(id);
+      }
+    };
+  };
   useEffect(() => {
     getPosts();
-    console.log(posts);
   }, []);
 
   return (
@@ -132,6 +151,26 @@ export default function Home() {
                   unmountOnExit
                 >
                   <CardContent>
+                    <div style={{ display: "flex", marginBottom: "20px" }}>
+                      <Avatar
+                        style={{ height: "55px", width: "55px" }}
+                        alt="user"
+                        src={pfp}
+                      />
+                      <TextField
+                        onChange={(e) => {
+                          e.preventDefault();
+                          setComment(e.target.value);
+                        }}
+                        style={{ margin: "0 10px", width: "85%" }}
+                        id="outlined-basic"
+                        label="Add a comment..."
+                        variant="outlined"
+                      />
+                      <Button variant="contained" endIcon={<SendIcon />}>
+                        Send
+                      </Button>
+                    </div>
                     <Typography paragraph>
                       Heat 1/2 cup of the broth in a pot until simmering, add
                       saffron and set aside for 10 minutes.
