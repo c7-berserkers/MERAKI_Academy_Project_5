@@ -75,8 +75,8 @@ const Post = () => {
   const [comments, setComments] = useState("");
   const [post, setPost] = useState("");
   const [message, setMessage] = useState("");
-  const [addComment, setAddComment] = useState("");
   const [status, setStatus] = useState(false);
+  const [addComment, setAddComment] = useState("");
 
   //===============================================================
 
@@ -140,9 +140,10 @@ const Post = () => {
       <Button value={e.id} variant="outlined" onClick={(e) => {
               deleteCommentFunction(e);
             }} startIcon={<DeleteIcon />}>Delete</Button>
-      <Button variant="contained" onClick={(e) => {
-              setModalShowEditPopup(!modalShowEditPopup);
+      <Button variant="contained" onClick={() => {
+              setModalShowEditPopup(e.id);
             }}>update</Button>
+            <Popup_Comment_Edit id={e.id} comment={e.comment} show={modalShowEditPopup===e.id} onHide={() => setModalShowEditPopup(false)} />
     </Stack>:""}
         </CardContent>
       </Card>
@@ -281,7 +282,6 @@ const Post = () => {
       </Collapse>
     </Card>
       </Container>
-      <Popup_Comment_Edit show={modalShowEditPopup} onHide={() => setModalShowEditPopup(false)} />
     </div>    
   );
 };
