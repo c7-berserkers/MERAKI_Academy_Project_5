@@ -78,10 +78,13 @@ const getPostByUser = (req, res) => {
   const user_id = req.params.id;
 
   const query = `
-  SELECT p.created_at,p.id,p.img ,p.description ,COUNT(l.posts_id) AS likes FROM posts p
-  LEFT JOIN likes l ON p.id=l.posts_id
-  WHERE p.user_id=$1 AND p.is_deleted=0
-  GROUP BY p.img ,p.description ,p.id ORDER BY p.created_at DESC;
+  SELECT p.id, p.img, p.description, p.created_at, COUNT(l.id) AS likes_count, u.img AS user_img, u.first_name AS user_first_name 
+FROM posts p 
+LEFT JOIN likes l ON p.id = l.posts_id 
+INNER JOIN users u ON p.user_id = u.id 
+WHERE p.user_id = $1 AND p.is_deleted = 0 
+GROUP BY p.id, u.img, u.first_name
+ORDER BY p.created_at DESC;
 `;
   const data = [user_id];
 
@@ -92,6 +95,58 @@ const getPostByUser = (req, res) => {
         return res.status(404).json({
           success: false,
           message: `The user: ${user_id} has no posts`,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `All posts for the user: ${user_id}`,
+          result: result.rows,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+
+const getPostForUser = (req, res) => {
+  const user_id = req.params.id;
+
+  const query = `
+  SELECT 
+  p.id as id, 
+  p.img as img, 
+  p.description as description, 
+  p.created_at as created_at, 
+  u.id as user_id, 
+  u.img as user_img, 
+  u.first_name as user_first_name, 
+  COUNT(l.id) as likes_count 
+FROM 
+  posts p 
+  JOIN users u ON p.user_id = u.id 
+  JOIN follows f ON f.followed_user_id = p.user_id 
+  LEFT JOIN likes l ON l.posts_id = p.id 
+WHERE 
+  f.following_user_id = $1 AND p.is_deleted = 0 AND u.is_deleted = 0 
+GROUP BY 
+  p.id, 
+  u.id
+  ORDER BY created_at DESC;
+`;
+  const data = [user_id];
+
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `The user: ${user_id} has no following`,
         });
       } else {
         res.status(200).json({
@@ -260,4 +315,5 @@ module.exports = {
   deletePost,
   updatePostById,
   getPostsByTag,
+  getPostForUser,
 };

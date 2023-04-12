@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -11,14 +11,21 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../redux/reducers/posts";
-
+import { setPosts, setComments, addComment } from "../redux/reducers/posts";
+import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Form from "react-bootstrap/Form";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -34,23 +41,31 @@ const ExpandMore = styled((props) => {
 
 export default function Home() {
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const { token, posts } = useSelector((state) => {
+  const { token, posts, pfp, userId, userName } = useSelector((state) => {
     return {
       token: state.auth.token,
+      userId: state.auth.userId,
+      pfp: state.auth.pfp,
       posts: state.posts.posts,
+      userName: state.auth.userName,
     };
   });
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   // ---------------------------------------
   const getPosts = async () => {
     try {
-      const result = await axios.get(`${BACKEND}/posts`, {
+      const result = await axios.get(`${BACKEND}/posts/following/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
@@ -64,9 +79,38 @@ export default function Home() {
     }
   };
 
+  const getCommentsForPost = async (id) => {
+    try {
+      const result = await axios.get(`${BACKEND}/comments/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.data.success) {
+        const comments = result.data.result;
+        console.log(comments);
+        dispatch(
+          setComments({
+            comments,
+            post_id: id,
+          })
+        );
+      } else throw Error;
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const handleExpandClick = (id) => {
+    return () => {
+      if (expanded) {
+        setExpanded(false);
+      } else {
+        setExpanded(id);
+        getCommentsForPost(id);
+      }
+    };
+  };
   useEffect(() => {
     getPosts();
-    console.log(posts);
   }, []);
 
   return (
@@ -87,7 +131,12 @@ export default function Home() {
                     ></Avatar>
                   }
                   action={
-                    <IconButton aria-label="settings">
+                    <IconButton
+                      aria-controls={open ? "long-menu" : undefined}
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClick}
+                      aria-label="settings"
+                    >
                       <MoreVertIcon />
                     </IconButton>
                   }
@@ -112,46 +161,96 @@ export default function Home() {
                   </IconButton>
 
                   <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
+                    expand={expanded === post.id}
+                    onClick={handleExpandClick(post.id)}
+                    aria-expanded={expanded === post.id}
                     aria-label="show more"
                   >
                     <MdComment />
                   </ExpandMore>
                 </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <Collapse
+                  in={expanded === post.id}
+                  timeout="auto"
+                  unmountOnExit
+                >
                   <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                      Heat 1/2 cup of the broth in a pot until simmering, add
-                      saffron and set aside for 10 minutes.
-                    </Typography>
-                    <Typography paragraph>
-                      Heat oil in a (14- to 16-inch) paella pan or a large, deep
-                      skillet over medium-high heat. Add chicken, shrimp and
-                      chorizo, and cook, stirring occasionally until lightly
-                      browned, 6 to 8 minutes. Transfer shrimp to a large plate
-                      and set aside, leaving chicken and chorizo in the pan. Add
-                      pimentón, bay leaves, garlic, tomatoes, onion, salt and
-                      pepper, and cook, stirring often until thickened and
-                      fragrant, about 10 minutes. Add saffron broth and
-                      remaining 4 1/2 cups chicken broth; bring to a boil.
-                    </Typography>
-                    <Typography paragraph>
-                      Add rice and stir very gently to distribute. Top with
-                      artichokes and peppers, and cook without stirring, until
-                      most of the liquid is absorbed, 15 to 18 minutes. Reduce
-                      heat to medium-low, add reserved shrimp and mussels,
-                      tucking them down into the rice, and cook again without
-                      stirring, until mussels have opened and rice is just
-                      tender, 5 to 7 minutes more. (Discard any mussels that
-                      don&apos;t open.)
-                    </Typography>
-                    <Typography>
-                      Set aside off of the heat to let rest for 10 minutes, and
-                      then serve.
-                    </Typography>
+                    <div style={{ display: "flex", marginBottom: "20px" }}>
+                      <Avatar
+                        style={{ height: "55px", width: "55px" }}
+                        alt="user"
+                        src={pfp}
+                      />
+                      <Form
+                        style={{ display: "flex", width: "100%" }}
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          try {
+                            const result = await axios.post(
+                              `${BACKEND}/comments/${post.id}`,
+                              { comment: e.target[0].value },
+                              {
+                                headers: { Authorization: `Bearer ${token}` },
+                              }
+                            );
+                            if (result.data.success) {
+                              const comment = result.data.result;
+                              comment.img = pfp;
+                              comment.first_name = userName;
+                              dispatch(
+                                addComment({
+                                  post_id: post.id,
+                                  comment,
+                                })
+                              );
+                            } else throw Error;
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
+                      >
+                        <Form.Control
+                          style={{ margin: "0 10px", width: "95%" }}
+                          type="text"
+                          placeholder="Add a comment.."
+                        />
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          endIcon={<SendIcon />}
+                        >
+                          Send
+                        </Button>
+                      </Form>
+                    </div>
+                    <div>
+                      {" "}
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxWidth: 360,
+                          bgcolor: "background.paper",
+                        }}
+                      >
+                        {post.comments ? (
+                          post.comments.map((comment) => {
+                            return (
+                              <ListItem key={comment.id}>
+                                <ListItemAvatar>
+                                  <Avatar src={comment.img} />
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={comment.comment}
+                                  secondary={`By ${comment.first_name}`}
+                                />
+                              </ListItem>
+                            );
+                          })
+                        ) : (
+                          <></>
+                        )}
+                      </List>
+                    </div>
                   </CardContent>
                 </Collapse>
               </Card>
