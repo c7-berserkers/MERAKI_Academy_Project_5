@@ -27,7 +27,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import TextField from "@mui/material/TextField";
-import Popup_Comment_Edit from './PopupUpdatePost/index'
+import Popup_Comment_Edit from './PopupUpdateComment/index'
+import Popup_Post_Edit from './PopupUpdatePost/index'
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -56,6 +57,7 @@ const bull = (
 const Post = () => {
 
   const [modalShowEditPopup, setModalShowEditPopup] = useState(false)
+  const [modalShowEditPopupPost, setModalShowEditPopupPost] = useState(false)
  
   const navigate = useNavigate();
 
@@ -217,10 +219,11 @@ const Post = () => {
             <Avatar alt="Remy Sharp" src={post.user_img} />
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
+        action={post.user_id==state.userId?<IconButton aria-label="settings" onClick={() => {
+          setModalShowEditPopupPost(!modalShowEditPopupPost);
+        }}>
             <MoreVertIcon/>
-          </IconButton>
+          </IconButton>:""
         }
         title={post.first_name}
         subheader="September 14, 2016"
@@ -282,6 +285,7 @@ const Post = () => {
       </Collapse>
     </Card>
       </Container>
+      <Popup_Post_Edit id={post.id} post={post.description} show={modalShowEditPopupPost} onHide={() => setModalShowEditPopupPost(false)} />
     </div>    
   );
 };
