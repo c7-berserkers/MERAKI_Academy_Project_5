@@ -206,7 +206,7 @@ export default function Home() {
                     )
                   }
                   title={post.user_first_name}
-                  subheader={post.created_at}
+                  subheader={post.created_at.split("T")[0]}
                 />
 
                 {}
@@ -382,10 +382,6 @@ export default function Home() {
                                                   type="text"
                                                   defaultValue={comment.comment}
                                                 />
-                                                <Form.Text className="text-muted">
-                                                  We'll never share your email
-                                                  with anyone else.
-                                                </Form.Text>
                                               </Modal.Body>
                                               <Modal.Footer>
                                                 <Button type="submit">
