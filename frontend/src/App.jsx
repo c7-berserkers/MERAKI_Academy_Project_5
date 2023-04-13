@@ -8,7 +8,7 @@ import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import Post from "./components/post";
 import Profile from "./components/Profile/index";
-
+import Tag from "./components/Tag";
 
 function App() {
   return (
@@ -23,27 +23,36 @@ function App() {
             </>
           }
         />
-        {/* <Route
+
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route
           path="/post/:id"
           element={
             <>
               <NavBar />
+              <Post />
             </>
           }
         />
-        
         <Route
-          path="/user/:id"
+          path="/tag/:id"
           element={
             <>
               <NavBar />
+              <Tag />
             </>
           }
-        /> */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/post" element={<Post />} />
-        <Route path="/Profile/:id" element={<>  <NavBar /> <Profile /> </>} />
+        />
+        <Route
+          path="/Profile/:id"
+          element={
+            <>
+              {" "}
+              <NavBar /> <Profile />{" "}
+            </>
+          }
+        />
       </Routes>
     </>
   );

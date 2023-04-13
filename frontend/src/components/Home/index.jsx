@@ -16,11 +16,14 @@ import Container from "@mui/material/Container";
 import { MdDelete, MdEdit } from "react-icons/md";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import Modal from "react-bootstrap/Modal";
 import {
   setPosts,
   setComments,
   addComment,
   deletePosts,
+  deleteComment,
+  updateComment,
 } from "../redux/reducers/posts";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
@@ -47,6 +50,10 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function Home() {
+  const [showUpdate, setShowUpdate] = useState(false);
+
+  const handleCloseUpdate = () => setShowUpdate(false);
+  const handleShowUpdate = (id) => setShowUpdate(id);
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -107,7 +114,6 @@ export default function Home() {
       });
       if (result.data.success) {
         const comments = result.data.result;
-        console.log(comments);
         dispatch(
           setComments({
             comments,
@@ -120,7 +126,7 @@ export default function Home() {
     }
   };
 
-  const deleteCommentFunction = async (id) => {
+  const deleteCommentFunction = async (id, post_id) => {
     try {
       const result = await axios.delete(`${BACKEND}/comments/${id}`, {
         headers: {
@@ -128,7 +134,26 @@ export default function Home() {
         },
       });
       if (result.data.success) {
-        console.log(result.data);
+        dispatch(deleteComment({ id, post_id }));
+      } else throw Error;
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const updateCommentFunction = async (id, post_id, comment) => {
+    try {
+      const result = await axios.put(
+        `${BACKEND}/comments/${id}`,
+        { comment },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (result.data.success) {
+        dispatch(updateComment({ id, post_id, comment }));
       } else throw Error;
     } catch (error) {
       console.log(error.response.data.message);
@@ -181,7 +206,7 @@ export default function Home() {
                     )
                   }
                   title={post.user_first_name}
-                  subheader={post.created_at}
+                  subheader={post.created_at.split("T")[0]}
                 />
 
                 {}
@@ -268,6 +293,7 @@ export default function Home() {
                                   comment,
                                 })
                               );
+                              e.target[0].value = "";
                             } else throw Error;
                           } catch (err) {
                             console.log(err);
@@ -302,11 +328,12 @@ export default function Home() {
                             post.comments.map((comment) => {
                               return (
                                 <ListGroup.Item
+                                  key={comment.id}
                                   style={{
                                     display: "flex",
                                   }}
                                 >
-                                  <ListItem key={comment.id}>
+                                  <ListItem>
                                     <ListItemAvatar>
                                       <Avatar src={comment.img} />
                                     </ListItemAvatar>
@@ -316,15 +343,65 @@ export default function Home() {
                                     />
                                   </ListItem>
                                   {(role === "Admin" ||
-                                    userId === comment.user_id) && (
+                                    userId == comment.user_id) && (
                                     <>
                                       {userId === comment.user_id && (
-                                        <IconButton aria-label="edit comment">
-                                          <MdEdit />
-                                        </IconButton>
+                                        <>
+                                          <IconButton
+                                            onClick={(e) => {
+                                              handleShowUpdate(comment.id);
+                                            }}
+                                            aria-label="edit comment"
+                                          >
+                                            <MdEdit />
+                                          </IconButton>
+                                          <Modal
+                                            show={showUpdate === comment.id}
+                                            onHide={handleCloseUpdate}
+                                          >
+                                            <Modal.Header closeButton>
+                                              <Modal.Title>
+                                                Update Comment
+                                              </Modal.Title>
+                                            </Modal.Header>
+
+                                            <Form
+                                              onSubmit={(e) => {
+                                                e.preventDefault();
+                                                console.log(e.target[0].value);
+                                                updateCommentFunction(
+                                                  comment.id,
+                                                  post.id,
+                                                  e.target[0].value
+                                                );
+                                                handleCloseUpdate();
+                                              }}
+                                            >
+                                              <Modal.Body>
+                                                <Form.Control
+                                                  type="text"
+                                                  defaultValue={comment.comment}
+                                                />
+                                              </Modal.Body>
+                                              <Modal.Footer>
+                                                <Button type="submit">
+                                                  Save Changes
+                                                </Button>
+                                              </Modal.Footer>
+                                            </Form>
+                                          </Modal>
+                                        </>
                                       )}
 
-                                      <IconButton aria-label="delete comment">
+                                      <IconButton
+                                        onClick={(e) => {
+                                          deleteCommentFunction(
+                                            comment.id,
+                                            post.id
+                                          );
+                                        }}
+                                        aria-label="delete comment"
+                                      >
                                         <MdDelete />
                                       </IconButton>
                                     </>
