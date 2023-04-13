@@ -207,6 +207,10 @@ const Post = () => {
    }
 
   //===============================================================
+
+
+    //===============================================================
+
   
   return (
     <div className="post" >
@@ -240,10 +244,7 @@ const Post = () => {
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
+          <FavoriteIcon /><div style={{fontSize:"20px"}}>{post.likes}</div>
         </IconButton>
         <ExpandMore
           expand={expanded}
