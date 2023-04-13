@@ -1,3 +1,4 @@
+import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
@@ -5,14 +6,9 @@ import "./style.css"
 import { useDispatch, useSelector } from "react-redux";
 import { Container,Alert } from "react-bootstrap";
 import { useContext, useState, useEffect } from "react";
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import Stack from '@mui/material/Stack';
 
 
-const Popup_Post_Edit = (props) => {
+const Popup_Comment_Edit = (props) => {
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState(false);
     const [comment, setComments] = useState(props.comment);
@@ -65,24 +61,13 @@ const Popup_Post_Edit = (props) => {
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        update you'r post
+                        update you'r comment
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Label>new post:</Form.Label>
+                    <Form.Label>new comment:</Form.Label>
                     <Form.Control name="img" onChange={(e) =>{setAddComment(e.target.value)}} defaultValue={comment} />
                 </Modal.Body>
-
-                <Stack direction="row" alignItems="center" spacing={2}>
-      <Button variant="contained" component="label">
-        Upload
-        <input hidden accept="image/*" multiple type="file" />
-      </Button>
-      <IconButton color="primary" aria-label="upload picture" component="label">
-        <input hidden accept="image/*" type="file" />
-        <PhotoCamera />
-      </IconButton>
-    </Stack>
 
                 <Modal.Footer>
                     <div className="addSubmit">
@@ -99,4 +84,4 @@ const Popup_Post_Edit = (props) => {
     )
 }
 
-export default Popup_Post_Edit
+export default Popup_Comment_Edit
