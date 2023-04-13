@@ -31,6 +31,7 @@ export const postsSlice = createSlice({
       });
     },
     addComment: (state, { payload }) => {
+      console.log("payload", payload)
       state.posts = state.posts.map((post) => {
         if (post.id === payload.post_id) {
           if (post.comments) {

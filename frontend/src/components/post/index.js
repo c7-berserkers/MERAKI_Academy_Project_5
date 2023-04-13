@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container,Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
+import { setPosts, setComments, addComment } from "../redux/reducers/posts";
 
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -63,22 +64,23 @@ const Post = () => {
 
   const dispatch = useDispatch();
   
-    const state = useSelector((state) => {
+  const { token, post, pfp, userId, userName } = useSelector((state) => {
       
       return {
         userId: state.auth.userId,
         token: state.auth.token,
         userLikes: state.auth.userLikes,
         pfp: state.auth.pfp,
+        post: state.posts.posts,
         
       };
     });
 
-  const [comments, setComments] = useState("");
-  const [post, setPost] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState(false);
-  const [addComment, setAddComment] = useState("");
+  const [addComment5, setAddComment] = useState("");
+
+  
 
   //===============================================================
 
@@ -95,15 +97,15 @@ const Post = () => {
     try {
       const result = await axios.get("http://localhost:5000/posts/2", {
         headers: {
-          Authorization: `Bearer ${state.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (result.data.success) {
         console.log(result.data)
         setMessage("");
         setStatus(false)
-        setComments(result.data.comments)
-        setPost(result.data.post)
+        dispatch(setPosts([result.data.post]));
+        dispatch(setComments({post_id:result.data.post.id,comments:result.data.comments}));
       } else throw Error;
     } catch (error) {
       if (!error.response.data.success) {
@@ -121,8 +123,9 @@ const Post = () => {
 
   //===============================================================
  const commentFunction= ()=>{
-
-    return comments.length>0? comments.map((e,i)=>{
+  console.log(post[0].comments)
+  console.log(post)
+    return post[0].comments.length>0? post[0].comments.map((e,i)=>{
         return (
           <div key={e.id}>
         <Card key={e.id} sx={{ minWidth: 275 }}>
@@ -137,7 +140,7 @@ const Post = () => {
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           {e.created_at}
           </Typography>
-          {e.user_id == state.userId?
+          {e.user_id == userId?
           <Stack direction="row" spacing={2}>
       <Button value={e.id} variant="outlined" onClick={(e) => {
               deleteCommentFunction(e);
@@ -163,15 +166,20 @@ const Post = () => {
       return
     }
     try {
-      const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:addComment},{
+      const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:addComment5},{
         headers: {
-          Authorization: `Bearer ${state.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (result.data.success) {
-        console.log(result.data)
+        console.log(result.data.result)
+        const comment = result.data.result
+        comment.img =pfp
+        comment.first_name=userName
+        dispatch(addComment({post_id:post[0].id,comment:comment}));
         setMessage("");
         setStatus(false)
+        return
       } else throw Error;
     } catch (error) {
       if (!error.response.data.success) {
@@ -182,13 +190,13 @@ const Post = () => {
       setMessage("Error happened while Add Comment, please try again");
     }
    }
+  //===============================================================
 
    const deleteCommentFunction = async(e)=>{
-    console.log(e.target.value)
     try {
       const result = await axios.delete(`http://localhost:5000/comments/${e.target.value}`,{
         headers: {
-          Authorization: `Bearer ${state.token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (result.data.success) {
@@ -207,12 +215,13 @@ const Post = () => {
    }
 
   //===============================================================
-
+    const addLikeFunction =()=>{
+      console.log("hi osama")
+    }
 
     //===============================================================
-
-  
-  return (
+if(post[0]){
+return (
     <div className="post" >
       <Container>
        
@@ -220,31 +229,33 @@ const Post = () => {
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            <Avatar alt="Remy Sharp" src={post.user_img} />
+            <Avatar alt="Remy Sharp" src={post[0].user_img} />
           </Avatar>
         }
-        action={post.user_id==state.userId?<IconButton aria-label="settings" onClick={() => {
+        action={post[0].user_id==userId?<IconButton aria-label="settings" onClick={() => {
           setModalShowEditPopupPost(!modalShowEditPopupPost);
         }}>
             <MoreVertIcon/>
           </IconButton>:""
         }
-        title={post.first_name}
+        title={post[0].first_name}
         subheader="September 14, 2016"
       />
       <CardMedia
         component="img"
         height="194"
-        image={post.img}
+        image={post[0].img}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {post.description}
+          {post[0].description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon /><div style={{fontSize:"20px"}}>{post.likes}</div>
+        <IconButton aria-label="add to favorites"  onClick={() => {
+          addLikeFunction()
+        }}>
+          <FavoriteIcon /><div style={{fontSize:"20px"}}>{post[0].likes}</div>
         </IconButton>
         <ExpandMore
           expand={expanded}
@@ -264,7 +275,7 @@ const Post = () => {
                       <Avatar
                         style={{ height: "55px", width: "55px" }}
                         alt="user"
-                        src={state.pfp}
+                        src={pfp}
                       />
                       <TextField
                           onChange={(e) => setAddComment(e.target.value)}
@@ -273,7 +284,7 @@ const Post = () => {
                         label="Add a comment..."
                         variant="outlined"
                       />
-                      <Button value={post.id} variant="contained" endIcon={<SendIcon />} onClick={(e) => {
+                      <Button value={post[0].id} variant="contained" endIcon={<SendIcon />} onClick={(e) => {
               addCommentFunction(e);
             }}>
                         Send
@@ -286,9 +297,14 @@ const Post = () => {
       </Collapse>
     </Card>
       </Container>
-      <Popup_Post_Edit id={post.id} post={post.description} show={modalShowEditPopupPost} onHide={() => setModalShowEditPopupPost(false)} />
+      <Popup_Post_Edit id={post[0].id} post={post[0].description} show={modalShowEditPopupPost} onHide={() => setModalShowEditPopupPost(false)} />
     </div>    
   );
+}else{
+  return <p>loding</p>
+}
+  
+  
 };
 
 export default Post;
