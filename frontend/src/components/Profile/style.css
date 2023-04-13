@@ -1,11 +1,16 @@
+.flex1 {
+    margin: 0px 110px;
+}
+
 .flex {
     display: flex;
     flex-wrap: wrap;
     margin: 0px 110px;
-
+    
 }
 
-.flex:hover {
+
+.flex2:hover {
     border-radius: 8px;
     box-shadow: 25px -29px 15px 0px rgba(0,150,250,0.1),0px 0px 19px -3px rgba(0,0,0,0.1);
 }
@@ -17,6 +22,10 @@
     border-radius: 50%;
     background-size: cover;
     margin-left: 18px;
+}
+
+.Paper{
+    margin-top: '80px',
 }
 
 #wrapper {
