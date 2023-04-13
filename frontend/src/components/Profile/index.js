@@ -24,20 +24,25 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 
 //==============================================================
+import Popup_Image_Edit from './PopupImageChange/index'
+import Popup_Edit_Data from './PopupEditMyData/index'
+import Popup_Delete_Profile from './PopupDeleteAccount/index'
+
+
+//===============================================================
 
 
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
+import PeopleIcon from '@mui/icons-material/People';
+import BurstModeIcon from '@mui/icons-material/BurstMode';
 
 
 
 //===============================================================
 
-import Popup_Image_Edit from './PopupImageChange'
-import Popup_Edit_Data from './PopupEditMyData/index'
 
-//===============================================================
 
 
 import { useDispatch, useSelector } from "react-redux";
@@ -78,7 +83,8 @@ export default function Profile() {
 
     const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false)
     const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] = useState(false)
-
+    const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] = useState(false)
+    
     //===============================================================
     const state = useSelector((state) => {
 
@@ -137,6 +143,7 @@ export default function Profile() {
                         <div className="userData">
                             <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
                             <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
+                            <Popup_Delete_Profile show={modalShowEditPopupDeleteProfile} onHide={() => setModalShowEditPopupDeleteProfile(false)} />
                             <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
                             <h4>{state.dataUser.email}</h4>
                             <h4>Age : {state.dataUser.age}</h4>
@@ -148,6 +155,13 @@ export default function Profile() {
                                     Edit
                                 </Button>
                             </Stack>
+                                <Button variant="contained" onClick={() => { setModalShowEditPopupMyProfile(true) }} endIcon={<EditNoteIcon />}>
+                                    Edit Password
+                                </Button>
+                                <Button variant="contained" onClick={() => { setModalShowEditPopupDeleteProfile(true) }} endIcon={<EditNoteIcon />}>
+                                    Delete Account
+                                </Button>
+                                {/* modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile */}
                         </div>
                     </div>
                     <div className="flex1">
@@ -167,13 +181,14 @@ export default function Profile() {
                         component="ul">
                     
                                 <ListItem >
-                                    <Chip  label={"followers: "+state.dataUser.followers_count}/>
+                                    
+                                    <Chip icon={<PeopleIcon />} label={"followers: "+state.dataUser.followers_count}/>
                                 </ListItem>
                                 <ListItem >
-                                    <Chip  label={"following: "+state.dataUser.following_count} />
+                                    <Chip icon={<PeopleIcon />}  label={"following: "+state.dataUser.following_count} />
                                 </ListItem>
                                 <ListItem >
-                                    <Chip  label={"posts: "+state.postsUser.length} />
+                                    <Chip icon={<BurstModeIcon />}  label={"posts: "+state.postsUser.length} />
                                 </ListItem>
                     </Paper>
                     {/* ******************************************************************************* */}
