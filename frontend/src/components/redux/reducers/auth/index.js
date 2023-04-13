@@ -25,7 +25,7 @@ export const authSlice = createSlice({
       localStorage.setItem("userId", state.userId);
       localStorage.setItem("role", state.role);
       localStorage.setItem("pfp", state.pfp);
-      localStorage.setItem("userName", payload.userName);
+      localStorage.setItem("userName", state.userName);
     },
     setUserLikes: (state, { payload }) => {
       state.userLikes = payload;

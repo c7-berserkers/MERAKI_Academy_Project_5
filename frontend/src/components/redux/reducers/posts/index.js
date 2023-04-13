@@ -42,6 +42,29 @@ export const postsSlice = createSlice({
         return post;
       });
     },
+    deleteComment: (state, { payload }) => {
+      state.posts = state.posts.map((post) => {
+        if (post.id === payload.post_id) {
+          post.comments = post.comments.filter((comment) => {
+            return comment.id !== payload.id;
+          });
+        }
+        return post;
+      });
+    },
+    updateComment: (state, { payload }) => {
+      state.posts = state.posts.map((post) => {
+        if (post.id === payload.post_id) {
+          post.comments = post.comments.map((comment) => {
+            if ((comment.id = payload.id)) {
+              comment.comment = payload.comment;
+            }
+            return comment;
+          });
+        }
+        return post;
+      });
+    },
   },
 });
 
@@ -52,5 +75,7 @@ export const {
   deletePosts,
   setComments,
   addComment,
+  deleteComment,
+  updateComment,
 } = postsSlice.actions;
 export default postsSlice.reducer;
