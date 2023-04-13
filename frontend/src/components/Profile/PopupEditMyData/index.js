@@ -1,11 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import "./style.css";
 import axios from 'axios';
+import "./style.css";
+
+
+
+//===============================================================
+
+
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../redux/reducers/profile/index";
+
+//=================================================================
 
 const Popup_Edit_Data = (props) => {
+
+    //===============================================================
+
+    const dispatch = useDispatch();
+
+    //===============================================================
 
     let user_test = {
         first_name: undefined,
@@ -15,27 +31,30 @@ const Popup_Edit_Data = (props) => {
         email: undefined,
         password: undefined,
     }
+    const [userDataHolder, setUserDataHolder] = useState(user_test)
 
-    const [userData, setUserData] = useState(user_test)
+    //===================================================
+
+
 
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        setUserData((preData) => ({ ...preData, [name]: value }))
-        console.log(userData);
+        setUserDataHolder((preData) => ({ ...preData, [name]: value }))
+        console.log(userDataHolder);
     }
 
 
-
     const submitNewData = () => {
-
-        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userData, {
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userDataHolder, {
             headers: {
                 'Authorization': `${localStorage.getItem("userId")}`
             }
         })
             .then(function (response) {
-
+                // userData
+                console.log(response.data.user, "my data")
+                dispatch(setUserData(response.data.user))
             })
             .catch(function (error) {
                 console.log(error);
@@ -60,25 +79,18 @@ const Popup_Edit_Data = (props) => {
 
                 <form onSubmit={(event) => event.preventDefault()} className="myProfileAreaEdit">
                     <label htmlFor="first_name" >first_name: </label>
-                    <Form.Control  name="first_name"  placeholder="your first_name" onChange={handleChange} />
-
+                    <Form.Control name="first_name" placeholder="your first_name" onChange={handleChange} />
                     <label htmlFor="last_name" >last_name:</label>
-                    <Form.Control  name="last_name"  placeholder="your last_name" onChange={handleChange} />
-
+                    <Form.Control name="last_name" placeholder="your last_name" onChange={handleChange} />
                     <label htmlFor="age" >age:</label>
-                    <Form.Control  name="age"   placeholder="your age" onChange={handleChange} />
-
+                    <Form.Control name="age" placeholder="your age" onChange={handleChange} />
                     <label htmlFor="age" >country:</label>
-                    <Form.Control  name="country"   placeholder="your country" onChange={handleChange} />
-
+                    <Form.Control name="country" placeholder="your country" onChange={handleChange} />
                     <label htmlFor="email" >email:</label>
-                    <Form.Control  name="email"   placeholder="your email" onChange={handleChange} />
-
+                    <Form.Control name="email" placeholder="your email" onChange={handleChange} />
                     <label htmlFor="password" >password:</label>
-                    <Form.Control  name="password" type="password" placeholder="your password" onChange={handleChange} />
+                    <Form.Control name="password" type="password" placeholder="your password" onChange={handleChange} />
                 </form>
-
-
             </Modal.Body>
             <Modal.Footer>
                 <div className='submitNewButton' >

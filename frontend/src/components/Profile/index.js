@@ -23,6 +23,15 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 
+//==============================================================
+
+
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import TagFacesIcon from '@mui/icons-material/TagFaces';
+
+
+
 //===============================================================
 
 import Popup_Image_Edit from './PopupImageChange'
@@ -52,6 +61,10 @@ export default function Profile() {
 
     const dispatch = useDispatch();
 
+
+    const ListItem = styled('li')(({ theme }) => ({
+        margin: theme.spacing(0.5),
+    }));
 
     //==========================posts=================================
 
@@ -105,6 +118,7 @@ export default function Profile() {
 
             {state.dataUser ? <>
                 <CardContent>
+                <div className="flex2">
                     <div className="flex">
                         <div id="wrapper">
                             <div id="image_div">
@@ -124,7 +138,7 @@ export default function Profile() {
                             <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
                             <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
                             <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
-                            <h4>Email : {state.dataUser.email}</h4>
+                            <h4>{state.dataUser.email}</h4>
                             <h4>Age : {state.dataUser.age}</h4>
                             <h4>Country : {state.dataUser.country}</h4>
                         </div>
@@ -136,12 +150,43 @@ export default function Profile() {
                             </Stack>
                         </div>
                     </div>
+                    <div className="flex1">
+                    {/* ******************************************************************************* */}
+                    <Paper
+                        sx={{
+                            backgroundColor: '#f0f0f0',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap',
+                            listStyle: 'none',
+                            p: 0.5,
+                            m: 0,
+                            boxShadow: 'none',
+                        }}
+                        className="Paper"
+                        component="ul">
+                    
+                                <ListItem >
+                                    <Chip  label={"followers: "+state.dataUser.followers_count}/>
+                                </ListItem>
+                                <ListItem >
+                                    <Chip  label={"following: "+state.dataUser.following_count} />
+                                </ListItem>
+                                <ListItem >
+                                    <Chip  label={"posts: "+state.postsUser.length} />
+                                </ListItem>
+                    </Paper>
+                    {/* ******************************************************************************* */}
+                    </div>
+                    </div>
                 </CardContent>
+
             </> : <p>noData</p>}
 
             <hr style={{ backgroundColor: "black", fontSize: "2em" }} />
 
-{/* ******************************************* post of user ************************************************* */}
+
+            {/* ******************************************* post of user ************************************************* */}
 
             <Container>
                 {state.postsUser.map((post) => {

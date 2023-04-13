@@ -16,6 +16,7 @@ export const profileSlice = createSlice({
         updateUserImage: (state, action) => {
             state.UserData.img = action.payload;
         },
+
     },
     
 });
