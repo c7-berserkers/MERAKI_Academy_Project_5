@@ -15,7 +15,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts, setComments, addComment } from "../redux/reducers/posts";
+import {
+  setPosts,
+  setComments,
+  addComment,
+  deletePosts,
+} from "../redux/reducers/posts";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -26,6 +31,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Form from "react-bootstrap/Form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import ListGroup from "react-bootstrap/ListGroup";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -50,15 +56,17 @@ export default function Home() {
     setAnchorEl(null);
   };
 
-  const { token, posts, pfp, userId, userName } = useSelector((state) => {
+  const { token, posts, pfp, userId, userName, role } = useSelector((state) => {
     return {
       token: state.auth.token,
+      role: state.auth.role,
       userId: state.auth.userId,
       pfp: state.auth.pfp,
       posts: state.posts.posts,
       userName: state.auth.userName,
     };
   });
+
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
@@ -79,6 +87,18 @@ export default function Home() {
     }
   };
 
+  const deletePost = async (id) => {
+    try {
+      const result = await axios.delete(`${BACKEND}/posts/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.data.success) {
+        dispatch(deletePosts(id));
+      } else throw Error;
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
   const getCommentsForPost = async (id) => {
     try {
       const result = await axios.get(`${BACKEND}/comments/${id}`, {
@@ -132,18 +152,24 @@ export default function Home() {
                     ></Avatar>
                   }
                   action={
-                    <IconButton
-                      aria-controls={open ? "long-menu" : undefined}
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={handleClick}
-                      aria-label="settings"
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
+                    role === "Admin" || userId === post.user_id ? (
+                      <IconButton
+                        aria-controls={open ? "long-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        onClick={handleClick}
+                        aria-label="settings"
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    ) : (
+                      <></>
+                    )
                   }
                   title={post.user_first_name}
                   subheader={post.created_at}
                 />
+
+                {}
                 <Menu
                   id="long-menu"
                   MenuListProps={{
@@ -158,9 +184,14 @@ export default function Home() {
                     },
                   }}
                 >
-                  {}
-                  <MenuItem onClick={handleClose}>Delete Post</MenuItem>
-                  <MenuItem onClick={handleClose}>Edit Post</MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      deletePost(post.id);
+                      handleClose();
+                    }}
+                  >
+                    Delete Post
+                  </MenuItem>
                 </Menu>
 
                 <CardMedia
@@ -247,27 +278,31 @@ export default function Home() {
                       <List
                         sx={{
                           width: "100%",
-                          maxWidth: 360,
+
                           bgcolor: "background.paper",
                         }}
                       >
-                        {post.comments ? (
-                          post.comments.map((comment) => {
-                            return (
-                              <ListItem key={comment.id}>
-                                <ListItemAvatar>
-                                  <Avatar src={comment.img} />
-                                </ListItemAvatar>
-                                <ListItemText
-                                  primary={comment.comment}
-                                  secondary={`By ${comment.first_name}`}
-                                />
-                              </ListItem>
-                            );
-                          })
-                        ) : (
-                          <></>
-                        )}
+                        <ListGroup>
+                          {post.comments ? (
+                            post.comments.map((comment) => {
+                              return (
+                                <ListGroup.Item>
+                                  <ListItem key={comment.id}>
+                                    <ListItemAvatar>
+                                      <Avatar src={comment.img} />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                      primary={comment.comment}
+                                      secondary={`By ${comment.first_name}`}
+                                    />
+                                  </ListItem>
+                                </ListGroup.Item>
+                              );
+                            })
+                          ) : (
+                            <></>
+                          )}
+                        </ListGroup>
                       </List>
                     </div>
                   </CardContent>

@@ -212,13 +212,13 @@ const getPostById = (req, res) => {
 
 const deletePost = (req, res) => {
   const id = req.params.id;
-  const user_id = req.token.userId;
+  // const user_id = req.token.userId;
 
   const query = `
     UPDATE posts 
     SET is_deleted = 1
-    WHERE user_id=$2 AND id=$1 AND is_deleted=0 RETURNING *;`;
-  const data = [id * 1, user_id * 1];
+    WHERE id=$1 AND is_deleted=0 RETURNING *;`;
+  const data = [Number(id)];
   console.log(data);
   pool
     .query(query, data)
