@@ -11,7 +11,7 @@ import { useContext, useState, useEffect } from "react";
 const Popup_Comment_Edit = (props) => {
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState(false);
-    const [comment, setComments] = useState(props.comment);
+    const [comment, setComment] = useState(props.comment);
     const [addComment, setAddComment] = useState("");
     const [commentId, setCommentId] = useState(props.id);
 
