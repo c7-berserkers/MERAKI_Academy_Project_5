@@ -218,6 +218,7 @@ const updateUserById = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
+  console.log("delete")
   const { id } = req.params;
   const query = `UPDATE users SET is_deleted=1 WHERE id=$1 RETURNING *`;
   try {

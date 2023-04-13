@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
 import { Button, Form, Alert, } from "react-bootstrap";
+import { useNavigate  } from "react-router-dom";
+import Modal from 'react-bootstrap/Modal';
+import React, { useState } from "react";
+import axios from 'axios';
 
 //===============================================================
 
@@ -11,9 +12,12 @@ import { setRandomNumber } from "../../redux/reducers/profile/index";
 //===============================================================
 
 const Popup_Delete_Profile = (props) => {
-
-    var randomstring = require("randomstring");
     
+    const navigate=useNavigate()
+
+
+    var randomString = require("randomstring");
+
     //===============================================================
     const dispatch = useDispatch();
 
@@ -26,7 +30,7 @@ const Popup_Delete_Profile = (props) => {
     //===============================================================
     let randomData
     if (!state.RandomNumber) {
-        randomData = randomstring.generate({
+        randomData = randomString.generate({
             length: 15,
             charset: 'alphanumeric'
         });
@@ -36,6 +40,7 @@ const Popup_Delete_Profile = (props) => {
     }
     const [userData, setUserData] = useState(undefined)
     const [alert, setAlert] = useState(false)
+    const [colorMassage, setColorMassage] = useState("danger")
 
 
 
@@ -57,11 +62,26 @@ const Popup_Delete_Profile = (props) => {
             setAlert(errors["randomInput"]);
             return;
         }
-        setAlert(0)
+        setColorMassage("success")
+        setAlert('delete is done')
+        axios.delete(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, {
+            headers: {
+                'Authorization': `${localStorage.getItem("userId")}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setColorMassage("success")
+                setAlert(' deleted successful')
+                setTimeout(()=>{ navigate("/register")},3000)
 
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
-        
     }
+
 
     //===============================================================
     return (
@@ -73,16 +93,14 @@ const Popup_Delete_Profile = (props) => {
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Add New Image
+                        Delete Profile
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
                     <Form.Label>Retype {randomData} if you really want to delete account:-   </Form.Label>
                     <Form.Control name="random_Input" onChange={(e) => { setUserData(e.target.value) }} placeholder="" />
-                    {alert ? <Alert key="danger" style={{ margin: "12px 0px" }} variant="danger">{alert}</Alert> : <> </>}
+                    {alert ? <Alert key={colorMassage} style={{ margin: "12px 0px" }} variant={colorMassage}>{alert}</Alert> : <> </>}
                 </Modal.Body>
-
                 <Modal.Footer>
                     <div className="addSubmit">
                         <Button variant="primary" onClick={delete_Function}>submit</Button>
