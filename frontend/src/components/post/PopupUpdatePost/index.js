@@ -15,9 +15,9 @@ import Stack from '@mui/material/Stack';
 const Popup_Post_Edit = (props) => {
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState(false);
-    const [comment, setComments] = useState(props.comment);
-    const [addComment, setAddComment] = useState("");
-    const [commentId, setCommentId] = useState(props.id);
+    const [post, setPost] = useState(props.post);
+    const [updatePost, setUpdatePost] = useState("");
+    const [postId, setPostId] = useState(props.id);
 
     const state = useSelector((state) => {
       
@@ -35,7 +35,7 @@ const Popup_Post_Edit = (props) => {
 
     const updateComment = async(e) => {
         try {
-          const result = await axios.put(`http://localhost:5000/comments/${e.target.value}`,{comment:addComment},{
+          const result = await axios.put(`http://localhost:5000/posts/${e.target.value}`,{description:updatePost},{
             headers: {
               Authorization: `Bearer ${state.token}`,
             },
@@ -50,7 +50,7 @@ const Popup_Post_Edit = (props) => {
             return setMessage(error.response.data.message);
           }
           setStatus(true)
-          setMessage("Error happened while update Comment, please try again");
+          setMessage("Error happened while update post, please try again");
         }
     }
 
@@ -69,24 +69,12 @@ const Popup_Post_Edit = (props) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Label>new post:</Form.Label>
-                    <Form.Control name="img" onChange={(e) =>{setAddComment(e.target.value)}} defaultValue={comment} />
+                    <Form.Label>new post description:</Form.Label>
+                    <Form.Control defaultValue={post} name="img" onChange={(e) =>{setUpdatePost(e.target.value)}} />
                 </Modal.Body>
-
-                <Stack direction="row" alignItems="center" spacing={2}>
-      <Button variant="contained" component="label">
-        Upload
-        <input hidden accept="image/*" multiple type="file" />
-      </Button>
-      <IconButton color="primary" aria-label="upload picture" component="label">
-        <input hidden accept="image/*" type="file" />
-        <PhotoCamera />
-      </IconButton>
-    </Stack>
-
                 <Modal.Footer>
                     <div className="addSubmit">
-                        <Button value={commentId} variant="primary" onClick={(e) => {updateComment(e)}}>submit</Button>
+                        <Button value={postId} variant="primary" onClick={(e) => {updateComment(e)}}>submit</Button>
                     </div>
                     <Button className="shadowButton" onClick={props.onHide}>Close</Button>
                 </Modal.Footer>
