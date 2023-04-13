@@ -13,6 +13,7 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Container from "@mui/material/Container";
+import { MdDelete, MdEdit } from "react-icons/md";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -119,6 +120,20 @@ export default function Home() {
     }
   };
 
+  const deleteCommentFunction = async (id) => {
+    try {
+      const result = await axios.delete(`${BACKEND}/comments/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (result.data.success) {
+        console.log(result.data);
+      } else throw Error;
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  };
   const handleExpandClick = (id) => {
     return () => {
       if (expanded) {
@@ -286,7 +301,11 @@ export default function Home() {
                           {post.comments ? (
                             post.comments.map((comment) => {
                               return (
-                                <ListGroup.Item>
+                                <ListGroup.Item
+                                  style={{
+                                    display: "flex",
+                                  }}
+                                >
                                   <ListItem key={comment.id}>
                                     <ListItemAvatar>
                                       <Avatar src={comment.img} />
@@ -296,6 +315,20 @@ export default function Home() {
                                       secondary={`By ${comment.first_name}`}
                                     />
                                   </ListItem>
+                                  {(role === "Admin" ||
+                                    userId === comment.user_id) && (
+                                    <>
+                                      {userId === comment.user_id && (
+                                        <IconButton aria-label="edit comment">
+                                          <MdEdit />
+                                        </IconButton>
+                                      )}
+
+                                      <IconButton aria-label="delete comment">
+                                        <MdDelete />
+                                      </IconButton>
+                                    </>
+                                  )}
                                 </ListGroup.Item>
                               );
                             })
