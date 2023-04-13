@@ -78,7 +78,7 @@ const Post = () => {
 
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState(false);
-  const [addComment5, setAddComment] = useState("");
+  const [newComment, setNewComment] = useState("");
 
   
 
@@ -166,7 +166,7 @@ const Post = () => {
       return
     }
     try {
-      const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:addComment5},{
+      const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:newComment},{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -278,7 +278,7 @@ return (
                         src={pfp}
                       />
                       <TextField
-                          onChange={(e) => setAddComment(e.target.value)}
+                          onChange={(e) => setNewComment(e.target.value)}
                         style={{ margin: "0 10px", width: "85%" }}
                         id="outlined-basic"
                         label="Add a comment..."
