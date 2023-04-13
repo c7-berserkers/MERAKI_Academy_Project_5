@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -109,6 +109,7 @@ export default function Home() {
       }
     };
   };
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -143,6 +144,24 @@ export default function Home() {
                   title={post.user_first_name}
                   subheader={post.created_at}
                 />
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      width: "20ch",
+                    },
+                  }}
+                >
+                  {}
+                  <MenuItem onClick={handleClose}>Delete Post</MenuItem>
+                  <MenuItem onClick={handleClose}>Edit Post</MenuItem>
+                </Menu>
 
                 <CardMedia
                   component="img"
