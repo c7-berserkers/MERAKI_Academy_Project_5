@@ -1,52 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import validator from 'validator';
+import Form from 'react-bootstrap/Form';
 import "./style.css";
 import axios from 'axios';
 
 const Popup_Edit_Data = (props) => {
 
-
-    const user_test = {
-        name: undefined,
+    let user_test = {
+        first_name: undefined,
+        last_name: undefined,
         age: undefined,
         country: undefined,
+        email: undefined,
+        password: undefined,
     }
+
     const [userData, setUserData] = useState(user_test)
-    const { name, age, country } = userData
-    const [errors, setErrors] = useState({})
+
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserData((preData) => ({ ...preData, [name]: value }))
+        console.log(userData);
     }
 
-    const validateData = () => {
-        let errors = {};
-        if (!name) {
-
-            errors.name = "Name is required";
-        }
-        if (!country) {
-
-            errors.country = "country is required";
-        }
-        if (!validator.isDate(age)) {
-
-            errors.age = "Date is required";
-        }
-
-        return errors
-    }
 
 
     const submitNewData = () => {
-        const errors = validateData();
-        if (Object.keys(errors).length) {
-            setErrors(errors);
-            return;
-        }
-        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`,userData, {
+
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userData, {
             headers: {
                 'Authorization': `${localStorage.getItem("userId")}`
             }
@@ -57,7 +40,7 @@ const Popup_Edit_Data = (props) => {
             .catch(function (error) {
                 console.log(error);
             });
-        
+
     }
 
     return (
@@ -76,15 +59,23 @@ const Popup_Edit_Data = (props) => {
 
 
                 <form onSubmit={(event) => event.preventDefault()} className="myProfileAreaEdit">
-                    <label htmlFor="name" >name: </label>
-                    <input name="name" required placeholder="your full name" onChange={handleChange}></input>
-                    <div style={{ color: "red" }}>{errors.name}</div>
-                    <label htmlFor="country" >country:</label>
-                    <input name="country" required placeholder="your country" onChange={handleChange}></input>
-                    <div style={{ color: "red" }}>{errors.country}</div>
+                    <label htmlFor="first_name" >first_name: </label>
+                    <Form.Control  name="first_name"  placeholder="your first_name" onChange={handleChange} />
+
+                    <label htmlFor="last_name" >last_name:</label>
+                    <Form.Control  name="last_name"  placeholder="your last_name" onChange={handleChange} />
+
                     <label htmlFor="age" >age:</label>
-                    <input name="age" type="date" required placeholder="your age" onChange={handleChange}></input>
-                    <div style={{ color: "red" }}>{errors.age}</div>
+                    <Form.Control  name="age"   placeholder="your age" onChange={handleChange} />
+
+                    <label htmlFor="age" >country:</label>
+                    <Form.Control  name="country"   placeholder="your country" onChange={handleChange} />
+
+                    <label htmlFor="email" >email:</label>
+                    <Form.Control  name="email"   placeholder="your email" onChange={handleChange} />
+
+                    <label htmlFor="password" >password:</label>
+                    <Form.Control  name="password" type="password" placeholder="your password" onChange={handleChange} />
                 </form>
 
 
