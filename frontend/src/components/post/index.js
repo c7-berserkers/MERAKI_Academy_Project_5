@@ -146,7 +146,7 @@ const Post = () => {
       <Button variant="contained" onClick={() => {
               setModalShowEditPopup(e.id);
             }}>update</Button>
-            <Popup_Comment_Edit id={e.id} comment={e.comment} show={modalShowEditPopup===e.id} onHide={() => setModalShowEditPopup(false)} />
+            <Popup_Comment_Edit post_id={post[0].id} id={e.id} comment={e.comment} show={modalShowEditPopup===e.id} onHide={() => setModalShowEditPopup(false)} />
     </Stack>:""}
         </CardContent>
       </Card>
