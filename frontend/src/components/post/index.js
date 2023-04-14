@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container,Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
-import { setPosts, setComments, addComment } from "../redux/reducers/posts";
+import { setPosts, setComments, addComment,updatePosts } from "../redux/reducers/posts";
 
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -123,9 +123,7 @@ const Post = () => {
 
   //===============================================================
  const commentFunction= ()=>{
-  console.log(post[0].comments)
-  console.log(post)
-    return post[0].comments.length>0? post[0].comments.map((e,i)=>{
+    return post[0].comments?post[0].comments.length>0? post[0].comments.map((e,i)=>{
         return (
           <div key={e.id}>
         <Card key={e.id} sx={{ minWidth: 275 }}>
@@ -155,7 +153,7 @@ const Post = () => {
       <br></br>
       </div>
         )
-    }):<p>no comment yet</p>
+    }):<p>no comment yet</p>:""
  }
    //===============================================================
 
