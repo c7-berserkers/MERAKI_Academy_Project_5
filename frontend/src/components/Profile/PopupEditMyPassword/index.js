@@ -34,32 +34,24 @@ const Popup_Edit_MyPassword = (props) => {
     }
     const [userDataHolder, setUserDataHolder] = useState(user_test)
     const [oneError, setOneError] = useState(false)
-    const [errors, setErrors] = useState({})
     const [colorMassage, setColorMassage] = useState("danger")
     const { email, password , password_confirmed} = userDataHolder
- 
-
     //==================================================
+
     const validateData = () => {
         let errors = {};
-        console.log(email, password , password_confirmed,'ffff');
         if (email==undefined||!validator.isEmail(email)) {
-            console.log(email, password , password_confirmed,'ssss');
             errors.email = "A vialed email is required";
         }
         if (password!==password_confirmed) {
-            console.log(email, password , password_confirmed,'wwwww');
             errors.password = "A password not identical";
         }
         if (!validator.isStrongPassword(password)) {
-            console.log(email, password , password_confirmed,'zzzz');
             errors.password = "A vialed strong password is required";
         }
         console.log(errors,'errors');
         return errors
     }
-
-
 
 
     const handleChange = (e) => {
@@ -70,18 +62,24 @@ const Popup_Edit_MyPassword = (props) => {
 
 
     const submitNewPassword = () => {
-        console.log("tttt");
         const errors = validateData(); 
-    console.log("dddd");
         if (Object.keys(errors).length) {
         setOneError(Object.values(errors)[0])
-
         return;
         }
-        setOneError("edit is done")
-        setColorMassage("success")
-
-
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userDataHolder, {
+            headers: {
+                'Authorization': `${localStorage.getItem("userId")}`
+            }
+        })
+            .then(function (response) {
+                dispatch(setUserData(response.data.user))
+                setOneError("edit is done")
+                setColorMassage("success")
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     return (
