@@ -27,7 +27,7 @@ import { styled } from "@mui/material/styles";
 import Popup_Image_Edit from './PopupImageChange/index'
 import Popup_Edit_Data from './PopupEditMyData/index'
 import Popup_Delete_Profile from './PopupDeleteAccount/index'
-
+import Popup_Edit_MyPassword from './PopupEditMyPassword/index'
 
 //===============================================================
 
@@ -84,6 +84,7 @@ export default function Profile() {
     const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false)
     const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] = useState(false)
     const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] = useState(false)
+    const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false)
     
     //===============================================================
     const state = useSelector((state) => {
@@ -118,10 +119,7 @@ export default function Profile() {
     //===============================================================
 
     return (
-
         <div>
-
-
             {state.dataUser ? <>
                 <CardContent>
                 <div className="flex2">
@@ -144,6 +142,9 @@ export default function Profile() {
                             <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
                             <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
                             <Popup_Delete_Profile show={modalShowEditPopupDeleteProfile} onHide={() => setModalShowEditPopupDeleteProfile(false)} />
+                            <Popup_Edit_MyPassword show={modalShowEditPopupEditMyPassword} onHide={() => setModalShowEditPopupEditMyPassword(false)} />
+                            
+                            
                             <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
                             <h4>{state.dataUser.email}</h4>
                             <h4>Age : {state.dataUser.age}</h4>
@@ -155,13 +156,14 @@ export default function Profile() {
                                     Edit
                                 </Button>
                             </Stack>
-                                <Button variant="contained" onClick={() => { setModalShowEditPopupMyProfile(true) }} endIcon={<EditNoteIcon />}>
+                            
+                                <Button variant="contained" onClick={() => { setModalShowEditPopupEditMyPassword(true) }} endIcon={<EditNoteIcon />}>
                                     Edit Password
                                 </Button>
                                 <Button variant="contained" onClick={() => { setModalShowEditPopupDeleteProfile(true) }} endIcon={<EditNoteIcon />}>
                                     Delete Account
                                 </Button>
-                                {/* modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile */}
+                                
                         </div>
                     </div>
                     <div className="flex1">
