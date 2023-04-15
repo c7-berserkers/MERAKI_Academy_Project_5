@@ -3,7 +3,7 @@ const cors = require("cors");
 const socket = require("socket.io");
 require("dotenv").config();
 require("./models/db");
-
+const chatDB = require("./models/chatdb");
 const app = express();
 const PORT = process.env.PORT || 5000;
 

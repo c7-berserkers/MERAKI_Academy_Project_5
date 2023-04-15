@@ -244,7 +244,7 @@ const deleteUser = async (req, res) => {
 
 const searchUsers = (req, res) => {
   const { name } = req.params;
-  const query = `SELECT * FROM users WHERE first_name LIKE '%'$1'%' OR last_name LIKE '%'$1'%' ;`;
+  const query = `SELECT * FROM users WHERE first_name LIKE '%$1%' OR last_name LIKE '%$1%' ;`;
   pool
     .query(query, [name])
     .then(({ rows }) => {
