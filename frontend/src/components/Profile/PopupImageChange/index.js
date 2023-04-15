@@ -1,10 +1,14 @@
 import Button from 'react-bootstrap/Button';
-import React, { useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./style.css"
 import validator from 'validator';
+import  React,{ useEffect,useState,createContext } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import Img from './Img';
+
 //===============================================================
 
 
@@ -15,6 +19,8 @@ import { updateUserImage } from "../../redux/reducers/profile/index";
 
 const Popup_Image_Edit = (props) => {
 
+
+    const [img_Select,setImg_Select]=useState("")
     //===============================================================
 
     const dispatch = useDispatch();
@@ -71,6 +77,22 @@ const Popup_Image_Edit = (props) => {
 
     }
 
+    //==============================================================
+    const imgUpload=()=>{
+        console.log(img_Select)
+        const formData = new FormData();
+        formData.append("file" ,img_Select )
+        formData.append("upload_preset" ,"vledn3tb" )
+        axios.post("https://api.cloudinary.com/v1_1/dy9hkpipf/image/upload",formData).then((result)=>{
+          console.log(result,".data.secure_url")
+          const { value } =" e.target"
+          setUserData((preData) => ({ ...preData, ["img"]: value }))
+    }).catch((err)=>{
+            console.log(err)
+            
+        })
+      }
+
     //===============================================================
 
     return (
@@ -88,12 +110,15 @@ const Popup_Image_Edit = (props) => {
                 <Modal.Body>
 
                     <Form.Label>Image:</Form.Label>
-                    <Form.Control name="img" onChange={handleChange} placeholder="img url" />
+                    {/* <Form.Control name="img" onChange={handleChange} placeholder="img url" /> */}
+                        <Form.Control  type="file" onChange={(e)=>{setImg_Select(e.target.files[0])}}/>
                 </Modal.Body>
 
                 <Modal.Footer>
                     <div className="addSubmit">
-                        <Button variant="primary" onClick={add_image}>submit</Button>
+                        {/* <Img/> */}
+                        <Button type="submit"  variant="primary"  className="login-button" onClick={imgUpload}>submit</Button>
+                        {/* <Button variant="primary" onClick={add_image}>submit</Button> */}
                     </div>
                     <Button className="shadowButton" onClick={props.onHide}>Close</Button>
                 </Modal.Footer>

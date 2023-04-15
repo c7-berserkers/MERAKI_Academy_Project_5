@@ -10,17 +10,15 @@ export const profileSlice = createSlice({
     reducers: {
         setUserData: (state, action) => {
             state.UserData = action.payload;
-        },
-        setUserPosts: (state, action) => {
-            state.UserPosts = action.payload;
-        },
+        }, 
         updateUserImage: (state, action) => {
             state.UserData.img = action.payload;
         },
         setRandomNumber: (state, action) => {
             state.RandomNumber = action.payload;
+        },setUserPosts: (state, action) => {
+            state.UserPosts = action.payload;
         },
-
     },
     
 });

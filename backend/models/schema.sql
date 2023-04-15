@@ -90,32 +90,6 @@ CREATE TABLE follows(
   PRIMARY KEY (id)
 );
 
---chats
-CREATE TABLE chats(
-  id SERIAL NOT NULL,
-  sender_user_id INT,
-  reserver_user_id INT,
-  created_at timestamp DEFAULT NOW(),
-  is_deleted SMALLINT DEFAULT 0,
-  FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (reserver_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  PRIMARY KEY (id)
-);
-
---messages
-CREATE TABLE messages(
-  id SERIAL NOT NULL,
-  sender_user_id INT,
-  chat_id INT,
-  message TEXT NOT NULL,
-  created_at timestamp DEFAULT NOW(),
-  is_deleted SMALLINT DEFAULT 0,
-  FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE,
-  PRIMARY KEY (id)
-);
-
-
 --likes
 CREATE TABLE likes(
   id SERIAL NOT NULL,
@@ -126,10 +100,5 @@ CREATE TABLE likes(
   FOREIGN KEY (posts_id) REFERENCES posts(id) ON DELETE CASCADE,
   PRIMARY KEY (id)
 );
-
-
-
-
-
 
 
