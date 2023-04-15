@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateUserImage } from "../../redux/reducers/profile/index";
 
-//=========================posts======================================
+//===============================================================
 
 const Popup_Image_Edit = (props) => {
 
@@ -46,15 +46,10 @@ const Popup_Image_Edit = (props) => {
         return errors
     }
 
-
-    //===============================================================
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setUserData((preData) => ({ ...preData, [name]: value }))
-    }
     //===============================================================
 
     const add_image = () => {
+        console.log(userData)
         const errors = validateData();
         if (Object.keys(errors).length) {
             setErrors(errors);
@@ -84,14 +79,17 @@ const Popup_Image_Edit = (props) => {
         formData.append("file" ,img_Select )
         formData.append("upload_preset" ,"vledn3tb" )
         axios.post("https://api.cloudinary.com/v1_1/dy9hkpipf/image/upload",formData).then((result)=>{
-          console.log(result,".data.secure_url")
-          const { value } =" e.target"
-          setUserData((preData) => ({ ...preData, ["img"]: value }))
+        // console.log(result.data.url,"url_img")
+        // console.log("img", result.data.url ,"eeeee")
+        setUserData({ "img": result.data.url })
+        //===============================================================
+        // console.log(userData)
+            add_image()
     }).catch((err)=>{
             console.log(err)
             
         })
-      }
+    }
 
     //===============================================================
 
