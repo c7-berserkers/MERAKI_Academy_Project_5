@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import Post from "./components/post";
 import Profile from "./components/Profile/index";
 import Tag from "./components/Tag";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -50,6 +51,17 @@ function App() {
             <>
               {" "}
               <NavBar /> <Profile />{" "}
+            </>
+          }
+        />
+
+        {/* Handling Undefined Routes */}
+        <Route
+          path="*"
+          element={
+            <>
+              <NavBar />
+              <NotFound />
             </>
           }
         />
