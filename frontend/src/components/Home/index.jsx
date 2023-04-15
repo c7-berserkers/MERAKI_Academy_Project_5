@@ -8,7 +8,6 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -25,6 +24,7 @@ import {
   deleteComment,
   updateComment,
 } from "../redux/reducers/posts";
+import { removeLike, addLike } from "../redux/reducers/auth";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -36,6 +36,7 @@ import Form from "react-bootstrap/Form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListGroup from "react-bootstrap/ListGroup";
+import { useNavigate } from "react-router-dom";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -48,8 +49,8 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-
 export default function Home() {
+  const navigate = useNavigate();
   const [showUpdate, setShowUpdate] = useState(false);
 
   const handleCloseUpdate = () => setShowUpdate(false);
@@ -64,20 +65,29 @@ export default function Home() {
     setAnchorEl(null);
   };
 
-  const { token, posts, pfp, userId, userName, role } = useSelector((state) => {
-    return {
-      token: state.auth.token,
-      role: state.auth.role,
-      userId: state.auth.userId,
-      pfp: state.auth.pfp,
-      posts: state.posts.posts,
-      userName: state.auth.userName,
-    };
-  });
-
+  const { token, posts, pfp, userId, userName, role, likes } = useSelector(
+    (state) => {
+      return {
+        token: state.auth.token,
+        role: state.auth.role,
+        userId: state.auth.userId,
+        pfp: state.auth.pfp,
+        posts: state.posts.posts,
+        userName: state.auth.userName,
+        likes: state.auth.userLikes,
+      };
+    }
+  );
+  console.log(likes);
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
+  // --------------------
+  const isLiked = (arr, id) => {
+    return arr.find((e) => {
+      return (e.post_id = id);
+    });
+  };
   // ---------------------------------------
   const getPosts = async () => {
     try {
@@ -186,6 +196,9 @@ export default function Home() {
                 <CardHeader
                   avatar={
                     <Avatar
+                      onClick={(e) => {
+                        navigate(`/profile/${post.user_id}`);
+                      }}
                       sx={{ bgcolor: red[500] }}
                       src={post.user_img}
                       aria-label="recipe"
@@ -241,14 +254,35 @@ export default function Home() {
                   alt="post"
                 />
                 <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    {post.description}
-                  </Typography>
+                  <p>
+                    <strong>{post.description}</strong>
+                  </p>
                 </CardContent>
                 <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                  </IconButton>
+                  {isLiked(likes, post.id) ? (
+                    <IconButton
+                      onClick={(e) => {
+                        dispatch(removeLike(post.id));
+                      }}
+                      aria-label="add to favorites"
+                    >
+                      <FavoriteIcon style={{ color: "red" }} />
+                    </IconButton>
+                  ) : (
+                    <div style={{ display: "flex" }}>
+                      {" "}
+                      <IconButton
+                        onClick={(e) => {
+                          const payload = { post_id: post.id, user_id: userId };
+                          dispatch(addLike(payload));
+                        }}
+                        aria-label="add to favorites"
+                      >
+                        <FavoriteIcon />
+                      </IconButton>
+                      <p style={{ margin: "10px" }}>{post.likes_count}</p>
+                    </div>
+                  )}
 
                   <ExpandMore
                     expand={expanded === post.id}
