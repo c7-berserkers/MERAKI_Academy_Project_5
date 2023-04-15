@@ -28,8 +28,6 @@ const Popup_Edit_Data = (props) => {
         last_name: undefined,
         age: undefined,
         country: undefined,
-        email: undefined,
-        password: undefined,
     }
     const [userDataHolder, setUserDataHolder] = useState(user_test)
 
@@ -83,13 +81,9 @@ const Popup_Edit_Data = (props) => {
                     <label htmlFor="last_name" >last_name:</label>
                     <Form.Control name="last_name" placeholder="your last_name" onChange={handleChange} />
                     <label htmlFor="age" >age:</label>
-                    <Form.Control name="age" placeholder="your age" onChange={handleChange} />
-                    <label htmlFor="age" >country:</label>
+                    <Form.Control name="age" placeholder="your age" type="number" onChange={handleChange} />
+                    <label htmlFor="country" >country:</label>
                     <Form.Control name="country" placeholder="your country" onChange={handleChange} />
-                    <label htmlFor="email" >email:</label>
-                    <Form.Control name="email" placeholder="your email" onChange={handleChange} />
-                    <label htmlFor="password" >password:</label>
-                    <Form.Control name="password" type="password" placeholder="your password" onChange={handleChange} />
                 </form>
             </Modal.Body>
             <Modal.Footer>

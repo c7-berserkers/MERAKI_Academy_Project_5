@@ -97,15 +97,15 @@ const Popup_Delete_Profile = (props) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Label>Retype {randomData} if you really want to delete account:-   </Form.Label>
+                    <Form.Label>Retype {randomData} if you really want to delete account:  </Form.Label>
                     <Form.Control name="random_Input" onChange={(e) => { setUserData(e.target.value) }} placeholder="" />
                     {alert ? <Alert key={colorMassage} style={{ margin: "12px 0px" }} variant={colorMassage}>{alert}</Alert> : <> </>}
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="addSubmit">
-                        <Button variant="primary" onClick={delete_Function}>submit</Button>
+                        <Button variant="danger"  onClick={delete_Function}>submit</Button>
                     </div>
-                    <Button className="shadowButton" onClick={props.onHide}>Close</Button>
+                    <Button className="shadowButton"  onClick={props.onHide}>Close</Button>
                 </Modal.Footer>
             </Modal>
         </div>

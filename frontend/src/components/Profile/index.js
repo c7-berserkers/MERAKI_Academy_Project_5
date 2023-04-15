@@ -23,26 +23,32 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 
+
+
+
+import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Tooltip from '@mui/material/Tooltip';
+import SettingsIcon from '@mui/icons-material/Settings';
+
 //==============================================================
 import Popup_Image_Edit from './PopupImageChange/index'
 import Popup_Edit_Data from './PopupEditMyData/index'
 import Popup_Delete_Profile from './PopupDeleteAccount/index'
-
+import Popup_Edit_MyPassword from './PopupEditMyPassword/index'
 
 //===============================================================
 
 
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
-import TagFacesIcon from '@mui/icons-material/TagFaces';
 import PeopleIcon from '@mui/icons-material/People';
+import MenuItem from '@mui/material/MenuItem';
 import BurstModeIcon from '@mui/icons-material/BurstMode';
 
 
-
 //===============================================================
-
-
 
 
 import { useDispatch, useSelector } from "react-redux";
@@ -65,26 +71,24 @@ const ExpandMore = styled((props) => {
 export default function Profile() {
 
     const dispatch = useDispatch();
-
-
     const ListItem = styled('li')(({ theme }) => ({
         margin: theme.spacing(0.5),
     }));
 
     //==========================posts=================================
 
-
     const [expanded, setExpanded] = useState(false);
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
     //===============================================================
 
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false)
     const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] = useState(false)
     const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] = useState(false)
-    
+    const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false)
+
     //===============================================================
     const state = useSelector((state) => {
 
@@ -118,81 +122,111 @@ export default function Profile() {
     //===============================================================
 
     return (
-
         <div>
-
-
             {state.dataUser ? <>
                 <CardContent>
-                <div className="flex2">
-                    <div className="flex">
-                        <div id="wrapper">
-                            <div id="image_div">
-                                <p className="img_wrapper">
-                                    <img className="MyProfileImg" src={state.dataUser.img} />
+                    <div className="flex2">
+                        <div className="flex">
+                            <div id="wrapper">
+                                <div id="image_div">
+                                    <p className="img_wrapper">
+                                        <img className="MyProfileImg" src={state.dataUser.img} />
 
-                                    <span className="MyProfileImgButton">
-                                        <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
-                                            <EditNoteIcon />
-                                        </Button>
-                                    </span>
+                                        <span className="MyProfileImgButton">
+                                            <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
+                                                <EditNoteIcon />
+                                            </Button>
+                                        </span>
 
-                                </p>
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="userData">
+                                <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
+                                <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
+                                <Popup_Delete_Profile show={modalShowEditPopupDeleteProfile} onHide={() => setModalShowEditPopupDeleteProfile(false)} />
+                                <Popup_Edit_MyPassword show={modalShowEditPopupEditMyPassword} onHide={() => setModalShowEditPopupEditMyPassword(false)} />
+
+
+                                <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
+                                <h4>{state.dataUser.email}</h4>
+                                <h4>Age : {state.dataUser.age}</h4>
+                                <h4>Country : {state.dataUser.country}</h4>
+                            </div>
+                            <div className="userDataEdit">
+
+                                {/* **************************************setting***************************************** */}
+                                <Box sx={{ flexGrow: 0 }}>
+                                    <Tooltip title="Open settings">
+                                        <IconButton onClick={(e)=>{setAnchorElUser(e.currentTarget)}} sx={{ p: 0 }}>
+                                            <SettingsIcon sx={{ fontSize: "30px" }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        id="menu-appbar"
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={()=>{setAnchorElUser(null)}}
+                                    >
+                                        <MenuItem onClick={() => {
+                                            setModalShowEditPopupMyProfile(true);
+                                            setAnchorElUser(null)
+                                        }}>
+                                            <Typography textAlign="center">Edit</Typography>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => {
+                                            setModalShowEditPopupEditMyPassword(true);
+                                            setAnchorElUser(null)
+                                        }}>
+                                            <Typography textAlign="center">Edit Password</Typography>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => { setModalShowEditPopupDeleteProfile(true); setAnchorElUser(null) }}>
+                                            <Typography textAlign="center">Delete Account</Typography>
+                                        </MenuItem>
+                                    </Menu>
+                                </Box>
+
                             </div>
                         </div>
-                        <div className="userData">
-                            <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
-                            <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
-                            <Popup_Delete_Profile show={modalShowEditPopupDeleteProfile} onHide={() => setModalShowEditPopupDeleteProfile(false)} />
-                            <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
-                            <h4>{state.dataUser.email}</h4>
-                            <h4>Age : {state.dataUser.age}</h4>
-                            <h4>Country : {state.dataUser.country}</h4>
+                        <div className="flex1">
+                            {/* **************************************counters***************************************** */}
+                            <Paper
+                                sx={{
+                                    backgroundColor: '#f0f0f0',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    flexWrap: 'wrap',
+                                    listStyle: 'none',
+                                    p: 0.5,
+                                    m: 0,
+                                    boxShadow: 'none',
+                                }}
+                                className="Paper"
+                                component="ul">
+
+                                <ListItem >
+
+                                    <Chip icon={<PeopleIcon />} label={"followers: " + state.dataUser.followers_count} />
+                                </ListItem>
+                                <ListItem >
+                                    <Chip icon={<PeopleIcon />} label={"following: " + state.dataUser.following_count} />
+                                </ListItem>
+                                <ListItem >
+                                    <Chip icon={<BurstModeIcon />} label={"posts: " + state.postsUser.length} />
+                                </ListItem>
+                            </Paper>
+                            {/* ******************************************************************************* */}
                         </div>
-                        <div className="userDataEdit">
-                            <Stack direction="row" spacing={2}>
-                                <Button variant="contained" onClick={() => { setModalShowEditPopupMyProfile(true) }} endIcon={<EditNoteIcon />}>
-                                    Edit
-                                </Button>
-                            </Stack>
-                                <Button variant="contained" onClick={() => { setModalShowEditPopupMyProfile(true) }} endIcon={<EditNoteIcon />}>
-                                    Edit Password
-                                </Button>
-                                <Button variant="contained" onClick={() => { setModalShowEditPopupDeleteProfile(true) }} endIcon={<EditNoteIcon />}>
-                                    Delete Account
-                                </Button>
-                                {/* modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile */}
-                        </div>
-                    </div>
-                    <div className="flex1">
-                    {/* ******************************************************************************* */}
-                    <Paper
-                        sx={{
-                            backgroundColor: '#f0f0f0',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexWrap: 'wrap',
-                            listStyle: 'none',
-                            p: 0.5,
-                            m: 0,
-                            boxShadow: 'none',
-                        }}
-                        className="Paper"
-                        component="ul">
-                    
-                                <ListItem >
-                                    
-                                    <Chip icon={<PeopleIcon />} label={"followers: "+state.dataUser.followers_count}/>
-                                </ListItem>
-                                <ListItem >
-                                    <Chip icon={<PeopleIcon />}  label={"following: "+state.dataUser.following_count} />
-                                </ListItem>
-                                <ListItem >
-                                    <Chip icon={<BurstModeIcon />}  label={"posts: "+state.postsUser.length} />
-                                </ListItem>
-                    </Paper>
-                    {/* ******************************************************************************* */}
-                    </div>
                     </div>
                 </CardContent>
 
@@ -259,21 +293,11 @@ export default function Profile() {
                                     <Typography paragraph>
                                         Heat oil in a (14- to 16-inch) paella pan or a large, deep
                                         skillet over medium-high heat. Add chicken, shrimp and
-                                        chorizo, and cook, stirring occasionally until lightly
-                                        browned, 6 to 8 minutes. Transfer shrimp to a large plate
-                                        and set aside, leaving chicken and chorizo in the pan. Add
-                                        pimentón, bay leaves, garlic, tomatoes, onion, salt and
-                                        pepper, and cook, stirring often until thickened and
-                                        fragrant, about 10 minutes. Add saffron broth and
                                         remaining 4 1/2 cups chicken broth; bring to a boil.
                                     </Typography>
                                     <Typography paragraph>
                                         Add rice and stir very gently to distribute. Top with
                                         artichokes and peppers, and cook without stirring, until
-                                        most of the liquid is absorbed, 15 to 18 minutes. Reduce
-                                        heat to medium-low, add reserved shrimp and mussels,
-                                        tucking them down into the rice, and cook again without
-                                        stirring, until mussels have opened and rice is just
                                         tender, 5 to 7 minutes more. (Discard any mussels that
                                         don&apos;t open.)
                                     </Typography>
