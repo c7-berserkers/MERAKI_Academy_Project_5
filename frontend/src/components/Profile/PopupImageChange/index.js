@@ -1,11 +1,11 @@
+import  React,{ useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./style.css"
 import validator from 'validator';
-import  React,{ useEffect,useState,createContext } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 // import Img from './Img';
 
@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { updateUserImage } from "../../redux/reducers/profile/index";
+import { setUserImg } from "../../redux/reducers/auth/index";
 
 //===============================================================
 
@@ -63,8 +64,7 @@ const Popup_Image_Edit = (props) => {
             .then(function (response) {
                 console.log(response.data.user.img, "my data")
                 dispatch(updateUserImage(response.data.user.img))
-
-
+                dispatch(setUserImg({img:response.data.user.img}))
             })
             .catch(function (error) {
                 console.log(error);

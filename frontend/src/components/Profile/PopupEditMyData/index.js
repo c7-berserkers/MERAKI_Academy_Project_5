@@ -12,7 +12,7 @@ import "./style.css";
 
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../redux/reducers/profile/index";
-
+import { setUser_first_name } from "../../redux/reducers/auth/index";
 //=================================================================
 
 const Popup_Edit_Data = (props) => {
@@ -53,6 +53,7 @@ const Popup_Edit_Data = (props) => {
                 // userData
                 console.log(response.data.user, "my data")
                 dispatch(setUserData(response.data.user))
+                dispatch(setUser_first_name(response.data.user))
             })
             .catch(function (error) {
                 console.log(error);
