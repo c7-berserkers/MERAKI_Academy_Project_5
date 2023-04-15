@@ -6,6 +6,7 @@ import "./style.css"
 import { useDispatch, useSelector } from "react-redux";
 import { Container,Alert } from "react-bootstrap";
 import { useContext, useState, useEffect } from "react";
+import { setPosts, setComments, updateComment } from "..///./../redux/reducers/posts/index";
 
 
 const Popup_Comment_Edit = (props) => {
@@ -15,16 +16,20 @@ const Popup_Comment_Edit = (props) => {
     const [addComment, setAddComment] = useState("");
     const [commentId, setCommentId] = useState(props.id);
 
-    const state = useSelector((state) => {
+    const dispatch = useDispatch();
+
+    const { token, post, pfp, userId, userName } = useSelector((state) => {
       
-        return {
-          userId: state.auth.userId,
-          token: state.auth.token,
-          userLikes: state.auth.userLikes,
-          pfp: state.auth.pfp,
-          
-        };
-      });
+      return {
+        userId: state.auth.userId,
+        token: state.auth.token,
+        userLikes: state.auth.userLikes,
+        pfp: state.auth.pfp,
+        post: state.posts.posts,
+        userName:state.auth.userName
+      };
+    });
+
   //===============================================================
     
   //===============================================================
@@ -33,13 +38,17 @@ const Popup_Comment_Edit = (props) => {
         try {
           const result = await axios.put(`http://localhost:5000/comments/${e.target.value}`,{comment:addComment},{
             headers: {
-              Authorization: `Bearer ${state.token}`,
+              Authorization: `Bearer ${token}`,
             },
           });
           if (result.data.success) {
-            setMessage("");
-            setStatus(false)
-          } else throw Error;
+            console.log(result.data.result)
+            const comment22=result.data.result
+            console.log({post_id:props.post_id,comment:comment22,id:props.id})
+            dispatch(updateComment({post_id:props.post_id,comment:comment22,id:props.id}));
+            setMessage("")
+                  setStatus(false)
+          } else{ throw Error};
         } catch (error) {
           if (!error.response.data.success) {
             setStatus(true)

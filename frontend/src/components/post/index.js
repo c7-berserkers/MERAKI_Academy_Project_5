@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container,Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
-import { setPosts, setComments, addComment } from "../redux/reducers/posts";
+import { setPosts, setComments, addComment,updatePosts } from "../redux/reducers/posts";
 
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -30,6 +30,9 @@ import Stack from '@mui/material/Stack';
 import TextField from "@mui/material/TextField";
 import Popup_Comment_Edit from './PopupUpdateComment/index'
 import Popup_Post_Edit from './PopupUpdatePost/index'
+import { MdDelete, MdEdit } from "react-icons/md";
+import Modal from "react-bootstrap/Modal";
+
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -123,9 +126,7 @@ const Post = () => {
 
   //===============================================================
  const commentFunction= ()=>{
-  console.log(post[0].comments)
-  console.log(post)
-    return post[0].comments.length>0? post[0].comments.map((e,i)=>{
+    return post[0].comments?post[0].comments.length>0? post[0].comments.map((e,i)=>{
         return (
           <div key={e.id}>
         <Card key={e.id} sx={{ minWidth: 275 }}>
@@ -148,14 +149,14 @@ const Post = () => {
       <Button variant="contained" onClick={() => {
               setModalShowEditPopup(e.id);
             }}>update</Button>
-            <Popup_Comment_Edit id={e.id} comment={e.comment} show={modalShowEditPopup===e.id} onHide={() => setModalShowEditPopup(false)} />
+            <Popup_Comment_Edit post_id={post[0].id} id={e.id} comment={e.comment} show={modalShowEditPopup===e.id} onHide={() => setModalShowEditPopup(false)} />
     </Stack>:""}
         </CardContent>
       </Card>
       <br></br>
       </div>
         )
-    }):<p>no comment yet</p>
+    }):<p>no comment yet</p>:""
  }
    //===============================================================
 

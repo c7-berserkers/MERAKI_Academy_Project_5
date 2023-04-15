@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
+import { setPosts, setComments, addComment,updatePosts } from "..///./../redux/reducers/posts/index";
 
 
 const Popup_Post_Edit = (props) => {
@@ -18,6 +19,9 @@ const Popup_Post_Edit = (props) => {
     const [post, setPost] = useState(props.post);
     const [updatePost, setUpdatePost] = useState("");
     const [postId, setPostId] = useState(props.id);
+
+
+    const dispatch = useDispatch();
 
     const state = useSelector((state) => {
       
@@ -41,8 +45,30 @@ const Popup_Post_Edit = (props) => {
             },
           });
           if (result.data.success) {
+            dispatch(updatePosts(result.data.result));
             setMessage("");
             setStatus(false)
+            try {
+              const result = await axios.get("http://localhost:5000/posts/2", {
+                headers: {
+                  Authorization: `Bearer ${state.token}`,
+                },
+              });
+              if (result.data.success) {
+                console.log(result.data)
+                setMessage("");
+                setStatus(false)
+                dispatch(setPosts([result.data.post]));
+                dispatch(setComments({post_id:result.data.post.id,comments:result.data.comments}));
+              } else throw Error;
+            } catch (error) {
+              if (!error.response.data.success) {
+                setStatus(true)
+                return setMessage(error.response.data.message);
+              }
+              setStatus(true)
+              setMessage("Error happened while Get Data, please try again");
+            }
           } else throw Error;
         } catch (error) {
           if (!error.response.data.success) {
