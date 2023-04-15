@@ -31,7 +31,7 @@ userRouter.get("/following/:id", getFollowingByUserId);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);
 userRouter.get("/", authentication, authorization("ADMIN"), getAllUsers);
-userRouter.get("/search/:name", searchUsers);
+userRouter.get("/search/:name", authentication, searchUsers);
 
 module.exports = userRouter;
 

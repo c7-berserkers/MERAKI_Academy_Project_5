@@ -218,7 +218,7 @@ const updateUserById = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  console.log("delete")
+  console.log("delete");
   const { id } = req.params;
   const query = `UPDATE users SET is_deleted=1 WHERE id=$1 RETURNING *`;
   try {
@@ -242,30 +242,31 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const searchUsers = async (req, res) => {
+const searchUsers = (req, res) => {
   const { name } = req.params;
-
-  const query = `SELECT * FROM users WHERE first_name LIKE $1'%' AND is_deleted = 0;`;
-  try {
-    const { rows } = await pool.query(query, [name]);
-    if (!rows) {
-      return res.status(404).json({
-        success: false,
-        message: `no users user with name: ${name}`,
+  const query = `SELECT * FROM users WHERE first_name LIKE '%'$1'%' OR last_name LIKE '%'$1'%' ;`;
+  pool
+    .query(query, [name])
+    .then(({ rows }) => {
+      if (!rows) {
+        return res.status(404).json({
+          success: false,
+          message: `no users user with name: ${name}`,
+        });
+      }
+      res.status(201).json({
+        success: true,
+        message: `users with the name ${name}`,
+        users: rows,
       });
-    }
-    res.status(201).json({
-      success: true,
-      message: `users with the name ${name}`,
-      users: rows,
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
     });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-      err: err.message,
-    });
-  }
 };
 
 const followUser = (req, res) => {
