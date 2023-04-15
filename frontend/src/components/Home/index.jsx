@@ -85,7 +85,7 @@ export default function Home() {
   // --------------------
   const isLiked = (arr, id) => {
     return arr.find((e) => {
-      return (e.post_id = id);
+      return e.post_id === id;
     });
   };
   // ---------------------------------------
@@ -260,14 +260,17 @@ export default function Home() {
                 </CardContent>
                 <CardActions disableSpacing>
                   {isLiked(likes, post.id) ? (
-                    <IconButton
-                      onClick={(e) => {
-                        dispatch(removeLike(post.id));
-                      }}
-                      aria-label="add to favorites"
-                    >
-                      <FavoriteIcon style={{ color: "red" }} />
-                    </IconButton>
+                    <div style={{ display: "flex" }}>
+                      <IconButton
+                        onClick={(e) => {
+                          dispatch(removeLike(post.id));
+                        }}
+                        aria-label="add to favorites"
+                      >
+                        <FavoriteIcon style={{ color: "red" }} />
+                      </IconButton>
+                      <p style={{ margin: "10px" }}>{post.likes_count}</p>
+                    </div>
                   ) : (
                     <div style={{ display: "flex" }}>
                       {" "}
