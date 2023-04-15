@@ -2,6 +2,7 @@
 CREATE TABLE tags (
   id SERIAL NOT NULL,
   tag TEXT,
+  img TEXT,
   created_at timestamp DEFAULT NOW(),
   is_deleted SMALLINT DEFAULT 0,
   PRIMARY KEY (id)
@@ -119,7 +120,6 @@ CREATE TABLE messages(
 CREATE TABLE likes(
   id SERIAL NOT NULL,
   user_id INT,
-  reaction VARCHAR(255) NOT NULL,
   posts_id INT,
   is_deleted SMALLINT DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -133,13 +133,3 @@ CREATE TABLE likes(
 
 
 
--- ON DELETE CASCADE
-
--- const mongoose = require("mongoose");
-
--------------------------------------------------
--- const namesSchema = new mongoose.Schema({
---  firstName: { type: String, required: true },
--- });
--- module.exports = mongoose.model("name", namesSchema);
---------------------------------------------------

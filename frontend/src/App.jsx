@@ -9,6 +9,8 @@ import Home from "./components/Home";
 import Post from "./components/post";
 import Profile from "./components/Profile/index";
 import Tag from "./components/Tag";
+import NotFound from "./components/NotFound";
+import SearchPage from "./components/SearchPage";
 
 function App() {
   return (
@@ -50,6 +52,27 @@ function App() {
             <>
               {" "}
               <NavBar /> <Profile />{" "}
+            </>
+          }
+        />
+
+        <Route
+          path="/search/:name"
+          element={
+            <>
+              <NavBar />
+              <SearchPage />
+            </>
+          }
+        />
+
+        {/* Handling Undefined Routes */}
+        <Route
+          path="*"
+          element={
+            <>
+              <NavBar />
+              <NotFound />
             </>
           }
         />

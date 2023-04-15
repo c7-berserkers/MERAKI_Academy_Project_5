@@ -29,7 +29,7 @@ const deleteComment = (req, res) => {
   const { id } = req.params;
   const data = [id];
   console.log(data);
-  const query = `DELETE FROM  comments WHERE id=($1) RETURNING  *;`;
+  const query = `DELETE FROM comments WHERE id=($1) RETURNING *;`;
   pool
     .query(query, data)
     .then((result) => {
