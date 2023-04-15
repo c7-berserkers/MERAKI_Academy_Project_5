@@ -1,26 +1,15 @@
 const express = require("express");
-
-const chatAndMessageRouter = express.Router();
-
-
-const { createChat , createMessage , getAllMessageOnSpecificChat ,deleteChat} = require('../controllers/chatAndMessage')
+const { createRoom } = require("../controllers/chats");
+const chatRouter = express.Router();
 
 const authentication = require("../middleware/authentication");
 const authorization = require("../middleware/authorization");
 
-
-
 //end point
 
-chatAndMessageRouter.post("", createChat);
-chatAndMessageRouter.post("/Message/:id", createMessage);
-chatAndMessageRouter.get("/allMessage/:id", getAllMessageOnSpecificChat);
-chatAndMessageRouter.delete("/:id", deleteChat);
+chatRouter.post("/", authentication, createRoom);
 
-
-
-module.exports = chatAndMessageRouter;
-
+module.exports = chatRouter;
 
 /*
  * Testing Object for createChat:
@@ -44,14 +33,12 @@ http://localhost:5000/chats/Message/:id
 }
 */
 
-
 /*
  * Testing Object for getAllMessageOnSpecificChat:
 
 http://localhost:5000/chats/allMessage/1
 
 */
-
 
 /*
  * Testing Object for getAllMessageOnSpecificChat:

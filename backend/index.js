@@ -14,8 +14,7 @@ const roleRouter = require("./routes/roles");
 const commentRouter = require("./routes/comments");
 const tagRouter = require("./routes/tags");
 const likeRouter = require("./routes/likes");
-const chatAndMessageRouter = require("./routes/chatAndMessage");
-
+const chatRouter = require("./routes/chats");
 app.use(cors());
 app.use(express.json());
 
@@ -26,7 +25,7 @@ app.use("/comments", commentRouter);
 app.use("/users", userRouter);
 app.use("/tags", tagRouter);
 app.use("/likes", likeRouter);
-app.use("/chats", chatAndMessageRouter);
+app.use("/chats", chatRouter);
 
 // Handles any other endpoints [unassigned - endpoints]
 app.use("*", (req, res) => res.status(404).json("NO content at this path"));
@@ -35,28 +34,28 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
 });
 
-const io = new Server(server, {
-  cors: {
-    origin: `http://localhost:${PORT}`,
-    methods: [GET, POST],
-  },
-});
-io.on(connection, (socket) => {
-  console.log(rooms, socket.rooms);
-  socket.on(JOIN_ROOM, (data) => {
-    console.log(data, data);
-    socket.join(data);
-    console.log(rooms, socket.rooms);
-  });
-  socket.on(SEND_MESSAGE, async (data) => {
-    console.log(data, data);
-    const content = { sender: data.sender, message: data.message };
-    const roomId = data.roomId;
-    // save the message here
-    socket.to(roomId).emit(RECEIVE_MESSAGE, content);
-  });
+// const io = new Server(server, {
+//   cors: {
+//     origin: `http://localhost:${PORT}`,
+//     methods: [GET, POST],
+//   },
+// });
+// io.on(connection, (socket) => {
+//   console.log(rooms, socket.rooms);
+//   socket.on(JOIN_ROOM, (data) => {
+//     console.log(data, data);
+//     socket.join(data);
+//     console.log(rooms, socket.rooms);
+//   });
+//   socket.on(SEND_MESSAGE, async (data) => {
+//     console.log(data, data);
+//     const content = { sender: data.sender, message: data.message };
+//     const roomId = data.roomId;
+//     // save the message here
+//     socket.to(roomId).emit(RECEIVE_MESSAGE, content);
+//   });
 
-  socket.on(disconnect, () => {
-    console.log("User Disconnected", socket.id);
-  });
-});
+//   socket.on(disconnect, () => {
+//     console.log("User Disconnected", socket.id);
+//   });
+// });
