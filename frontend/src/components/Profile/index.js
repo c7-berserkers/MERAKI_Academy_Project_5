@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./style.css"
 import CardContent from '@mui/material/CardContent';
@@ -55,7 +56,7 @@ import BurstModeIcon from '@mui/icons-material/BurstMode';
 
 
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData, setUserPosts } from "../redux/reducers/profile/index";
+import { setUserData, setUserPosts, setFollowing, setFollowing_plus1, setFollowing_minus1 } from "../redux/reducers/profile/index";
 
 //=========================posts======================================
 const ExpandMore = styled((props) => {
@@ -72,6 +73,13 @@ const ExpandMore = styled((props) => {
 //===============================================================
 
 export default function Profile() {
+
+    const navigate = useNavigate();
+    let personPage = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1]
+    let user_Id_Number = localStorage.getItem("userId")
+    let token = localStorage.getItem("token")
+    const [follow, setFollow] = useState(false)
+    //===============================================================
 
     const dispatch = useDispatch();
     const ListItem = styled('li')(({ theme }) => ({
@@ -99,28 +107,89 @@ export default function Profile() {
         return {
             dataUser: state.profile.UserData,
             postsUser: state.profile.UserPosts,
+            following: state.profile.following,
         };
     });
 
+    //   
+    const loop = () => {
+        state.following.forEach(element => {
+            console.log(element.id, personPage)
+            if (element.id == personPage * 1) {
+                setFollow(true)
+            }
+        });
+    }
+
     //===============================================================
 
-
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, {
+        axios.get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
             headers: {
-                'Authorization': `${localStorage.getItem("userId")}`
+                'Authorization': `${token}`
             }
         })
             .then(function (response) {
                 console.log(response.data, "my data")
                 dispatch(setUserData(response.data.user))
                 dispatch(setUserPosts(response.data.userPosts))
+            })
+            .catch(function (error) {
+                console.log(error);
+                navigate("/NotFound");
+            });
 
+        //===============================================================
+        axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data, "xxxxx xxxxx")
+                dispatch(setFollowing(response.data.followers))
+                loop()
+            })
+            .catch(function (error) {
+                console.log(error);
+                
+            });
+    }, []);
+
+    //=======================================================
+
+
+    const followUser = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`, {}, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+                dispatch(setFollowing_plus1())
+                setFollow(true)
+                // getAllUserFollowing()
             })
             .catch(function (error) {
                 console.log(error);
             });
-    }, []);
+    }
+
+    const unFollowUser = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`, {}, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+                dispatch(setFollowing_minus1())
+                setFollow(false)
+                // getAllUserFollowing()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
 
     //===============================================================
@@ -136,15 +205,16 @@ export default function Profile() {
                                     <p className="img_wrapper">
                                         <img className="MyProfileImg" src={state.dataUser.img} />
 
-                                        <span className="MyProfileImgButton">
+                                        {personPage == user_Id_Number ? <span className="MyProfileImgButton">
                                             <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
                                                 <EditNoteIcon />
                                             </Button>
-                                        </span>
+                                        </span> : <></>}
 
                                     </p>
                                 </div>
                             </div>
+
                             <div className="userData">
                                 <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
                                 <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
@@ -160,45 +230,50 @@ export default function Profile() {
                             <div className="userDataEdit">
 
                                 {/* **************************************setting***************************************** */}
-                                <Box sx={{ flexGrow: 0 }}>
-                                    <Tooltip title="Open settings">
-                                        <IconButton onClick={(e)=>{setAnchorElUser(e.currentTarget)}} sx={{ p: 0 }}>
-                                            <SettingsIcon sx={{ fontSize: "30px" }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Menu
-                                        sx={{ mt: '45px' }}
-                                        id="menu-appbar"
-                                        anchorEl={anchorElUser}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                        keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                        open={Boolean(anchorElUser)}
-                                        onClose={()=>{setAnchorElUser(null)}}
-                                    >
-                                        <MenuItem onClick={() => {
-                                            setModalShowEditPopupMyProfile(true);
-                                            setAnchorElUser(null)
-                                        }}>
-                                            <Typography textAlign="center">Edit</Typography>
-                                        </MenuItem>
-                                        <MenuItem onClick={() => {
-                                            setModalShowEditPopupEditMyPassword(true);
-                                            setAnchorElUser(null)
-                                        }}>
-                                            <Typography textAlign="center">Edit Password</Typography>
-                                        </MenuItem>
-                                        <MenuItem onClick={() => { setModalShowEditPopupDeleteProfile(true); setAnchorElUser(null) }}>
-                                            <Typography textAlign="center">Delete Account</Typography>
-                                        </MenuItem>
-                                    </Menu>
-                                </Box>
+                                {personPage == user_Id_Number ?
+                                    <Box sx={{ flexGrow: 0 }}>
+                                        <Tooltip title="Open settings">
+                                            <IconButton onClick={(e) => { setAnchorElUser(e.currentTarget) }} sx={{ p: 0 }}>
+                                                <SettingsIcon sx={{ fontSize: "30px" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Menu
+                                            sx={{ mt: '45px' }}
+                                            id="menu-appbar"
+                                            anchorEl={anchorElUser}
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }}
+                                            keepMounted
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }}
+                                            open={Boolean(anchorElUser)}
+                                            onClose={() => { setAnchorElUser(null) }}
+                                        >
+                                            <MenuItem onClick={() => {
+                                                setModalShowEditPopupMyProfile(true);
+                                                setAnchorElUser(null)
+                                            }}>
+                                                <Typography textAlign="center">Edit</Typography>
+                                            </MenuItem>
+                                            <MenuItem onClick={() => {
+                                                setModalShowEditPopupEditMyPassword(true);
+                                                setAnchorElUser(null)
+                                            }}>
+                                                <Typography textAlign="center">Edit Password</Typography>
+                                            </MenuItem>
+                                            <MenuItem onClick={() => { setModalShowEditPopupDeleteProfile(true); setAnchorElUser(null) }}>
+                                                <Typography textAlign="center">Delete Account</Typography>
+                                            </MenuItem>
+                                        </Menu>
+                                    </Box>
+                                    : <div>{follow ?
+                                        <Button onClick={() => { unFollowUser() }} variant="contained">unfollow</Button> :
+                                        <Button onClick={() => { followUser() }} variant="contained">follow</Button>}
+                                    </div>}
 
                             </div>
                         </div>

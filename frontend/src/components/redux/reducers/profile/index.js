@@ -5,7 +5,8 @@ export const profileSlice = createSlice({
     initialState: {
         UserData: {},
         UserPosts:[],
-        RandomNumber: false
+        RandomNumber: false,
+        following :[],
     },
     reducers: {
         setUserData: (state, action) => {
@@ -16,8 +17,17 @@ export const profileSlice = createSlice({
         },
         setRandomNumber: (state, action) => {
             state.RandomNumber = action.payload;
-        },setUserPosts: (state, action) => {
+        },
+        setUserPosts: (state, action) => {
             state.UserPosts = action.payload;
+        },
+        setFollowing: (state, action) => {
+            state.following = action.payload;
+        },
+        setFollowing_plus1: (state, action) => {
+            state.UserData.followers_count = state.UserData.followers_count*1+1;
+        },setFollowing_minus1: (state, action) => {
+            state.UserData.followers_count = state.UserData.followers_count*1-1;
         },
     },
     
@@ -28,5 +38,8 @@ export const {
     setUserPosts,
     updateUserImage,
     setRandomNumber,
+    setFollowing,
+    setFollowing_plus1,
+    setFollowing_minus1,
 } = profileSlice.actions;
 export default profileSlice.reducer;
