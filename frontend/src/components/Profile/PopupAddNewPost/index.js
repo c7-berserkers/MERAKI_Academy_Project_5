@@ -122,6 +122,15 @@ const Popup_Add_New_Post = (props) => {
         }
         
     },[tags])
+
+
+    const tagsFunction =()=>{
+        return tags.length>0?tags.map((e,i)=>{
+            return(
+                <option key={e.id} onClick={(e)=>setTag_id(e.target.key)}>{e.tag}</option>
+            )
+        }):""
+    }
     //===============================================================
 
 
@@ -140,15 +149,15 @@ const Popup_Add_New_Post = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                 
-      <FloatingLabel controlId="floatingTextarea2" label="Comments">
-        <Form.Control
+      <FloatingLabel controlId="floatingTextarea2" label="Description">
+        <Form.Control onChange={(e)=>{setDescription(e.target.value)}}
           as="textarea"
-          placeholder="Leave a comment here"
+          placeholder="Leave a Description here"
           style={{ height: '100px' }}
         />
       </FloatingLabel>
       <br></br>
-      {img_Select?<Image src="http://res.cloudinary.com/dy9hkpipf/image/upload/v1681677603/km7pc2xtxbb4z5bjsd5w.png" />:""}
+      {img_Select?<Image src={img_Select} />:""}
       <br></br>
 
       <Row className="g-2">
@@ -174,7 +183,7 @@ const Popup_Add_New_Post = (props) => {
         >
           <Form.Select aria-label="Floating label select example">
             <option>Open this select menu</option>
-            {tagsFunction}
+            {tagsFunction()}
           </Form.Select>
         </FloatingLabel>
       </Col>
