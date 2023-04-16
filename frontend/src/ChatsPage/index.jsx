@@ -7,7 +7,8 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 export default function ChatsPage() {
   const BACKEND = process.env.REACT_APP_BACKEND;
   const { token } = useSelector((state) => {
@@ -31,6 +32,7 @@ export default function ChatsPage() {
       )
       .then((result) => {
         setChatRooms(result.data.result);
+        setNoResults(true);
       })
       .catch((err) => {
         setNoResults(true);
@@ -47,7 +49,16 @@ export default function ChatsPage() {
         <AddIcon />
       </Fab>
       <Container style={{ marginTop: "20px" }}>
-        <div>x</div>
+        <div>
+          {noResults ? (
+            <>
+              {" "}
+              <h2>No Rooms Yet</h2>
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
       </Container>
       <>
         <Modal show={show} onHide={handleClose}>
