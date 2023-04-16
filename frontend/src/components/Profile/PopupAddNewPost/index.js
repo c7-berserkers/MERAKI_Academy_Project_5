@@ -1,11 +1,18 @@
-import  React,{ useState } from "react";
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./style.css"
 import validator from 'validator';
-
+import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import Stack from '@mui/material/Stack';
+import { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Image from 'react-bootstrap/Image';
 
 // import Img from './Img';
 
@@ -22,6 +29,8 @@ const Popup_Add_New_Post = (props) => {
 
 
     const [img_Select,setImg_Select]=useState("")
+    const [isLoading, setLoading] = useState(false);
+
     //===============================================================
 
     const dispatch = useDispatch();
@@ -74,24 +83,31 @@ const Popup_Add_New_Post = (props) => {
 
     //==============================================================
     const imgUpload=()=>{
-        console.log(img_Select)
+        setLoading(true)
         const formData = new FormData();
         formData.append("file" ,img_Select )
         formData.append("upload_preset" ,"vledn3tb" )
         axios.post("https://api.cloudinary.com/v1_1/dy9hkpipf/image/upload",formData).then((result)=>{
-        // console.log(result.data.url,"url_img")
-        // console.log("img", result.data.url ,"eeeee")
-        setUserData({ "img": result.data.url })
-        //===============================================================
-        // console.log(userData)
-            add_image()
+        console.log(result.data.url,"url_img")
+        if(result.data.url){
+            setLoading(false)
+        // setUserData({ "img": result.data.url })
+            // add_image()
+        }
+        
     }).catch((err)=>{
-            console.log(err)
+        setLoading(false)
+        console.log(err)
             
         })
     }
 
     //===============================================================
+
+    
+    //===============================================================
+
+
 
     return (
         <div>
@@ -106,10 +122,47 @@ const Popup_Add_New_Post = (props) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                
+      <FloatingLabel controlId="floatingTextarea2" label="Comments">
+        <Form.Control
+          as="textarea"
+          placeholder="Leave a comment here"
+          style={{ height: '100px' }}
+        />
+      </FloatingLabel>
+      {img_Select?<Image src="http://res.cloudinary.com/dy9hkpipf/image/upload/v1681677603/km7pc2xtxbb4z5bjsd5w.png" />:""}
 
-                    <Form.Label>Image:</Form.Label>
-                    {/* <Form.Control name="img" onChange={handleChange} placeholder="img url" /> */}
-                        <Form.Control  type="file" onChange={(e)=>{setImg_Select(e.target.files[0])}}/>
+      <Row className="g-2">
+      <Col md>
+      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Button
+            variant="primary"
+            disabled={isLoading}
+            onClick={!isLoading ? imgUpload : null}
+          >
+            {isLoading ? 'Loading…' : 'Upload'}
+          </Button>
+      <IconButton color="primary" aria-label="upload picture" component="label">
+        <input hidden accept="image/*" type="file" onChange={(e)=>{setImg_Select(e.target.files[0])}} />
+        <PhotoCamera />
+      </IconButton>
+    </Stack>
+      </Col>
+      <Col md>
+        <FloatingLabel
+          controlId="floatingSelectGrid"
+          label="Works with selects"
+        >
+          <Form.Select aria-label="Floating label select example">
+            <option>Open this select menu</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </Form.Select>
+        </FloatingLabel>
+      </Col>
+    </Row>
+                        
                 </Modal.Body>
 
                 <Modal.Footer>
