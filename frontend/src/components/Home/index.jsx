@@ -79,7 +79,6 @@ export default function Home() {
       };
     }
   );
-  console.log(likes);
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
@@ -191,13 +190,15 @@ export default function Home() {
       <div className="new-post">
         <Container>
           <ButtonGroup
-            style={{ width: "60%" }}
+            style={{ width: "60%", marginBottom: "20px" }}
             variant="contained"
             aria-label="outlined primary button group"
           >
             <Button style={{ width: "60%" }}>Explore</Button>
             <Button style={{ width: "60%" }}>New Post</Button>
-            <Button style={{ width: "60%" }}>Chat Groups</Button>
+            <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
+              Chat Groups
+            </Button>
           </ButtonGroup>
         </Container>
       </div>

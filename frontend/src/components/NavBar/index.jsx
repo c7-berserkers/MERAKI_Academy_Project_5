@@ -138,7 +138,7 @@ export default function NavBar() {
           >
             <MenuItem
               onClick={() => {
-                navigate(`profile/${userId}`);
+                navigate(`/profile/${userId}`);
                 handleClose();
               }}
             >
