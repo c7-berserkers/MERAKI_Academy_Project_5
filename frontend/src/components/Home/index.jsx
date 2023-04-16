@@ -36,6 +36,7 @@ import Form from "react-bootstrap/Form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListGroup from "react-bootstrap/ListGroup";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
 
 // ----------------------------------------------
@@ -187,7 +188,19 @@ export default function Home() {
   return (
     <div>
       {" "}
-      <div className="new-post">x</div>
+      <div className="new-post">
+        <Container>
+          <ButtonGroup
+            style={{ width: "60%" }}
+            variant="contained"
+            aria-label="outlined primary button group"
+          >
+            <Button style={{ width: "60%" }}>Explore</Button>
+            <Button style={{ width: "60%" }}>New Post</Button>
+            <Button style={{ width: "60%" }}>Chat Groups</Button>
+          </ButtonGroup>
+        </Container>
+      </div>
       <div className="feed">
         <Container>
           {posts.map((post) => {
