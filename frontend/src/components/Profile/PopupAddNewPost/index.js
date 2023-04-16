@@ -13,6 +13,7 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Image from 'react-bootstrap/Image';
+// import {addPosts } from "../redux/reducers/posts/index";
 
 // import Img from './Img';
 
@@ -29,6 +30,7 @@ const Popup_Add_New_Post = (props) => {
 
 
     const [img_Select,setImg_Select]=useState("")
+    const [imgURL,setImgURL]=useState("")
     const [isLoading, setLoading] = useState(false);
     const [description, setDescription] = useState('');
     const [tag_id, setTag_id] = useState('');
@@ -61,26 +63,26 @@ const Popup_Add_New_Post = (props) => {
 
     //===============================================================
 
-    const add_image = () => {
-        console.log(userData)
-        const errors = validateData();
-        if (Object.keys(errors).length) {
-            setErrors(errors);
-            return;
-        }
-        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userData, {
-            headers: {
-                'Authorization': `${localStorage.getItem("userId")}`
-            }
-        })
-            .then(function (response) {
-                console.log(response.data.user.img, "my data")
-                dispatch(updateUserImage(response.data.user.img))
-                dispatch(setUserImg({img:response.data.user.img}))
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    const add_post = () => {
+        console.log( { img:img_Select, description, tag_id })
+        // const errors = validateData();
+        // if (Object.keys(errors).length) {
+        //     setErrors(errors);
+        //     return;
+        // }
+        // axios.post(`${process.env.REACT_APP_BACKEND}/posts`, { img:img_Select, description, tag_id }, {
+        //     headers: {
+        //         'Authorization': `${localStorage.getItem("userId")}`
+        //     }
+        // })
+        //     .then(function (response) {
+        //         console.log(response.data, "my data")
+        //         //addPosts dispatch(updateUserImage(response.data.user.img))
+        //         // dispatch(setUserImg({img:response.data.user.img}))
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
 
     }
 
@@ -94,6 +96,7 @@ const Popup_Add_New_Post = (props) => {
         console.log(result.data.url,"url_img")
         if(result.data.url){
             setLoading(false)
+            setImgURL(result.data.url)
         // setUserData({ "img": result.data.url })
             // add_image()
         }
@@ -125,9 +128,9 @@ const Popup_Add_New_Post = (props) => {
 
 
     const tagsFunction =()=>{
-        return tags.length>0?tags.map((e,i)=>{
+        return tags.length>0?tags.map((tag,i)=>{
             return(
-                <option key={e.id} onClick={(e)=>setTag_id(e.target.key)}>{e.tag}</option>
+                <option value={tag.id} key={tag.id}>{tag.tag}</option>
             )
         }):""
     }
@@ -157,9 +160,9 @@ const Popup_Add_New_Post = (props) => {
         />
       </FloatingLabel>
       <br></br>
-      {img_Select?<Image src={img_Select} />:""}
+      {imgURL?<Image src={imgURL} />:""}
       <br></br>
-
+      
       <Row className="g-2">
       <Col md>
       <Stack direction="row" alignItems="center" spacing={2}>
@@ -181,7 +184,7 @@ const Popup_Add_New_Post = (props) => {
           controlId="floatingSelectGrid"
           label="Works with selects"
         >
-          <Form.Select aria-label="Floating label select example">
+          <Form.Select aria-label="Floating label select example" onChange={(e)=>{setTag_id(e.target.value)}}>
             <option>Open this select menu</option>
             {tagsFunction()}
           </Form.Select>
@@ -193,11 +196,9 @@ const Popup_Add_New_Post = (props) => {
 
                 <Modal.Footer>
                     <div className="addSubmit">
-                        {/* <Img/> */}
-                        <Button type="submit"  variant="primary"  className="login-button" onClick={imgUpload}>submit</Button>
-                        {/* <Button variant="primary" onClick={add_image}>submit</Button> */}
+                        <Button type="submit"  variant="primary"  className="login-button" onClick={add_post}>submit</Button>
                     </div>
-                    <Button className="shadowButton" onClick={props.onHide}>Close</Button>
+                    
                 </Modal.Footer>
             </Modal>
         </div>
