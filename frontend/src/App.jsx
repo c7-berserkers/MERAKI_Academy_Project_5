@@ -11,6 +11,8 @@ import Profile from "./components/Profile/index";
 import Tag from "./components/Tag";
 import NotFound from "./components/NotFound";
 import SearchPage from "./components/SearchPage";
+import ChatsPage from "./ChatsPage";
+import Chat from "./Chat";
 
 function App() {
   return (
@@ -62,6 +64,24 @@ function App() {
             <>
               <NavBar />
               <SearchPage />
+            </>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <>
+              <NavBar />
+              <ChatsPage />
+            </>
+          }
+        />
+        <Route
+          path="/chat/:name"
+          element={
+            <>
+              <NavBar />
+              <Chat />
             </>
           }
         />
