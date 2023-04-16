@@ -1,20 +1,27 @@
+import  React,{ useState } from "react";
 import Button from 'react-bootstrap/Button';
-import React, { useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./style.css"
 import validator from 'validator';
+
+
+// import Img from './Img';
+
 //===============================================================
 
 
 import { useDispatch } from "react-redux";
 import { updateUserImage } from "../../redux/reducers/profile/index";
+import { setUserImg } from "../../redux/reducers/auth/index";
 
-//=========================posts======================================
+//===============================================================
 
 const Popup_Image_Edit = (props) => {
 
+
+    const [img_Select,setImg_Select]=useState("")
     //===============================================================
 
     const dispatch = useDispatch();
@@ -40,15 +47,10 @@ const Popup_Image_Edit = (props) => {
         return errors
     }
 
-
-    //===============================================================
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setUserData((preData) => ({ ...preData, [name]: value }))
-    }
     //===============================================================
 
     const add_image = () => {
+        console.log(userData)
         const errors = validateData();
         if (Object.keys(errors).length) {
             setErrors(errors);
@@ -62,13 +64,31 @@ const Popup_Image_Edit = (props) => {
             .then(function (response) {
                 console.log(response.data.user.img, "my data")
                 dispatch(updateUserImage(response.data.user.img))
-
-
+                dispatch(setUserImg({img:response.data.user.img}))
             })
             .catch(function (error) {
                 console.log(error);
             });
 
+    }
+
+    //==============================================================
+    const imgUpload=()=>{
+        console.log(img_Select)
+        const formData = new FormData();
+        formData.append("file" ,img_Select )
+        formData.append("upload_preset" ,"vledn3tb" )
+        axios.post("https://api.cloudinary.com/v1_1/dy9hkpipf/image/upload",formData).then((result)=>{
+        // console.log(result.data.url,"url_img")
+        // console.log("img", result.data.url ,"eeeee")
+        setUserData({ "img": result.data.url })
+        //===============================================================
+        // console.log(userData)
+            add_image()
+    }).catch((err)=>{
+            console.log(err)
+            
+        })
     }
 
     //===============================================================
@@ -88,12 +108,15 @@ const Popup_Image_Edit = (props) => {
                 <Modal.Body>
 
                     <Form.Label>Image:</Form.Label>
-                    <Form.Control name="img" onChange={handleChange} placeholder="img url" />
+                    {/* <Form.Control name="img" onChange={handleChange} placeholder="img url" /> */}
+                        <Form.Control  type="file" onChange={(e)=>{setImg_Select(e.target.files[0])}}/>
                 </Modal.Body>
 
                 <Modal.Footer>
                     <div className="addSubmit">
-                        <Button variant="primary" onClick={add_image}>submit</Button>
+                        {/* <Img/> */}
+                        <Button type="submit"  variant="primary"  className="login-button" onClick={imgUpload}>submit</Button>
+                        {/* <Button variant="primary" onClick={add_image}>submit</Button> */}
                     </div>
                     <Button className="shadowButton" onClick={props.onHide}>Close</Button>
                 </Modal.Footer>

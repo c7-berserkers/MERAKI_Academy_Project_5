@@ -35,6 +35,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
 });
 
+
 const io = new Server(server, {
   cors: {
     origin: `http://localhost:${PORT}`,
@@ -66,3 +67,4 @@ io.on("connection", (socket) => {
     console.log("User Disconnected", socket.id);
   });
 });
+

@@ -54,8 +54,17 @@ export const authSlice = createSlice({
       state.userLikes = null;
       localStorage.clear();
     },
+    setUserImg: (state, { payload }) => {
+      state.pfp = payload.img;
+      localStorage.setItem("pfp", state.pfp);
+    },
+    setUser_first_name: (state, { payload }) => {
+      state.userName = payload.first_name;
+    },
   },
 });
+
+
 
 export const {
   setLogin,
@@ -64,5 +73,7 @@ export const {
   setUserLikes,
   addLike,
   removeLike,
+  setUserImg,
+  setUser_first_name,
 } = authSlice.actions;
 export default authSlice.reducer;
