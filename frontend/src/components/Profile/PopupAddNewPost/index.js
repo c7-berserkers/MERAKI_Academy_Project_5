@@ -30,6 +30,9 @@ const Popup_Add_New_Post = (props) => {
 
     const [img_Select,setImg_Select]=useState("")
     const [isLoading, setLoading] = useState(false);
+    const [description, setDescription] = useState('');
+    const [tag_id, setTag_id] = useState('');
+    const [tags, setTags] = useState('');
 
     //===============================================================
 
@@ -104,7 +107,21 @@ const Popup_Add_New_Post = (props) => {
 
     //===============================================================
 
-    
+    useEffect(()=>{
+        if(!tags){
+            axios.get(`${process.env.REACT_APP_BACKEND}/tags`, {
+            headers: {
+                'Authorization': `${localStorage.getItem("userId")}`
+            }
+        }).then((result)=>{
+            console.log(result.data.result)
+            setTags(result.data.result)
+    }).catch((err)=>{
+        console.log(err)
+        })
+        }
+        
+    },[tags])
     //===============================================================
 
 
@@ -130,7 +147,9 @@ const Popup_Add_New_Post = (props) => {
           style={{ height: '100px' }}
         />
       </FloatingLabel>
+      <br></br>
       {img_Select?<Image src="http://res.cloudinary.com/dy9hkpipf/image/upload/v1681677603/km7pc2xtxbb4z5bjsd5w.png" />:""}
+      <br></br>
 
       <Row className="g-2">
       <Col md>
@@ -155,9 +174,7 @@ const Popup_Add_New_Post = (props) => {
         >
           <Form.Select aria-label="Floating label select example">
             <option>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            {tagsFunction}
           </Form.Select>
         </FloatingLabel>
       </Col>
