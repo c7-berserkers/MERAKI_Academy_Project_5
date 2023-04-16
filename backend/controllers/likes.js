@@ -33,7 +33,7 @@ const addLike = async (req, res) => {
     });
 };
 
-const deletePost = (req, res) => {
+const deleteLike = (req, res) => {
   const query = `DELETE FROM  likes WHERE posts_id=$1`;
   const post_id = req.params.id;
   const data = [post_id];
@@ -108,5 +108,5 @@ module.exports = {
   addLike,
   getAllLikeForPost,
   getAllLikeForUser,
-  deletePost,
+  deleteLike,
 };
