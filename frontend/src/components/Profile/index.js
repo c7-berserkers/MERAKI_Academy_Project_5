@@ -22,6 +22,8 @@ import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
+import ButtonGroup from "@mui/material/ButtonGroup";
+
 
 
 
@@ -37,6 +39,7 @@ import Popup_Image_Edit from './PopupImageChange/index'
 import Popup_Edit_Data from './PopupEditMyData/index'
 import Popup_Delete_Profile from './PopupDeleteAccount/index'
 import Popup_Edit_MyPassword from './PopupEditMyPassword/index'
+import Popup_Add_New_Post from './PopupAddNewPost/index'
 
 //===============================================================
 
@@ -85,6 +88,7 @@ export default function Profile() {
 
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false)
+    const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] = useState(false)
     const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] = useState(false)
     const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] = useState(false)
     const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false)
@@ -238,6 +242,9 @@ export default function Profile() {
             {/* ******************************************* post of user ************************************************* */}
 
             <Container>
+            <Button style={{ width: "60%" }} onClick={() => { setModalShowPopupAddNewPost(true) }}>Add New Post</Button>
+        </Container>
+            <Container>
                 {state.postsUser.map((post) => {
                     return (
                         <Card key={post.id} sx={{ margin: "10px 0" }}>
@@ -307,7 +314,9 @@ export default function Profile() {
                                     </Typography>
                                 </CardContent>
                             </Collapse>
+                            <Popup_Add_New_Post show={modalShowPopupAddNewPost} onHide={() => setModalShowPopupAddNewPost(false)} />
                         </Card>
+                        
                     );
                 })}
             </Container>
