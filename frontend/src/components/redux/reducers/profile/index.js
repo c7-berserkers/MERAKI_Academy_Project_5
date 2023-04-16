@@ -17,10 +17,17 @@ export const profileSlice = createSlice({
         },
         setRandomNumber: (state, action) => {
             state.RandomNumber = action.payload;
-        },setUserPosts: (state, action) => {
+        },
+        setUserPosts: (state, action) => {
             state.UserPosts = action.payload;
-        },setFollowing: (state, action) => {
+        },
+        setFollowing: (state, action) => {
             state.following = action.payload;
+        },
+        setFollowing_plus1: (state, action) => {
+            state.UserData.followers_count = state.UserData.followers_count*1+1;
+        },setFollowing_minus1: (state, action) => {
+            state.UserData.followers_count = state.UserData.followers_count*1-1;
         },
     },
     
@@ -32,5 +39,7 @@ export const {
     updateUserImage,
     setRandomNumber,
     setFollowing,
+    setFollowing_plus1,
+    setFollowing_minus1,
 } = profileSlice.actions;
 export default profileSlice.reducer;

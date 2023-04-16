@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./style.css"
 import CardContent from '@mui/material/CardContent';
@@ -52,7 +53,7 @@ import BurstModeIcon from '@mui/icons-material/BurstMode';
 
 
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData, setUserPosts , setFollowing } from "../redux/reducers/profile/index";
+import { setUserData, setUserPosts, setFollowing, setFollowing_plus1, setFollowing_minus1 } from "../redux/reducers/profile/index";
 
 //=========================posts======================================
 const ExpandMore = styled((props) => {
@@ -70,11 +71,11 @@ const ExpandMore = styled((props) => {
 
 export default function Profile() {
 
-
+    const navigate = useNavigate();
     let personPage = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1]
     let user_Id_Number = localStorage.getItem("userId")
     let token = localStorage.getItem("token")
-
+    const [follow, setFollow] = useState(false)
     //===============================================================
 
     const dispatch = useDispatch();
@@ -106,27 +107,19 @@ export default function Profile() {
         };
     });
 
-    //===============================================================
-    let getAllUserFollowing=()=>{
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
-            headers: {
-                'Authorization': `${token}`
+    //   
+    const loop = () => {
+        state.following.forEach(element => {
+            console.log(element.id, personPage)
+            if (element.id == personPage * 1) {
+                setFollow(true)
             }
-        })
-            .then(function (response) {
-
-                console.log(response.data, "xxxxx xxxxx")
-                dispatch(setFollowing(response.data.followers))
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
+        });
+    }
 
     //===============================================================
 
     useEffect(() => {
-        console.log("url      lru")
         axios.get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
             headers: {
                 'Authorization': `${token}`
@@ -139,56 +132,55 @@ export default function Profile() {
             })
             .catch(function (error) {
                 console.log(error);
+                navigate("/NotFound");
             });
 
-        console.log("url      lru")
-        getAllUserFollowing()
-    }, []);
-
-    //=======================================================
-
-    const loop =()=>{
-        let st =false
-        state.following.forEach(element => {
-            console.log(element.id,personPage)
-            if(element.id==personPage*1)
-            {
-                st=true
-            }
-        });
-        return st 
-    }
-
-    
-    const followUser=()=>{
-     console.log( "yyyyyy  rrrrrrrrrrr yyyyyy" ,token)
-        axios.post(`${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`,{}, {
+        //===============================================================
+        axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
             headers: {
                 'Authorization': `${token}`
             }
         })
             .then(function (response) {
+                console.log(response.data, "xxxxx xxxxx")
+                dispatch(setFollowing(response.data.followers))
+                loop()
+            })
+            .catch(function (error) {
+                console.log(error);
+                
+            });
+    }, []);
 
-                console.log(response.data, "dodododododododo")
-                getAllUserFollowing()
+    //=======================================================
+
+
+    const followUser = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`, {}, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+                dispatch(setFollowing_plus1())
+                setFollow(true)
+                // getAllUserFollowing()
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
 
-    const unFollowUser=()=>{
-
-        console.log( "yyyyyy  rrrrrrrrrrr yyyyyy" ,token)
-        axios.post(`${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`,{}, {
+    const unFollowUser = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`, {}, {
             headers: {
                 'Authorization': `${token}`
             }
         })
             .then(function (response) {
-
-                console.log(response.data, "undo_undo_undo")
-                getAllUserFollowing()
+                dispatch(setFollowing_minus1())
+                setFollow(false)
+                // getAllUserFollowing()
             })
             .catch(function (error) {
                 console.log(error);
@@ -274,9 +266,9 @@ export default function Profile() {
                                             </MenuItem>
                                         </Menu>
                                     </Box>
-                                    : <div>{loop()?
-                                    <Button onClick={() => {unFollowUser()}} variant="contained">unflow</Button>:
-                                    <Button onClick={() => {followUser()}} variant="contained">flower</Button>}
+                                    : <div>{follow ?
+                                        <Button onClick={() => { unFollowUser() }} variant="contained">unfollow</Button> :
+                                        <Button onClick={() => { followUser() }} variant="contained">follow</Button>}
                                     </div>}
 
                             </div>
