@@ -190,7 +190,7 @@ export default function Home() {
       <div className="new-post">
         <Container>
           <ButtonGroup
-            style={{ width: "60%" }}
+            style={{ width: "60%", marginBottom: "20px" }}
             variant="contained"
             aria-label="outlined primary button group"
           >
