@@ -79,7 +79,6 @@ export default function Home() {
       };
     }
   );
-  console.log(likes);
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
@@ -197,7 +196,9 @@ export default function Home() {
           >
             <Button style={{ width: "60%" }}>Explore</Button>
             <Button style={{ width: "60%" }}>New Post</Button>
-            <Button style={{ width: "60%" }}>Chat Groups</Button>
+            <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
+              Chat Groups
+            </Button>
           </ButtonGroup>
         </Container>
       </div>

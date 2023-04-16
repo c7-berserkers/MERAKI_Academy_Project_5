@@ -244,11 +244,11 @@ const deleteUser = async (req, res) => {
 
 const searchUsers = (req, res) => {
   const { name } = req.params;
-  const query = `SELECT * FROM users WHERE first_name LIKE '%$1%' OR last_name LIKE '%$1%' ;`;
+  const query = `SELECT * FROM users WHERE first_name LIKE '%${name}%' OR last_name LIKE '%${name}%' ;`;
   pool
-    .query(query, [name])
+    .query(query)
     .then(({ rows }) => {
-      if (!rows) {
+      if (rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: `no users user with name: ${name}`,
