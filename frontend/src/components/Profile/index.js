@@ -107,7 +107,23 @@ export default function Profile() {
     });
 
     //===============================================================
+    let getAllUserFollowing=()=>{
+        axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
 
+                console.log(response.data, "xxxxx xxxxx")
+                dispatch(setFollowing(response.data.followers))
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+
+    //===============================================================
 
     useEffect(() => {
         console.log("url      lru")
@@ -126,21 +142,7 @@ export default function Profile() {
             });
 
         console.log("url      lru")
-
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-
-                console.log(response.data, "xxxxx xxxxx")
-                dispatch(setFollowing(response.data.followers))
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+        getAllUserFollowing()
     }, []);
 
     //=======================================================
@@ -157,21 +159,42 @@ export default function Profile() {
         return st 
     }
 
-
+    
     const followUser=()=>{
-        axios.post(`${process.env.REACT_APP_BACKEND}/users/follow/${user_Id_Number}`, {
+     console.log( "yyyyyy  rrrrrrrrrrr yyyyyy" ,token)
+        axios.post(`${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`,{}, {
             headers: {
                 'Authorization': `${token}`
             }
         })
             .then(function (response) {
 
-                console.log(response.data, "yyyyyy yyyyyy")
+                console.log(response.data, "dodododododododo")
+                getAllUserFollowing()
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
+
+    const unFollowUser=()=>{
+
+        console.log( "yyyyyy  rrrrrrrrrrr yyyyyy" ,token)
+        axios.post(`${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`,{}, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+
+                console.log(response.data, "undo_undo_undo")
+                getAllUserFollowing()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
 
     //===============================================================
 
@@ -252,8 +275,8 @@ export default function Profile() {
                                         </Menu>
                                     </Box>
                                     : <div>{loop()?
-                                    <Button onClick={() => followUser()} variant="contained">unflow</Button>:
-                                    <Button onClick={() => { }} variant="contained">flower</Button>}
+                                    <Button onClick={() => {unFollowUser()}} variant="contained">unflow</Button>:
+                                    <Button onClick={() => {followUser()}} variant="contained">flower</Button>}
                                     </div>}
 
                             </div>
