@@ -70,6 +70,11 @@ const ExpandMore = styled((props) => {
 
 export default function Profile() {
 
+
+    let personPage=window.location.pathname.split("/")[window.location.pathname.split("/").length-1]
+    let user_Id_Number=localStorage.getItem("userId")
+    //===============================================================
+
     const dispatch = useDispatch();
     const ListItem = styled('li')(({ theme }) => ({
         margin: theme.spacing(0.5),
@@ -102,22 +107,21 @@ export default function Profile() {
 
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, {
+        console.log( "url      lru")
+        axios.get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
             headers: {
-                'Authorization': `${localStorage.getItem("userId")}`
+                'Authorization': `${user_Id_Number}`
             }
         })
             .then(function (response) {
                 console.log(response.data, "my data")
                 dispatch(setUserData(response.data.user))
                 dispatch(setUserPosts(response.data.userPosts))
-
             })
             .catch(function (error) {
                 console.log(error);
             });
     }, []);
-
 
     //===============================================================
 
@@ -132,15 +136,16 @@ export default function Profile() {
                                     <p className="img_wrapper">
                                         <img className="MyProfileImg" src={state.dataUser.img} />
 
-                                        <span className="MyProfileImgButton">
-                                            <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
+                                        {personPage==user_Id_Number? <span className="MyProfileImgButton">
+                                         <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
                                                 <EditNoteIcon />
                                             </Button>
-                                        </span>
+                                        </span>:<></>}
 
                                     </p>
                                 </div>
                             </div>
+                           
                             <div className="userData">
                                 <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
                                 <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
@@ -156,6 +161,7 @@ export default function Profile() {
                             <div className="userDataEdit">
 
                                 {/* **************************************setting***************************************** */}
+                                {personPage==user_Id_Number?
                                 <Box sx={{ flexGrow: 0 }}>
                                     <Tooltip title="Open settings">
                                         <IconButton onClick={(e)=>{setAnchorElUser(e.currentTarget)}} sx={{ p: 0 }}>
@@ -195,6 +201,7 @@ export default function Profile() {
                                         </MenuItem>
                                     </Menu>
                                 </Box>
+                                :<div><Button onClick={() => {}} variant="contained">flower</Button></div>}
 
                             </div>
                         </div>
