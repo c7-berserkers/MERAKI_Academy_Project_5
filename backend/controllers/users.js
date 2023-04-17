@@ -154,7 +154,7 @@ GROUP BY u.id, r.role, r.id`;
 };
 
 const getAllUsers = (req, res) => {
-  const query = `SELECT id, first_name, last_name, age, country, email, created_at, img, is_deleted FROM users WHERE is_deleted=0 ORDER BY created_at DESC`;
+  const query = `SELECT id, first_name, last_name, age, country, email, created_at, img, is_deleted FROM users ORDER BY created_at DESC`;
   pool
     .query(query)
     .then(({ rows }) => {

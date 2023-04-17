@@ -153,7 +153,7 @@ export default function Profile() {
         console.log(error);
         navigate("/NotFound");
       });
-  }, []);
+  });
   //===============================================================
 
   useEffect(() => {

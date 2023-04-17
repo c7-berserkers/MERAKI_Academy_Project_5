@@ -36,7 +36,7 @@ export default function Dashboard() {
                     <strong>Status</strong>
                   </ListGroup.Item>
                   <ListGroup.Item
-                    onClick={(e) => navigate("/dashboard/")}
+                    onClick={(e) => navigate("/dashboard/users")}
                     className="list-filter"
                   >
                     <strong>Users</strong>
@@ -61,7 +61,7 @@ export default function Dashboard() {
             {" "}
             <Routes>
               <Route path="/" element={<h1>hi</h1>} />
-              <Route path="/" element={<h1>hi</h1>} />
+              <Route path="/users" element={<h1>hi</h1>} />
               <Route path="/" element={<h1>hi</h1>} />
               <Route path="/" element={<h1>hi</h1>} />
             </Routes>

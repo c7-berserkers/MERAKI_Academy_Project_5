@@ -298,7 +298,9 @@ export default function Home() {
                       >
                         <FavoriteIcon style={{ color: "red" }} />
                       </IconButton>
-                      <p style={{ margin: "10px" }}>{post.likes_count}</p>
+                      <p style={{ margin: "10px" }}>
+                        {parseInt(post.likes_count)}
+                      </p>
                     </div>
                   ) : (
                     <div style={{ display: "flex" }}>
