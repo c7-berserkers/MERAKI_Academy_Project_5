@@ -71,6 +71,7 @@ export default function SearchPage() {
                           height: "200px",
                           margin: "20px",
                           padding: "20px",
+                          cursor: "pointer",
                         }}
                       >
                         <Avatar
