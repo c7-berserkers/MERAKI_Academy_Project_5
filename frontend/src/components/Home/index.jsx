@@ -23,6 +23,8 @@ import {
   deletePosts,
   deleteComment,
   updateComment,
+  addLikePost,
+  removeLikePost,
 } from "../redux/reducers/posts";
 import { removeLike, addLike } from "../redux/reducers/auth";
 import SendIcon from "@mui/icons-material/Send";
@@ -183,7 +185,7 @@ export default function Home() {
   useEffect(() => {
     getPosts();
   }, []);
-
+  console.log(posts);
   return (
     <div>
       {" "}
@@ -277,7 +279,20 @@ export default function Home() {
                     <div style={{ display: "flex" }}>
                       <IconButton
                         onClick={(e) => {
-                          dispatch(removeLike(post.id));
+                          axios
+                            .delete(`${BACKEND}/likes/${post.id}`, {
+                              headers: {
+                                Authorization: `Bearer ${token}`,
+                              },
+                            })
+                            .then((result) => {
+                              console.log(result);
+                              dispatch(removeLikePost(post.id));
+                              dispatch(removeLike(post.id));
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
                         }}
                         aria-label="add to favorites"
                       >
@@ -291,7 +306,24 @@ export default function Home() {
                       <IconButton
                         onClick={(e) => {
                           const payload = { post_id: post.id, user_id: userId };
-                          dispatch(addLike(payload));
+                          axios
+                            .post(
+                              `${BACKEND}/likes/${post.id}`,
+                              {},
+                              {
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
+                              }
+                            )
+                            .then((result) => {
+                              console.log(result);
+                              dispatch(addLikePost(post.id));
+                              dispatch(addLike(payload));
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
                         }}
                         aria-label="add to favorites"
                       >

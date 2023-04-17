@@ -31,7 +31,7 @@ export const postsSlice = createSlice({
       });
     },
     addComment: (state, { payload }) => {
-      console.log("payload", payload)
+      console.log("payload", payload);
       state.posts = state.posts.map((post) => {
         if (post.id === payload.post_id) {
           if (post.comments) {
@@ -66,6 +66,18 @@ export const postsSlice = createSlice({
         return post;
       });
     },
+    addLikePost: (state, { payload }) => {
+      state.posts = state.posts.map((post) => {
+        if ((post.id = payload)) post.likes_count += 1;
+        return post;
+      });
+    },
+    removeLikePost: (state, { payload }) => {
+      state.posts = state.posts.map((post) => {
+        if ((post.id = payload)) post.likes_count -= 1;
+        return post;
+      });
+    },
   },
 });
 
@@ -78,5 +90,7 @@ export const {
   addComment,
   deleteComment,
   updateComment,
+  addLikePost,
+  removeLikePost,
 } = postsSlice.actions;
 export default postsSlice.reducer;
