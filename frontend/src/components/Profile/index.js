@@ -24,6 +24,7 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import Skeleton from "@mui/material/Skeleton";
 
 
 import Box from '@mui/material/Box';
@@ -139,12 +140,29 @@ export default function Profile() {
         })
             .then(function (response) {
                 dispatch(setUserData(response.data.user))
-                dispatch(setUserPosts(response.data.userPosts))
+                // dispatch(setUserPosts(response.data.userPosts))
+                // console.log(response.data.userPosts,"userPosts")
             })
             .catch(function (error) {
                 console.log(error);
                 navigate("/NotFound");
             });
+
+        //==============================================================
+        axios.get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+
+                dispatch(setUserPosts(response.data.result))
+                console.log(response.data.result,"userPosts  xxxxxxxxxxxxxxxxxxxxx")
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
 
         //===============================================================
         axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
@@ -386,13 +404,13 @@ export default function Profile() {
                                 </>
                             ) : (
                                 <>
-                                    {/* <Stack spacing={1}>
+                                    <Stack spacing={1}>
 
                                     <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                                     <Skeleton variant="circular" width={40} height={40} />
                                     <Skeleton variant="rectangular" width={210} height={60} />
                                     <Skeleton variant="rounded" width={210} height={60} />
-                                    </Stack> */}
+                                    </Stack>
                                 </>
                             )}
                         </>
@@ -422,7 +440,7 @@ export default function Profile() {
                                             <MoreVertIcon />
                                         </IconButton>
                                     }
-                                    title={state.dataUser.first_name}
+                                    title={post.user_first_name}
                                     subheader={post.created_at?.split("T")[0]}
                                 />
 
