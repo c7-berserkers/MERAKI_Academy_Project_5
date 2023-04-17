@@ -148,7 +148,12 @@ export default function NavBar() {
 
             <Divider />
             {role === "Admin" && (
-              <MenuItem onClick={handleClose}>
+              <MenuItem
+                onClick={(e) => {
+                  navigate(`/dashboard`);
+                  handleClose();
+                }}
+              >
                 <ListItemIcon>
                   <MdAdminPanelSettings fontSize="x-large" />
                 </ListItemIcon>
