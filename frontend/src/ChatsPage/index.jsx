@@ -9,6 +9,8 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import Card from "react-bootstrap/Card";
+
 export default function ChatsPage() {
   const BACKEND = process.env.REACT_APP_BACKEND;
   const { token } = useSelector((state) => {
@@ -32,12 +34,13 @@ export default function ChatsPage() {
       )
       .then((result) => {
         setChatRooms(result.data.result);
-        setNoResults(true);
+        setNoResults(false);
       })
       .catch((err) => {
         setNoResults(true);
       });
   }, []);
+  console.log(chatRooms);
   return (
     <div>
       <Fab
@@ -56,7 +59,61 @@ export default function ChatsPage() {
               <h2>No Rooms Yet</h2>
             </>
           ) : (
-            <></>
+            <>
+              {chatRooms.length > 0 ? (
+                <>
+                  <div>
+                    {chatRooms.map((room) => {
+                      return (
+                        <Card key={room._id} style={{ margin: "20px" }}>
+                          <Card.Body
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              flexDirection: "row",
+                              margin: "20px",
+                              padding: "10px",
+                            }}
+                          >
+                            <Card.Title>{room.chat_name}</Card.Title>
+
+                            <Button variant="primary">Start Chatting</Button>
+                          </Card.Body>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Stack spacing={1}>
+                    {/* For variant="text", adjust the height via font-size */}
+                    <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                    {/* For other variants, adjust the size with `width` and `height` */}
+                    <Skeleton variant="circular" width={40} height={40} />
+                    <Skeleton variant="rectangular" width={210} height={60} />
+                    <Skeleton variant="rounded" width={210} height={60} />
+                  </Stack>
+                  <Stack spacing={1}>
+                    {/* For variant="text", adjust the height via font-size */}
+                    <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                    {/* For other variants, adjust the size with `width` and `height` */}
+                    <Skeleton variant="circular" width={40} height={40} />
+                    <Skeleton variant="rectangular" width={210} height={60} />
+                    <Skeleton variant="rounded" width={210} height={60} />
+                  </Stack>
+                  <Stack spacing={1}>
+                    {/* For variant="text", adjust the height via font-size */}
+                    <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                    {/* For other variants, adjust the size with `width` and `height` */}
+                    <Skeleton variant="circular" width={40} height={40} />
+                    <Skeleton variant="rectangular" width={210} height={60} />
+                    <Skeleton variant="rounded" width={210} height={60} />
+                  </Stack>
+                </>
+              )}
+            </>
           )}
         </div>
       </Container>
@@ -80,6 +137,8 @@ export default function ChatsPage() {
                 )
                 .then((result) => {
                   console.log(result.data);
+                  setChatRooms([...chatRooms, result.data.result]);
+                  handleClose();
                 })
                 .catch((err) => console.log(err.response.data.message));
             }}
