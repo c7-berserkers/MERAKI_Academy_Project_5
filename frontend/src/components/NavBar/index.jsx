@@ -44,6 +44,7 @@ export default function NavBar() {
   useEffect(() => {
     !isLoggedIn && navigate("/login");
   });
+  console.log(role);
   return (
     <>
       <Navbar
@@ -146,7 +147,7 @@ export default function NavBar() {
             </MenuItem>
 
             <Divider />
-            {role === "admin" && (
+            {role === "Admin" && (
               <MenuItem onClick={handleClose}>
                 <ListItemIcon>
                   <MdAdminPanelSettings fontSize="x-large" />

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-import "./style.css"
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import axios from "axios";
+import "./style.css";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 
 //=============================posts=================================
 import CardMedia from "@mui/material/CardMedia";
@@ -26,107 +26,133 @@ import { styled } from "@mui/material/styles";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Skeleton from "@mui/material/Skeleton";
 
-
-import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Tooltip from '@mui/material/Tooltip';
-import SettingsIcon from '@mui/icons-material/Settings';
+import Box from "@mui/material/Box";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Tooltip from "@mui/material/Tooltip";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 //==============================================================
-import Popup_Image_Edit from './PopupImageChange/index'
-import Popup_Edit_Data from './PopupEditMyData/index'
-import Popup_Delete_Profile from './PopupDeleteAccount/index'
-import Popup_Edit_MyPassword from './PopupEditMyPassword/index'
-import Popup_Add_New_Post from './PopupAddNewPost/index'
+import Popup_Image_Edit from "./PopupImageChange/index";
+import Popup_Edit_Data from "./PopupEditMyData/index";
+import Popup_Delete_Profile from "./PopupDeleteAccount/index";
+import Popup_Edit_MyPassword from "./PopupEditMyPassword/index";
+import Popup_Add_New_Post from "./PopupAddNewPost/index";
 
 //===============================================================
 
-
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import PeopleIcon from '@mui/icons-material/People';
-import MenuItem from '@mui/material/MenuItem';
-import BurstModeIcon from '@mui/icons-material/BurstMode';
-
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import PeopleIcon from "@mui/icons-material/People";
+import MenuItem from "@mui/material/MenuItem";
+import BurstModeIcon from "@mui/icons-material/BurstMode";
 
 //===============================================================
-
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-    setUserData, setUserPosts, setFollowing, setFollowing_plus1, setFollowing_minus1,
-    setFollowingData, setFollowerData
+  setUserData,
+  setUserPosts,
+  setFollowing,
+  setFollowing_plus1,
+  setFollowing_minus1,
+  setFollowingData,
+  setFollowerData,
 } from "../redux/reducers/profile/index";
 
 //=========================posts======================================
 const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-        duration: theme.transitions.duration.shortest,
-    }),
+  transform: !expand ? "rotate(0deg)" : "rotate(0deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
 }));
 
 //===============================================================
 
 export default function Profile() {
+  const navigate = useNavigate();
+  let personPage =
+    window.location.pathname.split("/")[
+      window.location.pathname.split("/").length - 1
+    ];
+  let user_Id_Number = localStorage.getItem("userId");
+  let token = localStorage.getItem("token");
+  const [follow, setFollow] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showFollower, setShowFollower] = useState(false);
+  const [followerOrFollowingHolder, setFollowerOrFollowingHolder] =
+    useState(false);
 
-    const navigate = useNavigate();
-    let personPage = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1]
-    let user_Id_Number = localStorage.getItem("userId")
-    let token = localStorage.getItem("token")
-    const [follow, setFollow] = useState(false)
-    const [showFollowing, setShowFollowing] = useState(false)
-    const [showFollower, setShowFollower] = useState(false)
-    const [followerOrFollowingHolder, setFollowerOrFollowingHolder] = useState(false)
+  //===============================================================
 
-    //===============================================================
+  const dispatch = useDispatch();
+  const ListItem = styled("li")(({ theme }) => ({
+    margin: theme.spacing(0.5),
+  }));
 
-    const dispatch = useDispatch();
-    const ListItem = styled('li')(({ theme }) => ({
-        margin: theme.spacing(0.5),
-    }));
+  //==========================posts=================================
 
-    //==========================posts=================================
+  const [expanded, setExpanded] = useState(false);
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+  //===============================================================
 
-    const [expanded, setExpanded] = useState(false);
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false);
+  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
+    useState(false);
+  const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] =
+    useState(false);
+  const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] =
+    useState(false);
+  const [
+    modalShowEditPopupEditMyPassword,
+    setModalShowEditPopupEditMyPassword,
+  ] = useState(false);
+
+  //===============================================================
+  const state = useSelector((state) => {
+    return {
+      dataUser: state.profile.UserData,
+      postsUser: state.profile.UserPosts,
+      following: state.profile.following,
+      allFollower: state.profile.allFollower,
+      allFollowing: state.profile.allFollowing,
     };
-    //===============================================================
+  });
 
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false)
-    const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] = useState(false)
-    const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] = useState(false)
-    const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] = useState(false)
-    const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false)
-
-    //===============================================================
-    const state = useSelector((state) => {
-
-        return {
-            dataUser: state.profile.UserData,
-            postsUser: state.profile.UserPosts,
-            following: state.profile.following,
-            allFollower: state.profile.allFollower,
-            allFollowing: state.profile.allFollowing,
-        };
+  //===============================================================
+  const loop = () => {
+    state.following.forEach((element) => {
+      if (element.id == personPage * 1) {
+        setFollow(true);
+      }
     });
+  };
 
+  //===============================================================
 
-    //===============================================================   
-    const loop = () => {
-        state.following.forEach(element => {
-            if (element.id == personPage * 1) {
-                setFollow(true)
-            }
-        });
-    }
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(setUserData(response.data.user));
+        dispatch(setUserPosts(response.data.userPosts));
+      })
+      .catch(function (error) {
+        console.log(error);
+        navigate("/NotFound");
+      });
 
     //===============================================================
 
@@ -406,10 +432,12 @@ export default function Profile() {
                                 <>
                                     <Stack spacing={1}>
 
+
                                     <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                                     <Skeleton variant="circular" width={40} height={40} />
                                     <Skeleton variant="rectangular" width={210} height={60} />
                                     <Skeleton variant="rounded" width={210} height={60} />
+
                                     </Stack>
                                 </>
                             )}
@@ -505,4 +533,5 @@ export default function Profile() {
     )
 
     //===============================================================
+
 }
