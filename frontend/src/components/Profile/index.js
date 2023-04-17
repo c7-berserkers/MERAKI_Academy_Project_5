@@ -24,6 +24,7 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { styled } from "@mui/material/styles";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import Skeleton from "@mui/material/Skeleton";
 
 
 import Box from '@mui/material/Box';
@@ -130,6 +131,8 @@ export default function Profile() {
     //===============================================================
 
     useEffect(() => {
+            setShowFollower(false) 
+            setShowFollowing(false) 
         axios.get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
             headers: {
                 'Authorization': `${token}`
@@ -137,12 +140,29 @@ export default function Profile() {
         })
             .then(function (response) {
                 dispatch(setUserData(response.data.user))
-                dispatch(setUserPosts(response.data.userPosts))
+                // dispatch(setUserPosts(response.data.userPosts))
+                // console.log(response.data.userPosts,"userPosts")
             })
             .catch(function (error) {
                 console.log(error);
                 navigate("/NotFound");
             });
+
+        //==============================================================
+        axios.get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
+            .then(function (response) {
+
+                dispatch(setUserPosts(response.data.result))
+                console.log(response.data.result,"userPosts  xxxxxxxxxxxxxxxxxxxxx")
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
 
         //===============================================================
         axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
@@ -171,7 +191,7 @@ export default function Profile() {
                 console.log(error);
             });
             
-    }, []);
+    }, [personPage]);
 
     //=======================================================
 
@@ -307,17 +327,19 @@ export default function Profile() {
                                 component="ul">
 
                                 <ListItem >
-                                    <Chip icon={<PeopleIcon />} onClick={() => { console.log(state.allFollower);
+                                    <Chip icon={<PeopleIcon />} onClick={() => { 
                                         setFollowerOrFollowingHolder(state.allFollower);
                                         setShowFollower(!showFollower) }} label={"followers: " + state.dataUser.followers_count} />
                                 </ListItem>
                                 <ListItem >
-                                    <Chip icon={<PeopleIcon />} onClick={() => { console.log(state.allFollowing);
+                                    <Chip icon={<PeopleIcon />} onClick={() => { 
                                         setFollowerOrFollowingHolder(state.allFollowing); 
                                         setShowFollowing(!showFollowing) }} label={"following: " + state.dataUser.following_count} />
                                 </ListItem>
                                 <ListItem >
-                                    <Chip icon={<BurstModeIcon />} label={"posts: " + state.postsUser.length} />
+                                    <Chip icon={<BurstModeIcon />}  onClick={() => { 
+                                        setShowFollower(false); 
+                                        setShowFollowing(false) }} label={"posts: " + state.postsUser.length} />
                                 </ListItem>
                             </Paper>
                             {/* ******************************************************************************* */}
@@ -350,6 +372,8 @@ export default function Profile() {
                                     >
                                         {followerOrFollowingHolder.map((user) => {
                                             return (
+
+                                            
                                                 <Card
                                                     onClick={(e) => navigate(`/profile/${user.id}`)}
                                                     key={user.id}
@@ -362,6 +386,7 @@ export default function Profile() {
                                                         height: "200px",
                                                         margin: "20px",
                                                         padding: "20px",
+                                                        cursor: "pointer",
                                                     }}
                                                 >
                                                     <Avatar
@@ -379,13 +404,13 @@ export default function Profile() {
                                 </>
                             ) : (
                                 <>
-                                    {/* <Stack spacing={1}>
+                                    <Stack spacing={1}>
 
                                     <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                                     <Skeleton variant="circular" width={40} height={40} />
                                     <Skeleton variant="rectangular" width={210} height={60} />
                                     <Skeleton variant="rounded" width={210} height={60} />
-                                    </Stack> */}
+                                    </Stack>
                                 </>
                             )}
                         </>
@@ -415,7 +440,7 @@ export default function Profile() {
                                             <MoreVertIcon />
                                         </IconButton>
                                     }
-                                    title={state.dataUser.first_name}
+                                    title={post.user_first_name}
                                     subheader={post.created_at?.split("T")[0]}
                                 />
 
