@@ -13,6 +13,7 @@ import NotFound from "./components/NotFound";
 import SearchPage from "./components/SearchPage";
 import ChatsPage from "./ChatsPage";
 import Chat from "./Chat";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -57,7 +58,15 @@ function App() {
             </>
           }
         />
-
+        <Route
+          path="/dashboard/*"
+          element={
+            <>
+              <NavBar />
+              <Dashboard />
+            </>
+          }
+        />
         <Route
           path="/search/:name"
           element={

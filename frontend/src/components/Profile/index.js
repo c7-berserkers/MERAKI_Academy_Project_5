@@ -153,385 +153,478 @@ export default function Profile() {
         console.log(error);
         navigate("/NotFound");
       });
+  });
+  //===============================================================
+
+  useEffect(() => {
+    setShowFollower(false);
+    setShowFollowing(false);
+    axios
+      .get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(setUserData(response.data.user));
+        // dispatch(setUserPosts(response.data.userPosts))
+        // console.log(response.data.userPosts,"userPosts")
+      })
+      .catch(function (error) {
+        console.log(error);
+        navigate("/NotFound");
+      });
+
+    //==============================================================
+    axios
+      .get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(setUserPosts(response.data.result));
+        console.log(response.data.result, "userPosts  xxxxxxxxxxxxxxxxxxxxx");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     //===============================================================
-
-    useEffect(() => {
-            setShowFollower(false) 
-            setShowFollowing(false) 
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-                dispatch(setUserData(response.data.user))
-                // dispatch(setUserPosts(response.data.userPosts))
-                // console.log(response.data.userPosts,"userPosts")
-            })
-            .catch(function (error) {
-                console.log(error);
-                navigate("/NotFound");
-            });
-
-        //==============================================================
-        axios.get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-
-                dispatch(setUserPosts(response.data.result))
-                console.log(response.data.result,"userPosts  xxxxxxxxxxxxxxxxxxxxx")
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-
-        //===============================================================
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-                dispatch(setFollowing(response.data.followers))
-                dispatch(setFollowingData(response.data.followers))
-                loop()
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        //===============================================================
-        axios.get(`${process.env.REACT_APP_BACKEND}/users/followers/${personPage}`, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-                dispatch(setFollowerData(response.data.followers))
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-            
-    }, [personPage]);
-
-    //=======================================================
-
-
-    const followUser = () => {
-        axios.post(`${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`, {}, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-                dispatch(setFollowing_plus1())
-                setFollow(true)
-                // getAllUserFollowing()
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    const unFollowUser = () => {
-        axios.post(`${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`, {}, {
-            headers: {
-                'Authorization': `${token}`
-            }
-        })
-            .then(function (response) {
-                dispatch(setFollowing_minus1())
-                setFollow(false)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-
+    axios
+      .get(
+        `${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then(function (response) {
+        dispatch(setFollowing(response.data.followers));
+        dispatch(setFollowingData(response.data.followers));
+        loop();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     //===============================================================
+    axios
+      .get(`${process.env.REACT_APP_BACKEND}/users/followers/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(setFollowerData(response.data.followers));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [personPage]);
 
-    return (
-        <div>
-            {state.dataUser ? <>
-                <CardContent>
-                    <div className="flex2">
-                        <div className="flex">
-                            <div id="wrapper">
-                                <div id="image_div">
-                                    <p className="img_wrapper">
-                                        <img className="MyProfileImg" src={state.dataUser.img} />
-                                        {personPage == user_Id_Number ? <span className="MyProfileImgButton">
-                                            <Button onClick={() => { setModalShowEditPopupImage(true) }} variant="contained">
-                                                <EditNoteIcon />
-                                            </Button>
-                                        </span> : <></>}
-                                    </p>
-                                </div>
-                            </div>
+  //=======================================================
 
-                            <div className="userData">
-                                <Popup_Image_Edit show={modalShowEditPopupImage} onHide={() => setModalShowEditPopupImage(false)} />
-                                <Popup_Edit_Data show={modalShowEditPopupMyProfile} onHide={() => setModalShowEditPopupMyProfile(false)} />
-                                <Popup_Delete_Profile show={modalShowEditPopupDeleteProfile} onHide={() => setModalShowEditPopupDeleteProfile(false)} />
-                                <Popup_Edit_MyPassword show={modalShowEditPopupEditMyPassword} onHide={() => setModalShowEditPopupEditMyPassword(false)} />
+  const followUser = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`,
+        {},
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then(function (response) {
+        dispatch(setFollowing_plus1());
+        setFollow(true);
+        // getAllUserFollowing()
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-                                <h4> {state.dataUser.first_name}  {state.dataUser.last_name}  </h4>
-                                <h4>{state.dataUser.email}</h4>
-                                <h4>Age : {state.dataUser.age}</h4>
-                                <h4>Country : {state.dataUser.country}</h4>
-                            </div>
-                            <div className="userDataEdit">
+  const unFollowUser = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`,
+        {},
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      )
+      .then(function (response) {
+        dispatch(setFollowing_minus1());
+        setFollow(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-                                {/* **************************************setting***************************************** */}
-                                {personPage == user_Id_Number ?
-                                    <Box sx={{ flexGrow: 0 }}>
-                                        <Tooltip title="Open settings">
-                                            <IconButton onClick={(e) => { setAnchorElUser(e.currentTarget) }} sx={{ p: 0 }}>
-                                                <SettingsIcon sx={{ fontSize: "30px" }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Menu
-                                            sx={{ mt: '45px' }}
-                                            id="menu-appbar"
-                                            anchorEl={anchorElUser}
-                                            anchorOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            keepMounted
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            open={Boolean(anchorElUser)}
-                                            onClose={() => { setAnchorElUser(null) }}
-                                        >
-                                            <MenuItem onClick={() => {
-                                                setModalShowEditPopupMyProfile(true);
-                                                setAnchorElUser(null)
-                                            }}>
-                                                <Typography textAlign="center">Edit</Typography>
-                                            </MenuItem>
-                                            <MenuItem onClick={() => {
-                                                setModalShowEditPopupEditMyPassword(true);
-                                                setAnchorElUser(null)
-                                            }}>
-                                                <Typography textAlign="center">Edit Password</Typography>
-                                            </MenuItem>
-                                            <MenuItem onClick={() => { setModalShowEditPopupDeleteProfile(true); setAnchorElUser(null) }}>
-                                                <Typography textAlign="center">Delete Account</Typography>
-                                            </MenuItem>
-                                        </Menu>
-                                    </Box>
-                                    : <div>{follow ?
-                                        <Button onClick={() => { unFollowUser() }} variant="contained">unfollow</Button> :
-                                        <Button onClick={() => { followUser() }} variant="contained">follow</Button>}
-                                    </div>}
+  //===============================================================
 
-                            </div>
-                        </div>
-                        <div className="flex1">
-                            {/* **************************************counters***************************************** */}
-                            <Paper
-                                sx={{
-                                    backgroundColor: '#f0f0f0',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    flexWrap: 'wrap',
-                                    listStyle: 'none',
-                                    p: 0.5,
-                                    m: 0,
-                                    boxShadow: 'none',
-                                }}
-                                className="Paper"
-                                component="ul">
+  return (
+    <div>
+      {state.dataUser ? (
+        <>
+          <CardContent>
+            <div className="flex2">
+              <div className="flex">
+                <div id="wrapper">
+                  <div id="image_div">
+                    <p className="img_wrapper">
+                      <img className="MyProfileImg" src={state.dataUser.img} />
+                      {personPage == user_Id_Number ? (
+                        <span className="MyProfileImgButton">
+                          <Button
+                            onClick={() => {
+                              setModalShowEditPopupImage(true);
+                            }}
+                            variant="contained"
+                          >
+                            <EditNoteIcon />
+                          </Button>
+                        </span>
+                      ) : (
+                        <></>
+                      )}
+                    </p>
+                  </div>
+                </div>
 
-                                <ListItem >
-                                    <Chip icon={<PeopleIcon />} onClick={() => { 
-                                        setFollowerOrFollowingHolder(state.allFollower);
-                                        setShowFollower(!showFollower) }} label={"followers: " + state.dataUser.followers_count} />
-                                </ListItem>
-                                <ListItem >
-                                    <Chip icon={<PeopleIcon />} onClick={() => { 
-                                        setFollowerOrFollowingHolder(state.allFollowing); 
-                                        setShowFollowing(!showFollowing) }} label={"following: " + state.dataUser.following_count} />
-                                </ListItem>
-                                <ListItem >
-                                    <Chip icon={<BurstModeIcon />}  onClick={() => { 
-                                        setShowFollower(false); 
-                                        setShowFollowing(false) }} label={"posts: " + state.postsUser.length} />
-                                </ListItem>
-                            </Paper>
-                            {/* ******************************************************************************* */}
-                        </div>
+                <div className="userData">
+                  <Popup_Image_Edit
+                    show={modalShowEditPopupImage}
+                    onHide={() => setModalShowEditPopupImage(false)}
+                  />
+                  <Popup_Edit_Data
+                    show={modalShowEditPopupMyProfile}
+                    onHide={() => setModalShowEditPopupMyProfile(false)}
+                  />
+                  <Popup_Delete_Profile
+                    show={modalShowEditPopupDeleteProfile}
+                    onHide={() => setModalShowEditPopupDeleteProfile(false)}
+                  />
+                  <Popup_Edit_MyPassword
+                    show={modalShowEditPopupEditMyPassword}
+                    onHide={() => setModalShowEditPopupEditMyPassword(false)}
+                  />
+
+                  <h4>
+                    {" "}
+                    {state.dataUser.first_name} {state.dataUser.last_name}{" "}
+                  </h4>
+                  <h4>{state.dataUser.email}</h4>
+                  <h4>Age : {state.dataUser.age}</h4>
+                  <h4>Country : {state.dataUser.country}</h4>
+                </div>
+                <div className="userDataEdit">
+                  {/* **************************************setting***************************************** */}
+                  {personPage == user_Id_Number ? (
+                    <Box sx={{ flexGrow: 0 }}>
+                      <Tooltip title="Open settings">
+                        <IconButton
+                          onClick={(e) => {
+                            setAnchorElUser(e.currentTarget);
+                          }}
+                          sx={{ p: 0 }}
+                        >
+                          <SettingsIcon sx={{ fontSize: "30px" }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Menu
+                        sx={{ mt: "45px" }}
+                        id="menu-appbar"
+                        anchorEl={anchorElUser}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        open={Boolean(anchorElUser)}
+                        onClose={() => {
+                          setAnchorElUser(null);
+                        }}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            setModalShowEditPopupMyProfile(true);
+                            setAnchorElUser(null);
+                          }}
+                        >
+                          <Typography textAlign="center">Edit</Typography>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setModalShowEditPopupEditMyPassword(true);
+                            setAnchorElUser(null);
+                          }}
+                        >
+                          <Typography textAlign="center">
+                            Edit Password
+                          </Typography>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setModalShowEditPopupDeleteProfile(true);
+                            setAnchorElUser(null);
+                          }}
+                        >
+                          <Typography textAlign="center">
+                            Delete Account
+                          </Typography>
+                        </MenuItem>
+                      </Menu>
+                    </Box>
+                  ) : (
+                    <div>
+                      {follow ? (
+                        <Button
+                          onClick={() => {
+                            unFollowUser();
+                          }}
+                          variant="contained"
+                        >
+                          unfollow
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            followUser();
+                          }}
+                          variant="contained"
+                        >
+                          follow
+                        </Button>
+                      )}
                     </div>
-                </CardContent>
+                  )}
+                </div>
+              </div>
+              <div className="flex1">
+                {/* **************************************counters***************************************** */}
+                <Paper
+                  sx={{
+                    backgroundColor: "#f0f0f0",
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    listStyle: "none",
+                    p: 0.5,
+                    m: 0,
+                    boxShadow: "none",
+                  }}
+                  className="Paper"
+                  component="ul"
+                >
+                  <ListItem>
+                    <Chip
+                      icon={<PeopleIcon />}
+                      onClick={() => {
+                        setFollowerOrFollowingHolder(state.allFollower);
+                        setShowFollower(!showFollower);
+                      }}
+                      label={"followers: " + state.dataUser.followers_count}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <Chip
+                      icon={<PeopleIcon />}
+                      onClick={() => {
+                        setFollowerOrFollowingHolder(state.allFollowing);
+                        setShowFollowing(!showFollowing);
+                      }}
+                      label={"following: " + state.dataUser.following_count}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <Chip
+                      icon={<BurstModeIcon />}
+                      onClick={() => {
+                        setShowFollower(false);
+                        setShowFollowing(false);
+                      }}
+                      label={"posts: " + state.postsUser.length}
+                    />
+                  </ListItem>
+                </Paper>
+                {/* ******************************************************************************* */}
+              </div>
+            </div>
+          </CardContent>
+        </>
+      ) : (
+        <p>noData</p>
+      )}
 
-            </> : <p>noData</p>}
+      <hr style={{ backgroundColor: "black", fontSize: "2em" }} />
 
-            <hr style={{ backgroundColor: "black", fontSize: "2em" }} />
-
-            {/* ******************************* showFollower || showFollowing of user *************************** */}
-            {showFollower || showFollowing ? <>
-                {/* //*************************************************************************** */}
-                <Container>
-                    {followerOrFollowingHolder.length <= 0 ? (
-                        <>
-                            <h2>No results in {showFollower ? "Follower" : "Following"}</h2>
-                        </>
-                    ) : (
-                        <>
-                            {followerOrFollowingHolder.length > 0 ? (
-                                <>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            justifyContent: "space-around",
-                                            flexWrap: "wrap",
-                                        }}
-                                    >
-                                        {followerOrFollowingHolder.map((user) => {
-                                            return (
-
-                                            
-                                                <Card
-                                                    onClick={(e) => navigate(`/profile/${user.id}`)}
-                                                    key={user.id}
-                                                    sx={{
-                                                        width: 275,
-                                                        display: "flex",
-                                                        flexDirection: "column",
-                                                        justifyContent: "space-around",
-                                                        alignItems: "center",
-                                                        height: "200px",
-                                                        margin: "20px",
-                                                        padding: "20px",
-                                                        cursor: "pointer",
-                                                    }}
-                                                >
-                                                    <Avatar
-                                                        sx={{ height: "100px", width: "100px" }}
-                                                        alt="Remy Sharp"
-                                                        src={user.img}
-                                                    />
-                                                    <h4>
-                                                        {user.first_name} {user.last_name}
-                                                    </h4>
-                                                </Card>
-                                            );
-                                        })}
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <Stack spacing={1}>
-
-
-                                    <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
-                                    <Skeleton variant="circular" width={40} height={40} />
-                                    <Skeleton variant="rectangular" width={210} height={60} />
-                                    <Skeleton variant="rounded" width={210} height={60} />
-
-                                    </Stack>
-                                </>
-                            )}
-                        </>
-                    )}
-                </Container>
-
-
-            </> : <>
-                {/* //********************************post of user******************************************* */}
-                <Container>
-                    <Button style={{ width: "60%" }} onClick={() => { setModalShowPopupAddNewPost(true) }}>Add New Post</Button>
-                </Container>
-                <Container>
-                    {state.postsUser.map((post) => {
+      {/* ******************************* showFollower || showFollowing of user *************************** */}
+      {showFollower || showFollowing ? (
+        <>
+          {/* //*************************************************************************** */}
+          <Container>
+            {followerOrFollowingHolder.length <= 0 ? (
+              <>
+                <h2>No results in {showFollower ? "Follower" : "Following"}</h2>
+              </>
+            ) : (
+              <>
+                {followerOrFollowingHolder.length > 0 ? (
+                  <>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {followerOrFollowingHolder.map((user) => {
                         return (
-                            <Card key={post.id} sx={{ margin: "10px 0" }}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar
-                                            sx={{ bgcolor: red[500] }}
-                                            src={state.dataUser.img}
-                                            aria-label="recipe"
-                                        ></Avatar>
-                                    }
-                                    action={
-                                        <IconButton aria-label="settings">
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                    }
-                                    title={post.user_first_name}
-                                    subheader={post.created_at?.split("T")[0]}
-                                />
-
-                                <CardMedia
-                                    component="img"
-                                    // height="194"
-                                    image={post.img}
-                                    alt="post"
-                                />
-                                <CardContent>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {post.description}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites">
-                                        <FavoriteIcon />
-                                    </IconButton>
-
-                                    <ExpandMore
-                                        expand={expanded}
-                                        onClick={handleExpandClick}
-                                        aria-expanded={expanded}
-                                        aria-label="show more"
-                                    >
-                                        <MdComment />
-                                    </ExpandMore>
-                                </CardActions>
-                                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                    <CardContent>
-                                        <Typography paragraph>Method:</Typography>
-                                        <Typography paragraph>
-                                            Heat 1/2 cup of the broth in a pot until simmering, add
-                                            saffron and set aside for 10 minutes.
-                                        </Typography>
-                                        <Typography paragraph>
-                                            Heat oil in a (14- to 16-inch) paella pan or a large, deep
-                                            skillet over medium-high heat. Add chicken, shrimp and
-                                            remaining 4 1/2 cups chicken broth; bring to a boil.
-                                        </Typography>
-                                        <Typography paragraph>
-                                            Add rice and stir very gently to distribute. Top with
-                                            artichokes and peppers, and cook without stirring, until
-                                            tender, 5 to 7 minutes more. (Discard any mussels that
-                                            don&apos;t open.)
-                                        </Typography>
-                                        <Typography>
-                                            Set aside off of the heat to let rest for 10 minutes, and
-                                            then serve.
-                                        </Typography>
-                                    </CardContent>
-                                </Collapse>
-                                <Popup_Add_New_Post show={modalShowPopupAddNewPost} onHide={() => setModalShowPopupAddNewPost(false)} />
-                            </Card>
-
+                          <Card
+                            onClick={(e) => navigate(`/profile/${user.id}`)}
+                            key={user.id}
+                            sx={{
+                              width: 275,
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-around",
+                              alignItems: "center",
+                              height: "200px",
+                              margin: "20px",
+                              padding: "20px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <Avatar
+                              sx={{ height: "100px", width: "100px" }}
+                              alt="Remy Sharp"
+                              src={user.img}
+                            />
+                            <h4>
+                              {user.first_name} {user.last_name}
+                            </h4>
+                          </Card>
                         );
-                    })}
-                </Container>
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Stack spacing={1}>
+                      <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                      <Skeleton variant="circular" width={40} height={40} />
+                      <Skeleton variant="rectangular" width={210} height={60} />
+                      <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                  </>
+                )}
+              </>
+            )}
+          </Container>
+        </>
+      ) : (
+        <>
+          {/* //********************************post of user******************************************* */}
+          <Container>
+            <Button
+              style={{ width: "60%" }}
+              onClick={() => {
+                setModalShowPopupAddNewPost(true);
+              }}
+            >
+              Add New Post
+            </Button>
+          </Container>
+          <Container>
+            {state.postsUser.map((post) => {
+              return (
+                <Card key={post.id} sx={{ margin: "10px 0" }}>
+                  <CardHeader
+                    avatar={
+                      <Avatar
+                        sx={{ bgcolor: red[500] }}
+                        src={state.dataUser.img}
+                        aria-label="recipe"
+                      ></Avatar>
+                    }
+                    action={
+                      <IconButton aria-label="settings">
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                    title={post.user_first_name}
+                    subheader={post.created_at?.split("T")[0]}
+                  />
 
-            </>}
-        </div>
-    )
+                  <CardMedia
+                    component="img"
+                    // height="194"
+                    image={post.img}
+                    alt="post"
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      {post.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <IconButton aria-label="add to favorites">
+                      <FavoriteIcon />
+                    </IconButton>
 
-    //===============================================================
-
+                    <ExpandMore
+                      expand={expanded}
+                      onClick={handleExpandClick}
+                      aria-expanded={expanded}
+                      aria-label="show more"
+                    >
+                      <MdComment />
+                    </ExpandMore>
+                  </CardActions>
+                  <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                      <Typography paragraph>Method:</Typography>
+                      <Typography paragraph>
+                        Heat 1/2 cup of the broth in a pot until simmering, add
+                        saffron and set aside for 10 minutes.
+                      </Typography>
+                      <Typography paragraph>
+                        Heat oil in a (14- to 16-inch) paella pan or a large,
+                        deep skillet over medium-high heat. Add chicken, shrimp
+                        and remaining 4 1/2 cups chicken broth; bring to a boil.
+                      </Typography>
+                      <Typography paragraph>
+                        Add rice and stir very gently to distribute. Top with
+                        artichokes and peppers, and cook without stirring, until
+                        tender, 5 to 7 minutes more. (Discard any mussels that
+                        .)
+                      </Typography>
+                      <Typography>
+                        Set aside off of the heat to let rest for 10 minutes,
+                        and then serve.
+                      </Typography>
+                    </CardContent>
+                  </Collapse>
+                  <Popup_Add_New_Post
+                    show={modalShowPopupAddNewPost}
+                    onHide={() => setModalShowPopupAddNewPost(false)}
+                  />
+                </Card>
+              );
+            })}
+          </Container>
+        </>
+      )}
+    </div>
+  );
 }
