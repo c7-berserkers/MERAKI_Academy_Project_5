@@ -7,6 +7,8 @@ export const profileSlice = createSlice({
         UserPosts:[],
         RandomNumber: false,
         following :[],
+        allFollowing:[],
+        allFollower:[],
     },
     reducers: {
         setUserData: (state, action) => {
@@ -29,6 +31,12 @@ export const profileSlice = createSlice({
         },setFollowing_minus1: (state, action) => {
             state.UserData.followers_count = state.UserData.followers_count*1-1;
         },
+        setFollowingData: (state, action) => {
+            state.allFollowing =action.payload;
+        },setFollowerData: (state, action) => {
+            state.allFollower= action.payload;
+        },
+
     },
     
 });
@@ -41,5 +49,7 @@ export const {
     setFollowing,
     setFollowing_plus1,
     setFollowing_minus1,
+    setFollowingData,
+    setFollowerData,
 } = profileSlice.actions;
 export default profileSlice.reducer;
