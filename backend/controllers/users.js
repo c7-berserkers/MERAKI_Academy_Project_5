@@ -327,7 +327,7 @@ const unFollowUser = (req, res) => {
 
 const getFollowersByUserId = (req, res) => {
   const { id } = req.params;
-  const query = `SELECT u.id, u.first_name, u.last_name
+  const query = `SELECT u.id, u.first_name,u.img, u.last_name
   FROM follows f
   INNER JOIN users u ON f.following_user_id = u.id
   WHERE f.followed_user_id = $1 AND f.is_deleted = 0 ;
@@ -352,7 +352,7 @@ const getFollowersByUserId = (req, res) => {
 
 const getFollowingByUserId = (req, res) => {
   const { id } = req.params;
-  const query = `SELECT u.id, u.first_name, u.last_name
+  const query = `SELECT u.id, u.first_name,u.img, u.last_name
   FROM follows f
   INNER JOIN users u ON f.followed_user_id = u.id
   WHERE f.following_user_id = $1 AND f.is_deleted = 0;
