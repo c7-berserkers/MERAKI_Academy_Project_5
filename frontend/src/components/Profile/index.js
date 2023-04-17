@@ -130,6 +130,8 @@ export default function Profile() {
     //===============================================================
 
     useEffect(() => {
+            setShowFollower(false) 
+            setShowFollowing(false) 
         axios.get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
             headers: {
                 'Authorization': `${token}`
@@ -171,7 +173,7 @@ export default function Profile() {
                 console.log(error);
             });
             
-    }, []);
+    }, [personPage]);
 
     //=======================================================
 
@@ -307,17 +309,19 @@ export default function Profile() {
                                 component="ul">
 
                                 <ListItem >
-                                    <Chip icon={<PeopleIcon />} onClick={() => { console.log(state.allFollower);
+                                    <Chip icon={<PeopleIcon />} onClick={() => { 
                                         setFollowerOrFollowingHolder(state.allFollower);
                                         setShowFollower(!showFollower) }} label={"followers: " + state.dataUser.followers_count} />
                                 </ListItem>
                                 <ListItem >
-                                    <Chip icon={<PeopleIcon />} onClick={() => { console.log(state.allFollowing);
+                                    <Chip icon={<PeopleIcon />} onClick={() => { 
                                         setFollowerOrFollowingHolder(state.allFollowing); 
                                         setShowFollowing(!showFollowing) }} label={"following: " + state.dataUser.following_count} />
                                 </ListItem>
                                 <ListItem >
-                                    <Chip icon={<BurstModeIcon />} label={"posts: " + state.postsUser.length} />
+                                    <Chip icon={<BurstModeIcon />}  onClick={() => { 
+                                        setShowFollower(false); 
+                                        setShowFollowing(false) }} label={"posts: " + state.postsUser.length} />
                                 </ListItem>
                             </Paper>
                             {/* ******************************************************************************* */}
@@ -350,6 +354,8 @@ export default function Profile() {
                                     >
                                         {followerOrFollowingHolder.map((user) => {
                                             return (
+
+                                            
                                                 <Card
                                                     onClick={(e) => navigate(`/profile/${user.id}`)}
                                                     key={user.id}
@@ -362,6 +368,7 @@ export default function Profile() {
                                                         height: "200px",
                                                         margin: "20px",
                                                         padding: "20px",
+                                                        cursor: "pointer",
                                                     }}
                                                 >
                                                     <Avatar
