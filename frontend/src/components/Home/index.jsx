@@ -86,7 +86,7 @@ export default function Home() {
 
   // --------------------
   const isLiked = (arr, id) => {
-    return arr.find((e) => {
+    return arr.findIndex((e) => {
       return e.post_id === id;
     });
   };
@@ -275,7 +275,7 @@ export default function Home() {
                   </p>
                 </CardContent>
                 <CardActions disableSpacing>
-                  {isLiked(likes, post.id) ? (
+                  {isLiked(likes, post.id) > -1 ? (
                     <div style={{ display: "flex" }}>
                       <IconButton
                         onClick={(e) => {
