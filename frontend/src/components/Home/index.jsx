@@ -121,7 +121,9 @@ return tags.length>0?tags.map((tag,i)=>{
   return (
     <ListGroup.Item
                     key={tag.id}
-                    onClick={(e) => navigate("/dashboard/")}
+                    id={tag.id}
+                    onClick={(e) => {navigate(`/tag/${tag.id}`)
+                  console.log(e.target.id)}}
                     className="list-filter"
                   >
                     <strong>{tag.tag}</strong>

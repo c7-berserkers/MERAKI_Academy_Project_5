@@ -1,5 +1,6 @@
 import React from "react";
 
 export default function Tag() {
-  return <div>Tag</div>;
+
+  return <div>{window.location.pathname}</div>;
 }
