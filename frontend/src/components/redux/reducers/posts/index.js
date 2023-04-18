@@ -10,7 +10,7 @@ export const postsSlice = createSlice({
       state.posts = action.payload;
     },
     addPosts: (state, { payload }) => {
-      state.posts.push(payload);
+      state.posts.splice(0, 0, payload);
     },
     updatePosts: (state, { payload }) => {
       state.posts = state.posts.map((post) => {

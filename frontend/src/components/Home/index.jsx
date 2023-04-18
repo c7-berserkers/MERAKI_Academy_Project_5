@@ -40,6 +40,10 @@ import MenuItem from "@mui/material/MenuItem";
 import ListGroup from "react-bootstrap/ListGroup";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
+import Popup_Add_New_Post from "./PopupAddNewPost/index";
+import Offcanvas from 'react-bootstrap/Offcanvas';
+
+
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -83,6 +87,50 @@ export default function Home() {
   );
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
+  
+
+  // --------------------
+const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
+  useState(false);
+  const [show, setShow] = useState(false);
+  const [tag_id, setTag_id] = useState('');
+  const [tags, setTags] = useState([]);
+
+  // --------------------
+
+  const handleClose22 = () => setShow(false);
+  const handleShow = () => setShow(true);
+  // --------------------
+  useEffect(()=>{
+    if(tags.length==0){
+        axios.get(`${process.env.REACT_APP_BACKEND}/tags`, {
+        headers: {
+            'Authorization': `${token}`
+        }
+    }).then((result)=>{
+        setTags(result.data.result)
+}).catch((err)=>{
+    console.log(err)
+    })
+    }
+    
+},[tags])
+  // --------------------
+const tagsFunction =()=>{
+return tags.length>0?tags.map((tag,i)=>{
+  return (
+    <ListGroup.Item
+                    key={tag.id}
+                    id={tag.id}
+                    onClick={(e) => {navigate(`/tag/${tag.id}`)
+                  console.log(e.target.id)}}
+                    className="list-filter"
+                  >
+                    <strong>{tag.tag}</strong>
+                  </ListGroup.Item>
+  )
+}):""
+}
 
   // --------------------
   const isLiked = (arr, id) => {
@@ -196,8 +244,10 @@ export default function Home() {
             variant="contained"
             aria-label="outlined primary button group"
           >
-            <Button style={{ width: "60%" }}>Explore</Button>
-            <Button style={{ width: "60%" }}>New Post</Button>
+            <Button style={{ width: "60%" }} onClick={handleShow}>Explore</Button>
+            <Button style={{ width: "60%" }} onClick={() => {
+                setModalShowPopupAddNewPost(true);
+              }}>New Post</Button>
             <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
               Chat Groups
             </Button>
@@ -235,7 +285,7 @@ export default function Home() {
                     )
                   }
                   title={post.user_first_name}
-                  subheader={post.created_at.split("T")[0]}
+                  subheader={post.created_at}
                 />
 
                 {}
@@ -505,6 +555,20 @@ export default function Home() {
                     </div>
                   </CardContent>
                 </Collapse>
+                <Popup_Add_New_Post set={setModalShowPopupAddNewPost}
+                    show={modalShowPopupAddNewPost}
+                    onHide={() => setModalShowPopupAddNewPost(false)}
+                  />
+                  <Offcanvas show={show} onHide={handleClose22}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Tags</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+        <ListGroup>
+          {tagsFunction()}
+                </ListGroup>
+        </Offcanvas.Body>
+      </Offcanvas>
               </Card>
             );
           })}

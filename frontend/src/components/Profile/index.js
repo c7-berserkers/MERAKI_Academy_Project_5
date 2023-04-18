@@ -611,6 +611,7 @@ export default function Profile() {
                     </CardContent>
                   </Collapse>
                   <Popup_Add_New_Post
+                  set={setModalShowPopupAddNewPost}
                     show={modalShowPopupAddNewPost}
                     onHide={() => setModalShowPopupAddNewPost(false)}
                   />

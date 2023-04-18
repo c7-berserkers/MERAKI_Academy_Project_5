@@ -30,7 +30,7 @@ const Popup_Add_New_Post = (props) => {
     const [isLoading, setLoading] = useState(false);
     const [description, setDescription] = useState('');
     const [tag_id, setTag_id] = useState('');
-    const [tags, setTags] = useState('');
+    const [tags, setTags] = useState([]);
 
     
     const { token, post, pfp, userId, userName } = useSelector((state) => {
@@ -120,13 +120,12 @@ const Popup_Add_New_Post = (props) => {
     //===============================================================
 
     useEffect(()=>{
-        if(!tags){
+        if(tags.length==0){
             axios.get(`${process.env.REACT_APP_BACKEND}/tags`, {
             headers: {
-                'Authorization': `${localStorage.getItem("userId")}`
+                'Authorization': `${token}`
             }
         }).then((result)=>{
-            console.log(result.data.result)
             setTags(result.data.result)
     }).catch((err)=>{
         console.log(err)
