@@ -188,7 +188,7 @@ export default function Profile() {
       })
       .catch(function (error) {
         console.log(error);
-        // navigate("/NotFound");
+        navigate("/NotFound");
       });
 
 
