@@ -64,25 +64,20 @@ const Popup_Add_New_Post = (props) => {
     //===============================================================
 
     const add_post = () => {
-        console.log( { img:img_Select, description, tag_id })
-        // const errors = validateData();
-        // if (Object.keys(errors).length) {
-        //     setErrors(errors);
-        //     return;
-        // }
-        // axios.post(`${process.env.REACT_APP_BACKEND}/posts`, { img:img_Select, description, tag_id }, {
-        //     headers: {
-        //         'Authorization': `${localStorage.getItem("userId")}`
-        //     }
-        // })
-        //     .then(function (response) {
-        //         console.log(response.data, "my data")
-        //         //addPosts dispatch(updateUserImage(response.data.user.img))
-        //         // dispatch(setUserImg({img:response.data.user.img}))
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error);
-        //     });
+        console.log( { img:imgURL, description, tag_id })
+        
+        axios.post(`${process.env.REACT_APP_BACKEND}/posts`, { img:imgURL, description, tag_id }, {
+            headers: {
+                'Authorization': `${localStorage.getItem("userId")}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data, "my data")
+                // dispatch(addPosts(response.data))
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -160,7 +155,7 @@ const Popup_Add_New_Post = (props) => {
         />
       </FloatingLabel>
       <br></br>
-      {imgURL?<Image src={imgURL} />:""}
+      {imgURL?<Image src={imgURL}  fluid />:""}
       <br></br>
       
       <Row className="g-2">
