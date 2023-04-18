@@ -4,7 +4,6 @@ export const profileSlice = createSlice({
     name: "profile",
     initialState: {
         UserData: {},
-        UserPosts:[],
         RandomNumber: false,
         following :[],
         allFollowing:[],
@@ -19,9 +18,6 @@ export const profileSlice = createSlice({
         },
         setRandomNumber: (state, action) => {
             state.RandomNumber = action.payload;
-        },
-        setUserPosts: (state, action) => {
-            state.UserPosts = action.payload;
         },
         setFollowing: (state, action) => {
             state.following = action.payload;
@@ -43,7 +39,6 @@ export const profileSlice = createSlice({
 
 export const {
     setUserData,
-    setUserPosts,
     updateUserImage,
     setRandomNumber,
     setFollowing,

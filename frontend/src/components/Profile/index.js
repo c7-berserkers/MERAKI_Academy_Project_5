@@ -52,13 +52,16 @@ import BurstModeIcon from "@mui/icons-material/BurstMode";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUserData,
-  setUserPosts,
   setFollowing,
   setFollowing_plus1,
   setFollowing_minus1,
   setFollowingData,
   setFollowerData,
 } from "../redux/reducers/profile/index";
+
+import {
+  setPosts
+} from "../redux/reducers/posts/index";
 
 //=========================posts======================================
 const ExpandMore = styled((props) => {
@@ -78,7 +81,7 @@ export default function Profile() {
   const navigate = useNavigate();
   let personPage =
     window.location.pathname.split("/")[
-      window.location.pathname.split("/").length - 1
+    window.location.pathname.split("/").length - 1
     ];
   let user_Id_Number = localStorage.getItem("userId");
   let token = localStorage.getItem("token");
@@ -120,7 +123,7 @@ export default function Profile() {
   const state = useSelector((state) => {
     return {
       dataUser: state.profile.UserData,
-      postsUser: state.profile.UserPosts,
+      postsUser: state.posts.posts,
       following: state.profile.following,
       allFollower: state.profile.allFollower,
       allFollowing: state.profile.allFollowing,
@@ -148,29 +151,47 @@ export default function Profile() {
         },
       })
       .then(function (response) {
-        dispatch(setUserData(response.data.user));
-        // dispatch(setUserPosts(response.data.userPosts))
-        // console.log(response.data.userPosts,"userPosts")
+        dispatch(setUserData(response?.data?.user));
+        //==============================================================
+        axios
+          .get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
+            headers: {
+              Authorization: `${token}`,
+            },
+          })
+          .then(function (response) {
+            dispatch(setPosts(response?.data?.result));
+            console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
+            //===============================================================
+            axios
+              .get(`${process.env.REACT_APP_BACKEND}/users/followers/${personPage}`, {
+                headers: {
+                  Authorization: `${token}`,
+                },
+              })
+              .then(function (response) {
+                dispatch(setFollowerData(response.data.followers));
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+
+            //===========================================================
+
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        //---------------------------------------------------------------
       })
       .catch(function (error) {
         console.log(error);
         navigate("/NotFound");
       });
 
-    //==============================================================
-    axios
-      .get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      })
-      .then(function (response) {
-        dispatch(setUserPosts(response.data.result));
-        console.log(response.data.result, "userPosts  xxxxxxxxxxxxxxxxxxxxx");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
 
     //===============================================================
     axios
@@ -183,26 +204,16 @@ export default function Profile() {
         }
       )
       .then(function (response) {
-        dispatch(setFollowing(response.data.followers));
-        dispatch(setFollowingData(response.data.followers));
+        dispatch(setFollowing(response?.data?.followers));
+        dispatch(setFollowingData(response?.data?.followers));
         loop();
       })
       .catch(function (error) {
         console.log(error);
       });
-    //===============================================================
-    axios
-      .get(`${process.env.REACT_APP_BACKEND}/users/followers/${personPage}`, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      })
-      .then(function (response) {
-        dispatch(setFollowerData(response.data.followers));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+  //=============================================================
+
   }, [personPage]);
 
   //=======================================================
@@ -527,6 +538,8 @@ export default function Profile() {
               Add New Post
             </Button>
           </Container>
+
+
           <Container>
             {state.postsUser.map((post) => {
               return (
