@@ -139,24 +139,6 @@ export default function Profile() {
   //===============================================================
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      })
-      .then(function (response) {
-        dispatch(setUserData(response.data.user));
-        dispatch(setUserPosts(response.data.userPosts));
-      })
-      .catch(function (error) {
-        console.log(error);
-        navigate("/NotFound");
-      });
-  });
-  //===============================================================
-
-  useEffect(() => {
     setShowFollower(false);
     setShowFollowing(false);
     axios

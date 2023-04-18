@@ -43,7 +43,7 @@ export default function NavBar() {
   });
   useEffect(() => {
     !isLoggedIn && navigate("/login");
-  });
+  }, []);
   console.log(role);
   return (
     <>
