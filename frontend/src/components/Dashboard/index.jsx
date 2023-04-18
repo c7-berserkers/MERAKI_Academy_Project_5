@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { useNavigate, Route, Routes } from "react-router-dom";
 import { Container, ListGroup, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import Users from "./UsersChange/index";
+
+
 
 export default function Dashboard() {
   const { role } = useSelector((state) => {
@@ -51,7 +54,7 @@ export default function Dashboard() {
                     onClick={(e) => navigate("/dashboard/")}
                     className="list-filter"
                   >
-                    <strong>Add a new admin</strong>
+                    <strong>group chat edit</strong>
                   </ListGroup.Item>
                 </ListGroup>
               </Card.Body>
@@ -61,7 +64,7 @@ export default function Dashboard() {
             {" "}
             <Routes>
               <Route path="/" element={<h1>hi</h1>} />
-              <Route path="/users" element={<h1>hi</h1>} />
+              <Route path="/users" element={<><Users/></>} />
               <Route path="/" element={<h1>hi</h1>} />
               <Route path="/" element={<h1>hi</h1>} />
             </Routes>
