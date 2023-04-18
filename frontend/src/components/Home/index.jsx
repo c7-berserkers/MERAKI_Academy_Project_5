@@ -40,6 +40,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListGroup from "react-bootstrap/ListGroup";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
+import Popup_Add_New_Post from "./PopupAddNewPost/index";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -83,7 +84,8 @@ export default function Home() {
   );
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
-
+  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
+  useState(false);
   // --------------------
   const isLiked = (arr, id) => {
     return arr.findIndex((e) => {
@@ -97,6 +99,7 @@ export default function Home() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
+        console.log(result.data.result)
         dispatch(setPosts(result.data.result));
       } else throw Error;
     } catch (error) {
@@ -197,7 +200,9 @@ export default function Home() {
             aria-label="outlined primary button group"
           >
             <Button style={{ width: "60%" }}>Explore</Button>
-            <Button style={{ width: "60%" }}>New Post</Button>
+            <Button style={{ width: "60%" }} onClick={() => {
+                setModalShowPopupAddNewPost(true);
+              }}>New Post</Button>
             <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
               Chat Groups
             </Button>
@@ -235,7 +240,7 @@ export default function Home() {
                     )
                   }
                   title={post.user_first_name}
-                  subheader={post.created_at.split("T")[0]}
+                  subheader={post.created_at}
                 />
 
                 {}
@@ -505,6 +510,10 @@ export default function Home() {
                     </div>
                   </CardContent>
                 </Collapse>
+                <Popup_Add_New_Post set={setModalShowPopupAddNewPost}
+                    show={modalShowPopupAddNewPost}
+                    onHide={() => setModalShowPopupAddNewPost(false)}
+                  />
               </Card>
             );
           })}
