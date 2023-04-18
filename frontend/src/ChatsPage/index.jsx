@@ -10,9 +10,12 @@ import Form from "react-bootstrap/Form";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Card from "react-bootstrap/Card";
+import { useNavigate } from "react-router-dom";
 
 export default function ChatsPage() {
   const BACKEND = process.env.REACT_APP_BACKEND;
+  const navigate = useNavigate();
+
   const { token } = useSelector((state) => {
     return {
       token: state.auth.token,
@@ -78,7 +81,12 @@ export default function ChatsPage() {
                           >
                             <Card.Title>{room.chat_name}</Card.Title>
 
-                            <Button variant="primary">Start Chatting</Button>
+                            <Button
+                              onClick={(e) => navigate(`${room.chat_name}`)}
+                              variant="primary"
+                            >
+                              Start Chatting
+                            </Button>
                           </Card.Body>
                         </Card>
                       );

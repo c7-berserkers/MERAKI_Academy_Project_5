@@ -68,13 +68,13 @@ export const postsSlice = createSlice({
     },
     addLikePost: (state, { payload }) => {
       state.posts = state.posts.map((post) => {
-        if (post.id === payload) post.likes_count += 1;
+        if (post.id === payload) post.likes_count++;
         return post;
       });
     },
     removeLikePost: (state, { payload }) => {
       state.posts = state.posts.map((post) => {
-        if (post.id === payload) post.likes_count -= 1;
+        if (post.id === payload) post.likes_count--;
         return post;
       });
     },

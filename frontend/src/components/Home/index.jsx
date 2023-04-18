@@ -87,7 +87,7 @@ export default function Home() {
   // --------------------
   const isLiked = (arr, id) => {
     return arr.findIndex((e) => {
-      return e.post_id === id;
+      return e.posts_id === id;
     });
   };
   // ---------------------------------------
@@ -185,7 +185,7 @@ export default function Home() {
   useEffect(() => {
     getPosts();
   }, []);
-  console.log(posts);
+  console.log(likes);
   return (
     <div>
       {" "}
@@ -275,7 +275,7 @@ export default function Home() {
                   </p>
                 </CardContent>
                 <CardActions disableSpacing>
-                  {isLiked(likes, post.id) > -1 ? (
+                  {isLiked(likes, post.id) !== -1 ? (
                     <div style={{ display: "flex" }}>
                       <IconButton
                         onClick={(e) => {
@@ -307,7 +307,10 @@ export default function Home() {
                       {" "}
                       <IconButton
                         onClick={(e) => {
-                          const payload = { post_id: post.id, user_id: userId };
+                          const payload = {
+                            posts_id: post.id,
+                            user_id: userId,
+                          };
                           axios
                             .post(
                               `${BACKEND}/likes/${post.id}`,
