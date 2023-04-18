@@ -81,13 +81,15 @@ const Popup_Add_New_Post = (props) => {
             }
         })
             .then(function (response) {
+                props.set(false)
                 console.log(response.data.result, "my data")
                 const addPost=response.data.result[0]
                 addPost.user_first_name=userName
                 addPost.user_id=userId
                 addPost.user_img=pfp
-                dispatch(addPosts(response.data.result))
-                props.set(false)
+                addPost.likes_count="0"
+                
+                dispatch(addPosts(response.data.result[0]))
             })
             .catch(function (error) {
                 console.log(error);
