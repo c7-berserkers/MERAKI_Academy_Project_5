@@ -13,16 +13,12 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Image from 'react-bootstrap/Image';
-// import {addPosts } from "../redux/reducers/posts/index";
-
-// import Img from './Img';
+import { useDispatch, useSelector } from "react-redux";
+import {addPosts } from "../../redux/reducers/posts/index"
 
 //===============================================================
 
 
-import { useDispatch } from "react-redux";
-import { updateUserImage } from "../../redux/reducers/profile/index";
-import { setUserImg } from "../../redux/reducers/auth/index";
 
 //===============================================================
 
@@ -35,6 +31,19 @@ const Popup_Add_New_Post = (props) => {
     const [description, setDescription] = useState('');
     const [tag_id, setTag_id] = useState('');
     const [tags, setTags] = useState('');
+
+    
+    const { token, post, pfp, userId, userName } = useSelector((state) => {
+      
+        return {
+          userId: state.auth.userId,
+          token: state.auth.token,
+          userLikes: state.auth.userLikes,
+          pfp: state.auth.pfp,
+          post: state.posts.posts,
+          userName:state.auth.userName
+        };
+      });
 
     //===============================================================
 
@@ -68,12 +77,19 @@ const Popup_Add_New_Post = (props) => {
         
         axios.post(`${process.env.REACT_APP_BACKEND}/posts`, { img:imgURL, description, tag_id }, {
             headers: {
-                'Authorization': `${localStorage.getItem("userId")}`
+                'Authorization': `${token}`
             }
         })
             .then(function (response) {
-                console.log(response.data, "my data")
-                // dispatch(addPosts(response.data))
+                props.set(false)
+                console.log(response.data.result, "my data")
+                const addPost=response.data.result[0]
+                addPost.user_first_name=userName
+                addPost.user_id=userId
+                addPost.user_img=pfp
+                addPost.likes_count="0"
+                
+                dispatch(addPosts(response.data.result[0]))
             })
             .catch(function (error) {
                 console.log(error);
@@ -92,8 +108,6 @@ const Popup_Add_New_Post = (props) => {
         if(result.data.url){
             setLoading(false)
             setImgURL(result.data.url)
-        // setUserData({ "img": result.data.url })
-            // add_image()
         }
         
     }).catch((err)=>{
