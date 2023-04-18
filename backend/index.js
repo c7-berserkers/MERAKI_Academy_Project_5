@@ -35,10 +35,9 @@ const server = app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
 });
 
-
 const io = new Server(server, {
   cors: {
-    origin: `http://localhost:${PORT}`,
+    origin: `http://localhost:3000`,
     methods: ["GET", "POST"],
   },
 });
@@ -46,25 +45,30 @@ io.on("connection", (socket) => {
   console.log("rooms", socket.rooms);
   socket.on("JOIN_ROOM", (data) => {
     console.log("data", data);
-    socket.join(data);
+    socket.join("room");
     console.log("rooms", socket.rooms);
   });
   socket.on("SEND_MESSAGE", async (data) => {
     console.log("data", data);
-    const content = { sender: data.sender, message: data.message };
-    const roomId = data.roomId;
+    const content = {
+      sender: data.content.sender,
+      sender_id: data.content.sender_id,
+      sender_pfp: data.content.sender_pfp,
+      message: data.content.message,
+    };
+    const roomId = data.room;
 
     // save the message here
-    chatModel.findOneAndUpdate(
-      { chat_name: roomId },
-      { $push: { messages: content } },
-      { new: true }
-    );
-    socket.to(roomId).emit(RECEIVE_MESSAGE, content);
+
+    // await chatModel.findOneAndUpdate(
+    //   { chat_name: roomId },
+    //   { $push: { messages: content } },
+    //   { new: true }
+    // );
+    socket.in("room").emit("RECEIVE_MESSAGE", content);
   });
 
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
 });
-
