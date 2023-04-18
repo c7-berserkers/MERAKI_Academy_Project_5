@@ -156,7 +156,7 @@ const Popup_Add_New_Post = (props) => {
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Add New Image
+                        Add New post
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -204,9 +204,9 @@ const Popup_Add_New_Post = (props) => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <div className="addSubmit">
+                <Stack direction="row" alignItems="center" spacing={1}>
                         <Button type="submit"  variant="primary"  className="login-button" onClick={add_post}>submit</Button>
-                    </div>
+                    </Stack>
                     
                 </Modal.Footer>
             </Modal>

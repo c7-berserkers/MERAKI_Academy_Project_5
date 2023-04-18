@@ -41,6 +41,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
 import Popup_Add_New_Post from "./PopupAddNewPost/index";
+import Offcanvas from 'react-bootstrap/Offcanvas';
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -84,8 +85,16 @@ export default function Home() {
   );
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
-  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
+  
+
+  // --------------------
+const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
   useState(false);
+  const [show, setShow] = useState(false);
+  // --------------------
+
+  const handleClose22 = () => setShow(false);
+  const handleShow = () => setShow(true);
   // --------------------
   const isLiked = (arr, id) => {
     return arr.findIndex((e) => {
@@ -199,7 +208,7 @@ export default function Home() {
             variant="contained"
             aria-label="outlined primary button group"
           >
-            <Button style={{ width: "60%" }}>Explore</Button>
+            <Button style={{ width: "60%" }} onClick={handleShow}>Explore</Button>
             <Button style={{ width: "60%" }} onClick={() => {
                 setModalShowPopupAddNewPost(true);
               }}>New Post</Button>
@@ -514,6 +523,15 @@ export default function Home() {
                     show={modalShowPopupAddNewPost}
                     onHide={() => setModalShowPopupAddNewPost(false)}
                   />
+                  <Offcanvas show={show} onHide={handleClose22}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          Some text as placeholder. In real life you can have the elements you
+          have chosen. Like, text, images, lists, etc.
+        </Offcanvas.Body>
+      </Offcanvas>
               </Card>
             );
           })}
