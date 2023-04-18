@@ -43,6 +43,8 @@ import { useNavigate } from "react-router-dom";
 import Popup_Add_New_Post from "./PopupAddNewPost/index";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
+
+
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -91,10 +93,43 @@ export default function Home() {
 const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
   useState(false);
   const [show, setShow] = useState(false);
+  const [tag_id, setTag_id] = useState('');
+  const [tags, setTags] = useState([]);
+
   // --------------------
 
   const handleClose22 = () => setShow(false);
   const handleShow = () => setShow(true);
+  // --------------------
+  useEffect(()=>{
+    if(tags.length==0){
+        axios.get(`${process.env.REACT_APP_BACKEND}/tags`, {
+        headers: {
+            'Authorization': `${token}`
+        }
+    }).then((result)=>{
+        setTags(result.data.result)
+}).catch((err)=>{
+    console.log(err)
+    })
+    }
+    
+},[tags])
+  // --------------------
+const tagsFunction =()=>{
+return tags.length>0?tags.map((tag,i)=>{
+  return (
+    <ListGroup.Item
+                    key={tag.id}
+                    onClick={(e) => navigate("/dashboard/")}
+                    className="list-filter"
+                  >
+                    <strong>{tag.tag}</strong>
+                  </ListGroup.Item>
+  )
+}):""
+}
+
   // --------------------
   const isLiked = (arr, id) => {
     return arr.findIndex((e) => {
@@ -108,7 +143,6 @@ const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
-        console.log(result.data.result)
         dispatch(setPosts(result.data.result));
       } else throw Error;
     } catch (error) {
@@ -525,11 +559,12 @@ const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
                   />
                   <Offcanvas show={show} onHide={handleClose22}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+          <Offcanvas.Title>Tags</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          Some text as placeholder. In real life you can have the elements you
-          have chosen. Like, text, images, lists, etc.
+        <ListGroup>
+          {tagsFunction()}
+                </ListGroup>
         </Offcanvas.Body>
       </Offcanvas>
               </Card>
