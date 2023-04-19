@@ -1,28 +1,47 @@
-import  React,{ useState } from "react";
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import "./style.css"
 import validator from 'validator';
-
-
-// import Img from './Img';
-
-//===============================================================
-
-
-import { useDispatch } from "react-redux";
+import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import Stack from '@mui/material/Stack';
+import { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Image from 'react-bootstrap/Image';
+import { useDispatch, useSelector } from "react-redux";
 import { updateUserImage } from "../../redux/reducers/profile/index";
 import { setUserImg } from "../../redux/reducers/auth/index";
+import { Container,Alert } from "react-bootstrap";
 
 //===============================================================
 
 const Popup_Image_Edit = (props) => {
 
 
+    const [message, setMessage] = useState("");
+    const [status, setStatus] = useState(false);
     const [img_Select,setImg_Select]=useState("")
+    const [imgURL,setImgURL]=useState("")
+    const [isLoading, setLoading] = useState(false);
+
     //===============================================================
+
+    const { token, post, pfp, userId, userName } = useSelector((state) => {
+      
+        return {
+          userId: state.auth.userId,
+          token: state.auth.token,
+          userLikes: state.auth.userLikes,
+          pfp: state.auth.pfp,
+          post: state.posts.posts,
+          userName:state.auth.userName
+        };
+      });
 
     const dispatch = useDispatch();
 
@@ -50,21 +69,27 @@ const Popup_Image_Edit = (props) => {
     //===============================================================
 
     const add_image = () => {
-        console.log(userData)
         const errors = validateData();
         if (Object.keys(errors).length) {
             setErrors(errors);
             return;
         }
-        axios.put(`${process.env.REACT_APP_BACKEND}/users/${localStorage.getItem("userId")}`, userData, {
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/${userId}`, userData, {
             headers: {
-                'Authorization': `${localStorage.getItem("userId")}`
+                'Authorization': `${token}`
             }
         })
             .then(function (response) {
                 console.log(response.data.user.img, "my data")
                 dispatch(updateUserImage(response.data.user.img))
                 dispatch(setUserImg({img:response.data.user.img}))
+                props.set(false)
+                props.set(false)
+                setMessage('')
+setStatus(false)
+setImg_Select("")
+setImgURL("")
+setUserData(TestValue)
             })
             .catch(function (error) {
                 console.log(error);
@@ -73,22 +98,32 @@ const Popup_Image_Edit = (props) => {
     }
 
     //==============================================================
+    
     const imgUpload=()=>{
-        console.log(img_Select)
+        if(img_Select){
+        setLoading(true)
         const formData = new FormData();
         formData.append("file" ,img_Select )
         formData.append("upload_preset" ,"vledn3tb" )
         axios.post("https://api.cloudinary.com/v1_1/dy9hkpipf/image/upload",formData).then((result)=>{
-        // console.log(result.data.url,"url_img")
-        // console.log("img", result.data.url ,"eeeee")
-        setUserData({ "img": result.data.url })
-        //===============================================================
-        // console.log(userData)
-            add_image()
+        console.log(result.data.url,"url_img")
+        if(result.data.url){
+            setLoading(false)
+            setUserData({ "img": result.data.url })
+            setImgURL(result.data.url)
+        }
+        
     }).catch((err)=>{
-            console.log(err)
+        setMessage(err)
+        setStatus(true)
+        setLoading(false)
+        console.log(err)
             
         })
+    }else{
+        setMessage("pleas upload img first")
+        setStatus(true)
+    }
     }
 
     //===============================================================
@@ -102,24 +137,42 @@ const Popup_Image_Edit = (props) => {
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Add New Image
+                        Add New post
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
-                    <Form.Label>Image:</Form.Label>
-                    {/* <Form.Control name="img" onChange={handleChange} placeholder="img url" /> */}
-                        <Form.Control  type="file" onChange={(e)=>{setImg_Select(e.target.files[0])}}/>
+      <br></br>
+      {imgURL?<Image src={imgURL}  fluid />:""}
+      <br></br>
+      
+      <Row className="g-1">
+      <Col md>
+      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Button
+            variant="primary"
+            disabled={isLoading}
+            onClick={!isLoading ? imgUpload : null}
+          >
+            {isLoading ? 'Loading…' : 'Upload'}
+          </Button>
+      <IconButton color="primary" aria-label="upload picture" component="label">
+        <input hidden accept="image/*" type="file" onChange={(e)=>{setImg_Select(e.target.files[0])}} />
+        <PhotoCamera />
+      </IconButton>
+    </Stack>
+      </Col>
+    </Row>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <div className="addSubmit">
-                        {/* <Img/> */}
-                        <Button type="submit"  variant="primary"  className="login-button" onClick={imgUpload}>submit</Button>
-                        {/* <Button variant="primary" onClick={add_image}>submit</Button> */}
-                    </div>
-                    <Button className="shadowButton" onClick={props.onHide}>Close</Button>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                        <Button type="submit"  variant="primary"  className="login-button" onClick={add_image} disabled={isLoading}>submit</Button>
+                    </Stack>
+                    
                 </Modal.Footer>
+                <Container>
+                  {status && <Alert variant="danger">{message}</Alert>}
+        </Container>
             </Modal>
         </div>
     )

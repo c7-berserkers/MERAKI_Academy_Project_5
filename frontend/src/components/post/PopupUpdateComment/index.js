@@ -10,8 +10,8 @@ import { setPosts, setComments, updateComment } from "..///./../redux/reducers/p
 
 
 const Popup_Comment_Edit = (props) => {
-    const [message, setMessage] = useState("");
-    const [status, setStatus] = useState(false);
+  const [message, setMessage] = useState("");
+    const [status, setStatus] = useState(false);  
     const [comment, setComment] = useState(props.comment);
     const [addComment, setAddComment] = useState("");
     const [commentId, setCommentId] = useState(props.id);

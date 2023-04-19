@@ -15,6 +15,7 @@ import Row from 'react-bootstrap/Row';
 import Image from 'react-bootstrap/Image';
 import { useDispatch, useSelector } from "react-redux";
 import {addPosts } from "../../redux/reducers/posts/index"
+import { Container,Alert } from "react-bootstrap";
 
 //===============================================================
 
@@ -24,7 +25,8 @@ import {addPosts } from "../../redux/reducers/posts/index"
 
 const Popup_Add_New_Post = (props) => {
 
-
+    const [message, setMessage] = useState("");
+    const [status, setStatus] = useState(false);
     const [img_Select,setImg_Select]=useState("")
     const [imgURL,setImgURL]=useState("")
     const [isLoading, setLoading] = useState(false);
@@ -90,6 +92,11 @@ const Popup_Add_New_Post = (props) => {
                 addPost.likes_count="0"
                 
                 dispatch(addPosts(response.data.result[0]))
+                props.set(false)
+                setMessage('')
+setStatus(false)
+setImg_Select("")
+setImgURL("")
             })
             .catch(function (error) {
                 console.log(error);
@@ -99,6 +106,7 @@ const Popup_Add_New_Post = (props) => {
 
     //==============================================================
     const imgUpload=()=>{
+        if(img_Select){
         setLoading(true)
         const formData = new FormData();
         formData.append("file" ,img_Select )
@@ -111,10 +119,16 @@ const Popup_Add_New_Post = (props) => {
         }
         
     }).catch((err)=>{
+        setMessage(err)
+        setStatus(true)
         setLoading(false)
         console.log(err)
             
         })
+    }else{
+        setMessage("pleas upload img first")
+        setStatus(true)
+    }
     }
 
     //===============================================================
@@ -205,10 +219,14 @@ const Popup_Add_New_Post = (props) => {
 
                 <Modal.Footer>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                        <Button type="submit"  variant="primary"  className="login-button" onClick={add_post}>submit</Button>
+                        <Button type="submit"  variant="primary"  className="login-button" onClick={add_post} disabled={isLoading}>submit</Button>
                     </Stack>
                     
                 </Modal.Footer>
+
+                <Container>
+                  {status && <Alert variant="danger">{message}</Alert>}
+        </Container>
             </Modal>
         </div>
     )
