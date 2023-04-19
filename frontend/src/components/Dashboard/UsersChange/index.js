@@ -73,13 +73,14 @@ function Users() {
             <ListGroup as="ol" numbered>
                 {allUser ? <>
 
+
+
                     {allUser.map((user) => {
                         return (
                             <ListGroup.Item
                                 key={user.id}
                                 as="li"
-                                className="d-flex justify-content-between align-items-start"
-                            >
+                                className="d-flex justify-content-between align-items-start">
                                 <div className="ms-3 me-auto">
                                     <Stack spacing={2} direction="row">
                                         <Avatar alt="Remy Sharp" src={user.img} />
@@ -91,29 +92,32 @@ function Users() {
                                 </div>
                                 <div >
                                     <Stack spacing={2} direction="column">
+
+
+
+
                                         {user.is_deleted ? <>
                                         <Button variant="outlined" id={user.id} onClick={(e)=>{unDeleteUser(e.target.id)}} >unDelete</Button>
                                         </> : <>
                                         <Button variant="outlined" id={user.id} onClick={(e)=>{deleteUser(e.target.id)}} >delete</Button></>}
+                                        
+
+
+
                                         {user.is_deleted ? <>
                                         <Button variant="outlined">unAdmin</Button>
                                         </> : <>
                                         <Button variant="outlined">admin</Button></>}
+
+
                                     </Stack>
                                 </div>
                             </ListGroup.Item>
-
                         )
                     })}
-
                     { }
-
                 </> : <></>}
-
-
-
             </ListGroup>
-
         </Container>
     )
 }
