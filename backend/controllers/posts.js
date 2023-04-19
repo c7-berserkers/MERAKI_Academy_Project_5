@@ -276,12 +276,14 @@ const updatePostById = (req, res) => {
 const getPostsByTag = (req, res) => {
   const { tag } = req.params;
   const query = `
-  SELECT p.*, COUNT(l.posts_id) AS likes
-FROM posts p
-INNER JOIN tags t ON p.tag_id = t.id
+  SELECT p.id, p.img, p.description, p.created_at, COUNT(l.id) AS likes_count, u.img AS user_img, u.first_name AS user_first_name 
+FROM posts p 
+INNER JOIN users u ON p.user_id = u.id 
 LEFT JOIN likes l ON p.id=l.posts_id
-WHERE t.tag = $1
-AND p.is_deleted = 0;
+INNER JOIN tags t ON p.tag_id = t.id
+WHERE p.tag_id =$1 AND p.is_deleted = 0
+GROUP BY p.id, p.img, p.description, p.created_at, user_img,u.first_name
+ORDER BY p.created_at DESC;
 `;
   pool
     .query(query, [tag])
