@@ -123,7 +123,8 @@ return tags.length>0?tags.map((tag,i)=>{
                     key={tag.id}
                     id={tag.id}
                     onClick={(e) => {navigate(`/tag/${tag.id}`)
-                  console.log(e.target.id)}}
+                    setTag_id(e.target.id)
+                    setShow(false)}}
                     className="list-filter"
                   >
                     <strong>{tag.tag}</strong>
@@ -233,8 +234,7 @@ return tags.length>0?tags.map((tag,i)=>{
 
   useEffect(() => {
     getPosts();
-  }, []);
-  console.log(likes);
+  }, [tag_id]);
   return (
     <div>
       {" "}
