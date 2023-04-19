@@ -309,6 +309,42 @@ ORDER BY p.created_at DESC;
     });
 };
 
+
+const unDeletePost = (req, res) => {
+  const id = req.params.id;
+  // const user_id = req.token.userId;
+
+  const query = `
+    UPDATE posts 
+    SET is_deleted = 0
+    WHERE id=$1 AND is_deleted=1 RETURNING *;`;
+  const data = [Number(id)];
+  console.log(data);
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `The post with id: ${id} is not found`,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `get the post with id: ${id} successfully`,
+          result: result.rows,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+
 module.exports = {
   createNewPost,
   getAllPost,
@@ -318,4 +354,5 @@ module.exports = {
   updatePostById,
   getPostsByTag,
   getPostForUser,
+  unDeletePost
 };
