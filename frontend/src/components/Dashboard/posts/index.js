@@ -9,6 +9,10 @@ import {
   } from "../../redux/reducers/posts/index";
   import Image from 'react-bootstrap/Image';
   import Button from 'react-bootstrap/Button';
+  import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+
 
 
 function Post() {
@@ -96,19 +100,31 @@ axios.delete(`${process.env.REACT_APP_BACKEND}/posts/${e.target.value}`, {
                 className="d-flex justify-content-between align-items-start"
                 key={e.id}
             >
-                <div className="ms-2 me-auto">
-                    <div className="fw-bold">{e.user_first_name}</div>
+                <Container>
+<Row>
+<Col xs={6} md={4}>
+                <div className="ms-2 me-auto" style={{marginTop:"20%"}} >
+                    <div className="fw-bold" >{e.user_first_name}</div>
                     {e.description}
-                <br></br>
-                <hr></hr>
+                    </div>
+                    </Col>
+                    <Col xs={6} md={4}>
+                        <div className="fw-bold" style={{marginTop:"20%"}}>
                 {e.is_deleted?<Button value={e.id} variant="warning" onClick={(e)=>{
                     unDeletePosts(e)
                 }}>disband</Button>:<Button value={e.id} variant="danger"  onClick={(e)=>{
                     deletePosts(e)
                 }}>band</Button>}
                 </div>
+                </Col>
+                <Col xs={6} md={4}>
                 <Image src={e.img} width="180" height="150" rounded />
-            </ListGroup.Item>
+                        </Col>
+                
+                </Row>
+            </Container>
+              </ListGroup.Item>
+            
             
             )
         }):<p>no post yet</p>
