@@ -8,6 +8,9 @@ import {
     setComments,
     deleteComment,
   } from "../../redux/reducers/posts/index";
+  import Image from 'react-bootstrap/Image';
+  import Button from 'react-bootstrap/Button';
+
 
 function Post() {
 
@@ -55,18 +58,19 @@ function Post() {
     const postFunction =()=>{
         return posts.length>0?posts.map((e,i)=>{
             return (
-                <ListGroup as="ol" numbered>
+                <ListGroup as="ul" >
             <ListGroup.Item
                 as="li"
                 className="d-flex justify-content-between align-items-start"
             >
                 <div className="ms-2 me-auto">
-                    <div className="fw-bold">Subheading</div>
-                    Cras justo odio
+                    <div className="fw-bold">{e.user_first_name}</div>
+                    {e.description}
+                <br></br>
+                <hr></hr>
+                {e.is_deleted?<Button variant="warning">disband</Button>:<Button variant="danger">band</Button>}
                 </div>
-                <Badge bg="primary" pill>
-                    14
-                </Badge>
+                <Image src={e.img} width="180" height="150" rounded />
             </ListGroup.Item>
             
         </ListGroup>
