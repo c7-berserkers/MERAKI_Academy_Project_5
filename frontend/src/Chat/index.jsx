@@ -6,10 +6,17 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Avatar from "@mui/material/Avatar";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import { io } from "socket.io-client";
 
 export default function Chat() {
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
   const { token, userId, userName, pfp } = useSelector((state) => {
     return {
       token: state.auth.token,
@@ -22,12 +29,10 @@ export default function Chat() {
   const socket = io(BACKEND);
   const navigate = useNavigate();
   const { name } = useParams();
-  const [chat, setChat] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+
   const sendMessage = () => {
     const messageData = {
-      room: chat.chat_name,
+      room: name,
       content: {
         sender: userName,
         sender_id: userId,
@@ -35,9 +40,22 @@ export default function Chat() {
         message,
       },
     };
-    socket.emit("SEND_MESSAGE", messageData);
-    setMessages([...messages, messageData.content]);
-    setMessage(``);
+    axios
+      .post(
+        `${BACKEND}/chats/${name}`,
+        { content: messageData.content },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        console.log(response.data.result);
+        socket.emit("SEND_MESSAGE", messageData);
+        setMessages([...messages, messageData.content]);
+        console.log(`after send`, messages);
+        setMessage(``);
+      })
+      .catch((err) => console.log(err.response.data.message));
   };
   useEffect(() => {
     axios
@@ -45,24 +63,23 @@ export default function Chat() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((result) => {
-        setChat(result.data.result);
+        console.log(result.data.result.messages);
         setMessages(result.data.result.messages);
-        socket.emit("JOIN_ROOM", result.data.result.chat_name);
+        console.log(`before`, messages);
+        socket.emit("JOIN_ROOM", name);
+        socket.on("RECEIVE_MESSAGE", (data) => {
+          setMessages([...messages, data]);
+          console.log(`after receive`, messages);
+        });
       })
       .catch((err) => console.log(err.response.data.message));
-  }, []);
-  useEffect(() => {
-    socket.on("RECEIVE_MESSAGE", (data) => {
-      setMessages([...messages, data]);
-      console.log(messages);
-    });
   }, []);
   return (
     <div style={{ height: "80vh" }}>
       <Container>
         <Card style={{ height: "80vh" }}>
           <Card.Header>
-            <h2>{chat.chat_name}</h2>
+            <h2>{name}</h2>
           </Card.Header>
           <Card.Body
             style={{
@@ -80,9 +97,28 @@ export default function Chat() {
             ) : (
               <>
                 <div>
-                  {messages.map((element, i) => {
-                    return <li key={i}>{element.message}</li>;
-                  })}
+                  <ListGroup>
+                    {messages.map((element, i) => {
+                      return (
+                        <ListGroup.Item
+                          key={message._id}
+                          style={{
+                            display: "flex",
+                          }}
+                        >
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar src={message.sender_pfp} />
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={message.message}
+                              secondary={`By ${message.sender}`}
+                            />
+                          </ListItem>
+                        </ListGroup.Item>
+                      );
+                    })}
+                  </ListGroup>
                 </div>
               </>
             )}

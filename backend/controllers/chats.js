@@ -65,7 +65,7 @@ const newMessage = (req, res) => {
   const { content } = req.body;
   chatModel
     .findOneAndUpdate(
-      { chat_name: roomId },
+      { chat_name },
       { $push: { messages: content } },
       { new: true }
     )
