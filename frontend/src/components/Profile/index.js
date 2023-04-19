@@ -116,12 +116,7 @@ export default function Profile() {
     margin: theme.spacing(0.5),
   }));
 
-  //==========================posts=================================
-
-  const [expanded, setExpanded] = useState(false);
-  const handleExpandClick = () => { setExpanded(!expanded); };
-
-  //===============================================================
+  //=============================posts===============================
 
   const [show, setShow] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -159,6 +154,7 @@ export default function Profile() {
     };
   });
 
+  //==========================posts=================================
   const { token, posts, pfp, userId, userName, role, likes } = useSelector(
     (state) => {
       return {
@@ -237,9 +233,8 @@ export default function Profile() {
       console.log(error.response.data.message);
     }
   };
-  // ===================
 
-  //===============================================================
+  //=====================
   const deletePost = async (id) => {
     try {
       const result = await axios.delete(`${BACKEND}/posts/${id}`, {
@@ -252,6 +247,41 @@ export default function Profile() {
       console.log(err.response.data.message);
     }
   };
+  // ===================
+  const getCommentsForPost = async (id) => {
+    try {
+      const result = await axios.get(`${BACKEND}/comments/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.data.success) {
+        const comments = result.data.result;
+        dispatch(
+          setComments({
+            comments,
+            post_id: id,
+          })
+        );
+      } else throw Error;
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+   // ===================
+   const [expanded, setExpanded] = useState(false);
+   const handleExpandClick = (id) => {
+     return () => {
+       if (expanded) {
+         setExpanded(false);
+       } else {
+         setExpanded(id);
+         getCommentsForPost(id);
+       }
+     };
+   };
+ 
+
+
   //===============================================================
   const loop = () => {
     state.following.forEach((element) => {
@@ -267,7 +297,7 @@ export default function Profile() {
     setShowFollower(false);
     setShowFollowing(false);
     axios
-      .get(`${process.env.REACT_APP_BACKEND}/users/${personPage}`, {
+      .get(`${BACKEND}/users/${personPage}`, {
         headers: {
           Authorization: `${token}`,
         },
@@ -276,7 +306,7 @@ export default function Profile() {
         dispatch(setUserData(response?.data?.user));
         //==============================================================
         axios
-          .get(`${process.env.REACT_APP_BACKEND}/posts/user/${personPage}`, {
+          .get(`${BACKEND}/posts/user/${personPage}`, {
             headers: {
               Authorization: `${token}`,
             },
@@ -286,7 +316,7 @@ export default function Profile() {
             console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
             //===============================================================
             axios
-              .get(`${process.env.REACT_APP_BACKEND}/users/followers/${personPage}`, {
+              .get(`${BACKEND}/users/followers/${personPage}`, {
                 headers: {
                   Authorization: `${token}`,
                 },
@@ -318,7 +348,7 @@ export default function Profile() {
     //===============================================================
     axios
       .get(
-        `${process.env.REACT_APP_BACKEND}/users/following/${user_Id_Number}`,
+        `${BACKEND}/users/following/${user_Id_Number}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -344,7 +374,7 @@ export default function Profile() {
   const followUser = () => {
     axios
       .post(
-        `${process.env.REACT_APP_BACKEND}/users/follow/${personPage}`,
+        `${BACKEND}/users/follow/${personPage}`,
         {},
         {
           headers: {
@@ -365,7 +395,7 @@ export default function Profile() {
   const unFollowUser = () => {
     axios
       .post(
-        `${process.env.REACT_APP_BACKEND}/users/unfollow/${personPage}`,
+        `${BACKEND}/users/unfollow/${personPage}`,
         {},
         {
           headers: {
@@ -401,8 +431,7 @@ export default function Profile() {
                             onClick={() => {
                               setModalShowEditPopupImage(true);
                             }}
-                            variant="contained"
-                          >
+                            variant="contained">
                             <EditNoteIcon />
                           </Button>
                         </span>
@@ -416,21 +445,16 @@ export default function Profile() {
                 <div className="userData">
                   <Popup_Image_Edit
                     show={modalShowEditPopupImage}
-                    onHide={() => setModalShowEditPopupImage(false)}
-                  />
+                    onHide={() => setModalShowEditPopupImage(false)} />
                   <Popup_Edit_Data
                     show={modalShowEditPopupMyProfile}
-                    onHide={() => setModalShowEditPopupMyProfile(false)}
-                  />
+                    onHide={() => setModalShowEditPopupMyProfile(false)} />
                   <Popup_Delete_Profile
                     show={modalShowEditPopupDeleteProfile}
-                    onHide={() => setModalShowEditPopupDeleteProfile(false)}
-                  />
+                    onHide={() => setModalShowEditPopupDeleteProfile(false)} />
                   <Popup_Edit_MyPassword
                     show={modalShowEditPopupEditMyPassword}
-                    onHide={() => setModalShowEditPopupEditMyPassword(false)}
-                  />
-
+                    onHide={() => setModalShowEditPopupEditMyPassword(false)} />
                   <h4>
                     {" "}
                     {state.dataUser.first_name} {state.dataUser.last_name}{" "}
@@ -786,7 +810,7 @@ export default function Profile() {
                       {/* ************************************** */}
                       <ExpandMore
                         expand={expanded === post.id}
-                        // onClick={handleExpandClick(post.id)}
+                        onClick={handleExpandClick(post.id)}
                         aria-expanded={expanded === post.id}
                         aria-label="show more">
                         <MdComment />
@@ -899,7 +923,7 @@ export default function Profile() {
                                                     <Modal.Body>
                                                       <Form.Control
                                                         type="text"
-                                                        defaultValue={comment.comment}/>
+                                                        defaultValue={comment.comment} />
                                                     </Modal.Body>
                                                     <Modal.Footer>
                                                       <Button type="submit">
