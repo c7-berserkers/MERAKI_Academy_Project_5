@@ -242,6 +242,32 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const unDeleteUser = async (req, res) => {
+  const { id } = req.params;
+  const query = `UPDATE users SET is_deleted=0 WHERE id=$1 RETURNING *`;
+  try {
+    const { rows } = await pool.query(query, [id]);
+    if (!rows) {
+      return res.status(404).json({
+        success: false,
+        message: `The user with id: ${id} is not found`,
+      });
+    }
+    res.status(201).json({
+      success: true,
+      message: `User with id: ${id} unDeleted successfully`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      err: err.message,
+    });
+  }
+};
+
+
+
 const searchUsers = (req, res) => {
   const { name } = req.params;
   const query = `SELECT * FROM users WHERE first_name LIKE '%${name}%' OR last_name LIKE '%${name}%' ;`;
@@ -382,6 +408,7 @@ module.exports = {
   getAllUsers,
   updateUserById,
   deleteUser,
+  unDeleteUser,
   searchUsers,
   followUser,
   unFollowUser,
