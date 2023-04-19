@@ -246,7 +246,6 @@ return tags.length>0?tags.map((tag,i)=>{
             aria-label="outlined primary button group"
           >
             <Button style={{ width: "60%" }} onClick={handleShow}>Explore</Button>
-            <div>{window.location.pathname.split("/tag/")}</div>
             <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
               Chat Groups
             </Button>

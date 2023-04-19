@@ -292,6 +292,7 @@ export default function Profile() {
 
                 <div className="userData">
                   <Popup_Image_Edit
+                  set={setModalShowEditPopupImage}
                     show={modalShowEditPopupImage}
                     onHide={() => setModalShowEditPopupImage(false)}
                   />
