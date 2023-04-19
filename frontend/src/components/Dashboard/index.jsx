@@ -4,6 +4,7 @@ import { Container, ListGroup, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Users from "./UsersChange/index";
 import GroupChat from "./groupChat/index";
+import Posts from "./posts/index";
 
 
 
@@ -47,7 +48,7 @@ export default function Dashboard() {
                     <strong>Users</strong>
                   </ListGroup.Item>
                   <ListGroup.Item
-                    onClick={(e) => navigate("/dashboard/")}
+                    onClick={(e) => navigate("/dashboard/post")}
                     className="list-filter"
                   >
                     <strong>Posts</strong>
@@ -65,7 +66,7 @@ export default function Dashboard() {
           <div className="col-md">
             {" "}
             <Routes>
-              <Route path="/" element={<h1>hi</h1>} />
+              <Route path="/post" element={<Posts/>} />
               <Route path="/users" element={<><Users/></>} />
               <Route path="/" element={<h1>hi</h1>} />
               <Route path="/Chats" element={<><GroupChat/></>} />
