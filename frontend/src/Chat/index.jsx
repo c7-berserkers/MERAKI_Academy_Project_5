@@ -96,23 +96,23 @@ export default function Chat() {
               </>
             ) : (
               <>
-                <div>
+                <div style={{ overflowX: "auto", height: "300px" }}>
                   <ListGroup>
                     {messages.map((element, i) => {
                       return (
                         <ListGroup.Item
-                          key={message._id}
+                          key={i}
                           style={{
                             display: "flex",
                           }}
                         >
                           <ListItem>
                             <ListItemAvatar>
-                              <Avatar src={message.sender_pfp} />
+                              <Avatar src={element.sender_pfp} />
                             </ListItemAvatar>
                             <ListItemText
-                              primary={message.message}
-                              secondary={`By ${message.sender}`}
+                              primary={element.message}
+                              secondary={`By ${element.sender}`}
                             />
                           </ListItem>
                         </ListGroup.Item>
