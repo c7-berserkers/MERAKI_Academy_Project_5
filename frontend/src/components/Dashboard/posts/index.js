@@ -103,9 +103,12 @@ axios.delete(`${process.env.REACT_APP_BACKEND}/posts/${e.target.value}`, {
                 <Container>
 <Row>
 <Col xs={6} md={4}>
+                <Image src={e.img} width="180" height="150" rounded />
+                        </Col>
+<Col xs={6} md={4}>
                 <div className="ms-2 me-auto" style={{marginTop:"20%"}} >
-                    <div className="fw-bold" >{e.user_first_name}</div>
-                    {e.description}
+                    <div className="fw-bold" >created by : {e.user_first_name}</div>
+                    description : {e.description}
                     </div>
                     </Col>
                     <Col xs={6} md={4}>
@@ -117,9 +120,7 @@ axios.delete(`${process.env.REACT_APP_BACKEND}/posts/${e.target.value}`, {
                 }}>band</Button>}
                 </div>
                 </Col>
-                <Col xs={6} md={4}>
-                <Image src={e.img} width="180" height="150" rounded />
-                        </Col>
+                
                 
                 </Row>
             </Container>
