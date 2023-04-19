@@ -296,6 +296,8 @@ export default function Profile() {
   useEffect(() => {
     setShowFollower(false);
     setShowFollowing(false);
+
+
     axios
       .get(`${BACKEND}/users/${personPage}`, {
         headers: {
@@ -314,23 +316,7 @@ export default function Profile() {
           .then(function (response) {
             dispatch(setPosts(response?.data?.result));
             console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
-            //===============================================================
-            axios
-              .get(`${BACKEND}/users/followers/${personPage}`, {
-                headers: {
-                  Authorization: `${token}`,
-                },
-              })
-              .then(function (response) {
-                dispatch(setFollowerData(response.data.followers));
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-
-            //===========================================================
-
-
+            
           })
           .catch(function (error) {
             console.log(error);
@@ -344,7 +330,19 @@ export default function Profile() {
       });
 
 
-
+      //===============================================================
+      axios
+      .get(`${BACKEND}/users/followers/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(setFollowerData(response.data.followers));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     //===============================================================
     axios
       .get(
@@ -673,7 +671,8 @@ export default function Profile() {
       ) : (
         <>
           {/* //********************************add post of user******************************************* */}
-          <Container>
+          {personPage == user_Id_Number ? <>
+            <Container>
             <Button
               style={{ width: "60%" }}
               onClick={() => {
@@ -682,7 +681,11 @@ export default function Profile() {
               Add New Post
             </Button>
           </Container>
-
+          
+          
+          
+          </>:<></>}
+         
           {/* ******************************************post of user***************************************** */}
           <div className="feed">
             <Container>
