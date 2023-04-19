@@ -24,7 +24,7 @@ export default function Chat() {
   const { name } = useParams();
   const [chat, setChat] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
   const sendMessage = () => {
     const messageData = {
       room: chat.chat_name,
@@ -36,7 +36,7 @@ export default function Chat() {
       },
     };
     socket.emit("SEND_MESSAGE", messageData);
-    // setMessages([...messages, messageData.content]);
+    setMessages([...messages, messageData.content]);
     setMessage(``);
   };
   useEffect(() => {
@@ -47,15 +47,14 @@ export default function Chat() {
       .then((result) => {
         setChat(result.data.result);
         setMessages(result.data.result.messages);
-        console.log(chat);
-        socket.emit("JOIN_ROOM", chat.chat_name);
+        socket.emit("JOIN_ROOM", result.data.result.chat_name);
       })
       .catch((err) => console.log(err.response.data.message));
   }, []);
   useEffect(() => {
     socket.on("RECEIVE_MESSAGE", (data) => {
-      // setMessages([...messages, data]);
-      console.log(data);
+      setMessages([...messages, data]);
+      console.log(messages);
     });
   }, []);
   return (
@@ -96,6 +95,7 @@ export default function Chat() {
                 className="mb-3"
               >
                 <Form.Control
+                  value={message}
                   onChange={(e) => {
                     setMessage(e.target.value);
                   }}

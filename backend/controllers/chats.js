@@ -59,4 +59,30 @@ const getAllChats = (req, res) => {
       });
     });
 };
-module.exports = { createRoom, getChatByName, getAllChats };
+
+const newMessage = (req, res) => {
+  const { chat_name } = req.params;
+  const { content } = req.body;
+  chatModel
+    .findOneAndUpdate(
+      { chat_name: roomId },
+      { $push: { messages: content } },
+      { new: true }
+    )
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        message: `message sent`,
+        result: result,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+};
+
+module.exports = { createRoom, getChatByName, getAllChats, newMessage };

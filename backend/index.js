@@ -42,30 +42,25 @@ const io = new Server(server, {
   },
 });
 io.on("connection", (socket) => {
-  console.log("rooms", socket.rooms);
+  console.log("User connected On", socket.rooms);
   socket.on("JOIN_ROOM", (data) => {
-    console.log("data", data);
-    socket.join("room");
+    console.log("JOIN_ROOM data", data);
+    socket.join(data);
     console.log("rooms", socket.rooms);
   });
   socket.on("SEND_MESSAGE", async (data) => {
-    console.log("data", data);
+    console.log("SEND_MESSAGE data", data);
     const content = {
       sender: data.content.sender,
       sender_id: data.content.sender_id,
       sender_pfp: data.content.sender_pfp,
       message: data.content.message,
     };
-    const roomId = data.room;
+    const room = data.room;
 
     // save the message here
 
-    // await chatModel.findOneAndUpdate(
-    //   { chat_name: roomId },
-    //   { $push: { messages: content } },
-    //   { new: true }
-    // );
-    socket.in("room").emit("RECEIVE_MESSAGE", content);
+    socket.in(room).emit("RECEIVE_MESSAGE", content);
   });
 
   socket.on("disconnect", () => {
