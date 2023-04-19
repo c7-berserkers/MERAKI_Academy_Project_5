@@ -4,9 +4,7 @@ import { Container, ListGroup, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Users from "./UsersChange/index";
 import GroupChat from "./groupChat/index";
-
-
-
+import Stats from "./Stats";
 
 export default function Dashboard() {
   const { role } = useSelector((state) => {
@@ -35,7 +33,7 @@ export default function Dashboard() {
               <Card.Body>
                 <ListGroup>
                   <ListGroup.Item
-                    onClick={(e) => navigate("/dashboard")}
+                    onClick={(e) => navigate("/dashboard/")}
                     className="list-filter"
                   >
                     <strong>Status</strong>
@@ -47,16 +45,16 @@ export default function Dashboard() {
                     <strong>Users</strong>
                   </ListGroup.Item>
                   <ListGroup.Item
-                    onClick={(e) => navigate("/dashboard/")}
+                    onClick={(e) => navigate("/dashboard/posts")}
                     className="list-filter"
                   >
                     <strong>Posts</strong>
                   </ListGroup.Item>
                   <ListGroup.Item
-                    onClick={(e) => navigate("/dashboard/Chats")}
+                    onClick={(e) => navigate("/dashboard/chats")}
                     className="list-filter"
                   >
-                    <strong>group chat edit</strong>
+                    <strong>group chat</strong>
                   </ListGroup.Item>
                 </ListGroup>
               </Card.Body>
@@ -65,10 +63,24 @@ export default function Dashboard() {
           <div className="col-md">
             {" "}
             <Routes>
-              <Route path="/" element={<h1>hi</h1>} />
-              <Route path="/users" element={<><Users/></>} />
-              <Route path="/" element={<h1>hi</h1>} />
-              <Route path="/Chats" element={<><GroupChat/></>} />
+              <Route path="/" element={<Stats />} />
+              <Route
+                path="/users"
+                element={
+                  <>
+                    <Users />
+                  </>
+                }
+              />
+              <Route path="/posts" element={<h1>hi</h1>} />
+              <Route
+                path="/Chats"
+                element={
+                  <>
+                    <GroupChat />
+                  </>
+                }
+              />
             </Routes>
           </div>
         </div>
