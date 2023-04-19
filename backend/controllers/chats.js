@@ -85,4 +85,39 @@ const newMessage = (req, res) => {
     });
 };
 
-module.exports = { createRoom, getChatByName, getAllChats, newMessage };
+const mostChats = (req, res) => {
+  chatModel
+    .aggregate([
+      {
+        $project: {
+          _id: 1,
+          chat_name: 1,
+          message_count: { $size: "$messages" },
+        },
+      },
+      { $sort: { message_count: -1 } },
+      { $limit: 1 },
+    ])
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `done`,
+        result: result,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+};
+
+module.exports = {
+  createRoom,
+  getChatByName,
+  getAllChats,
+  newMessage,
+  mostChats,
+};

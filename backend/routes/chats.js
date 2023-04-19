@@ -4,6 +4,7 @@ const {
   getChatByName,
   getAllChats,
   newMessage,
+  mostChats,
 } = require("../controllers/chats");
 const chatRouter = express.Router();
 
@@ -15,6 +16,7 @@ const authorization = require("../middleware/authorization");
 chatRouter.post("/", authentication, createRoom);
 chatRouter.post("/:chat_name", authentication, newMessage);
 chatRouter.get("/", authentication, getAllChats);
+chatRouter.get("/most", authentication, mostChats);
 chatRouter.get("/:name", authentication, getChatByName);
 
 module.exports = chatRouter;

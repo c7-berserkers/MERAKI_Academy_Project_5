@@ -11,7 +11,12 @@ const {
   updatePostById,
   getPostsByTag,
   getPostForUser,
-  unDeletePost
+
+  unDeletePost,
+
+  getMostLiked,
+  getMostComments,
+
 } = require("../controllers/posts");
 
 const authentication = require("../middleware/authentication");
@@ -19,6 +24,18 @@ const authorization = require("../middleware/authorization");
 
 postRouter.post("/", authentication, createNewPost);
 postRouter.get("/", authentication, authorization("CREATE"), getAllPost);
+postRouter.get(
+  "/mostlikes",
+  authentication,
+  authorization("CREATE"),
+  getMostLiked
+);
+postRouter.get(
+  "/mostcomments",
+  authentication,
+  authorization("CREATE"),
+  getMostComments
+);
 postRouter.get(
   "/user/:id",
   authentication,
