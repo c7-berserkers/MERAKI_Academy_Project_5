@@ -9,6 +9,7 @@ const {
   getAllUsers,
   updateUserById,
   deleteUser,
+  unDeleteUser,
   searchUsers,
   followUser,
   unFollowUser,
@@ -30,6 +31,7 @@ userRouter.get("/followers/:id", getFollowersByUserId);
 userRouter.get("/following/:id", getFollowingByUserId);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);
+userRouter.put("unDelete/:id", unDeleteUser);
 userRouter.get("/", authentication, authorization("ADMIN"), getAllUsers);
 userRouter.get("/search/:name", authentication, searchUsers);
 
