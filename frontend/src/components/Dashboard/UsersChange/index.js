@@ -40,14 +40,26 @@ function Users() {
         axios.delete(`${process.env.REACT_APP_BACKEND}/users/${id}`)
             .then(function (response) {
                 console.log(response.data)
+                setToggle(!toggle)
             })
             .catch(function (error) {
                 console.log(error);
-                setToggle(!toggle)
             });
     }
 
-    const unDeleteUser = () => { }
+    const unDeleteUser = (id) => {
+        console.log(id);
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/unDelete/${id}`)
+            .then(function (response) {
+                console.log(response.data)
+                setToggle(!toggle)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
     const Admin = () => { }
     const NotAdmin = () => { }
 
@@ -80,7 +92,7 @@ function Users() {
                                 <div >
                                     <Stack spacing={2} direction="column">
                                         {user.is_deleted ? <>
-                                        <Button variant="outlined" id={user.id} >unDelete</Button>
+                                        <Button variant="outlined" id={user.id} onClick={(e)=>{unDeleteUser(e.target.id)}} >unDelete</Button>
                                         </> : <>
                                         <Button variant="outlined" id={user.id} onClick={(e)=>{deleteUser(e.target.id)}} >delete</Button></>}
                                         {user.is_deleted ? <>
