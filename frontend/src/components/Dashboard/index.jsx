@@ -3,6 +3,8 @@ import { useNavigate, Route, Routes } from "react-router-dom";
 import { Container, ListGroup, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Users from "./UsersChange/index";
+import GroupChat from "./groupChat/index";
+
 
 
 
@@ -51,7 +53,7 @@ export default function Dashboard() {
                     <strong>Posts</strong>
                   </ListGroup.Item>
                   <ListGroup.Item
-                    onClick={(e) => navigate("/dashboard/")}
+                    onClick={(e) => navigate("/dashboard/Chats")}
                     className="list-filter"
                   >
                     <strong>group chat edit</strong>
@@ -66,7 +68,7 @@ export default function Dashboard() {
               <Route path="/" element={<h1>hi</h1>} />
               <Route path="/users" element={<><Users/></>} />
               <Route path="/" element={<h1>hi</h1>} />
-              <Route path="/" element={<h1>hi</h1>} />
+              <Route path="/Chats" element={<><GroupChat/></>} />
             </Routes>
           </div>
         </div>
