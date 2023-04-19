@@ -51,7 +51,8 @@ export default function Chat() {
       .then((response) => {
         console.log(response.data.result);
         socket.emit("SEND_MESSAGE", messageData);
-        setMessages([...messages, messageData.content]);
+        // setMessages((preMess) => [...preMess, messageData.content]);
+
         console.log(`after send`, messages);
         setMessage(``);
       })
@@ -68,7 +69,7 @@ export default function Chat() {
         console.log(`before`, messages);
         socket.emit("JOIN_ROOM", name);
         socket.on("RECEIVE_MESSAGE", (data) => {
-          setMessages([...messages, data]);
+          setMessages((oldMes) => [...oldMes, data]);
           console.log(`after receive`, messages);
         });
       })
@@ -77,7 +78,7 @@ export default function Chat() {
   return (
     <div style={{ height: "80vh" }}>
       <Container>
-        <Card style={{ height: "80vh" }}>
+        <Card style={{ height: "700px" }}>
           <Card.Header>
             <h2>{name}</h2>
           </Card.Header>
@@ -96,7 +97,10 @@ export default function Chat() {
               </>
             ) : (
               <>
-                <div style={{ overflowX: "auto", height: "300px" }}>
+                <div
+                  id="message-body"
+                  style={{ overflowX: "auto", height: "520px" }}
+                >
                   <ListGroup>
                     {messages.map((element, i) => {
                       return (

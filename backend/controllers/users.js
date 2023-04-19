@@ -266,8 +266,6 @@ const unDeleteUser = async (req, res) => {
   }
 };
 
-
-
 const searchUsers = (req, res) => {
   const { name } = req.params;
   const query = `SELECT * FROM users WHERE first_name LIKE '%${name}%' OR last_name LIKE '%${name}%' ;`;
@@ -401,6 +399,36 @@ const getFollowingByUserId = (req, res) => {
     });
 };
 
+const getMostFollowed = (req, res) => {
+  const query = `SELECT u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img
+  FROM users u
+  INNER JOIN (
+    SELECT followed_user_id, COUNT(*) AS followers_count
+    FROM follows
+    WHERE is_deleted = 0
+    GROUP BY followed_user_id
+    ORDER BY followers_count DESC
+    LIMIT 1
+  ) f ON f.followed_user_id = u.id;
+  `;
+  pool
+    .query(query)
+    .then(({ rows }) => {
+      res.status(200).json({
+        success: true,
+        message: `most followed user`,
+        result: rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   register,
   login,
@@ -414,4 +442,5 @@ module.exports = {
   unFollowUser,
   getFollowersByUserId,
   getFollowingByUserId,
+  getMostFollowed,
 };

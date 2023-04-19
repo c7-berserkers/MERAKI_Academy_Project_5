@@ -309,6 +309,58 @@ ORDER BY p.created_at DESC;
     });
 };
 
+const getMostLiked = (req, res) => {
+  const query = `SELECT p.id, p.img, p.description, COUNT(l.id) AS total_likes
+  FROM posts AS p
+  INNER JOIN likes AS l ON l.posts_id = p.id
+  WHERE p.is_deleted = 0 AND l.is_deleted = 0
+  GROUP BY p.id
+  ORDER BY total_likes DESC
+  LIMIT 1;
+  `;
+  pool
+    .query(query)
+    .then(({ rows }) => {
+      res.status(200).json({
+        success: true,
+        message: `done`,
+        result: rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
+const getMostComments = (req, res) => {
+  const query = `SELECT posts.*, COUNT(comments.id) AS comment_count
+  FROM posts
+  JOIN comments ON posts.id = comments.post_id
+  GROUP BY posts.id
+  ORDER BY comment_count DESC
+  LIMIT 1;
+  `;
+  pool
+    .query(query)
+    .then(({ rows }) => {
+      res.status(200).json({
+        success: true,
+        message: `done`,
+        result: rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
 module.exports = {
   createNewPost,
   getAllPost,
@@ -318,4 +370,6 @@ module.exports = {
   updatePostById,
   getPostsByTag,
   getPostForUser,
+  getMostLiked,
+  getMostComments,
 };
