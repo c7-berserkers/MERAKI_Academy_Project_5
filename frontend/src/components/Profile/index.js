@@ -267,19 +267,19 @@ export default function Profile() {
     }
   };
 
-   // ===================
-   const [expanded, setExpanded] = useState(false);
-   const handleExpandClick = (id) => {
-     return () => {
-       if (expanded) {
-         setExpanded(false);
-       } else {
-         setExpanded(id);
-         getCommentsForPost(id);
-       }
-     };
-   };
- 
+  // ===================
+  const [expanded, setExpanded] = useState(false);
+  const handleExpandClick = (id) => {
+    return () => {
+      if (expanded) {
+        setExpanded(false);
+      } else {
+        setExpanded(id);
+        getCommentsForPost(id);
+      }
+    };
+  };
+
 
 
   //===============================================================
@@ -294,9 +294,6 @@ export default function Profile() {
   //===============================================================
 
   useEffect(() => {
-    setShowFollower(false);
-    setShowFollowing(false);
-
 
     axios
       .get(`${BACKEND}/users/${personPage}`, {
@@ -306,39 +303,42 @@ export default function Profile() {
       })
       .then(function (response) {
         dispatch(setUserData(response?.data?.user));
-        //==============================================================
-        axios
-          .get(`${BACKEND}/posts/user/${personPage}`, {
-            headers: {
-              Authorization: `${token}`,
-            },
-          })
-          .then(function (response) {
-            dispatch(setPosts(response?.data?.result));
-            console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
-            
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
 
-        //---------------------------------------------------------------
       })
       .catch(function (error) {
         console.log(error);
         navigate("/NotFound");
       });
 
+    //==============================================================
+    axios
+      .get(`${BACKEND}/posts/user/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(setPosts(response?.data?.result));
+        console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
 
-      //===============================================================
-      axios
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    //---------------------------------------------------------------
+    axios
       .get(`${BACKEND}/users/followers/${personPage}`, {
         headers: {
           Authorization: `${token}`,
         },
       })
       .then(function (response) {
+
+
         dispatch(setFollowerData(response.data.followers));
+        // setShowFollower(false);
+
       })
       .catch(function (error) {
         console.log(error);
@@ -346,7 +346,7 @@ export default function Profile() {
     //===============================================================
     axios
       .get(
-        `${BACKEND}/users/following/${user_Id_Number}`,
+        `${BACKEND}/users/following/${personPage}`,
         {
           headers: {
             Authorization: `${token}`,
@@ -356,6 +356,7 @@ export default function Profile() {
       .then(function (response) {
         dispatch(setFollowing(response?.data?.followers));
         dispatch(setFollowingData(response?.data?.followers));
+        // setShowFollowing(false);
         loop();
       })
       .catch(function (error) {
@@ -442,7 +443,7 @@ export default function Profile() {
 
                 <div className="userData">
                   <Popup_Image_Edit
-                  set={setModalShowEditPopupImage}
+                    set={setModalShowEditPopupImage}
                     show={modalShowEditPopupImage}
                     onHide={() => setModalShowEditPopupImage(false)} />
                   <Popup_Edit_Data
@@ -673,19 +674,19 @@ export default function Profile() {
           {/* //********************************add post of user******************************************* */}
           {personPage == user_Id_Number ? <>
             <Container>
-            <Button
-              style={{ width: "60%" }}
-              onClick={() => {
-                setModalShowPopupAddNewPost(true);
-              }}>
-              Add New Post
-            </Button>
-          </Container>
-          
-          
-          
-          </>:<></>}
-         
+              <Button
+                style={{ width: "60%" }}
+                onClick={() => {
+                  setModalShowPopupAddNewPost(true);
+                }}>
+                Add New Post
+              </Button>
+            </Container>
+
+
+
+          </> : <></>}
+
           {/* ******************************************post of user***************************************** */}
           <div className="feed">
             <Container>
