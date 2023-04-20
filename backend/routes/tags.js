@@ -3,11 +3,11 @@ const express = require("express");
 const tagRouter = express.Router();
 
 const {
-    addTag,
-    deleteTag,
-    getAllTag,
-    updateTag
-}= require("../controllers/tags");
+  addTag,
+  deleteTag,
+  getAllTag,
+  updateTag,
+} = require("../controllers/tags");
 
 //end point
 
