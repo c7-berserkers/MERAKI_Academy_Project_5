@@ -7,11 +7,7 @@ import GroupChat from "./groupChat/index";
 
 import Posts from "./posts/index";
 
-
-
-
 import Stats from "./Stats";
-
 
 export default function Dashboard() {
   const { role } = useSelector((state) => {
@@ -52,9 +48,7 @@ export default function Dashboard() {
                     <strong>Users</strong>
                   </ListGroup.Item>
                   <ListGroup.Item
-
                     onClick={(e) => navigate("/dashboard/posts")}
-
                     className="list-filter"
                   >
                     <strong>Posts</strong>
@@ -72,11 +66,24 @@ export default function Dashboard() {
           <div className="col-md">
             {" "}
             <Routes>
+              <Route path="/post" element={<Posts />} />
+              <Route
+                path="/users"
+                element={
+                  <>
+                    <Users />
+                  </>
+                }
+              />
 
-              <Route path="/post" element={<Posts/>} />
-              <Route path="/users" element={<><Users/></>} />
-              <Route path="/" element={<h1>hi</h1>} />
-              <Route path="/Chats" element={<><GroupChat/></>} />
+              <Route
+                path="/Chats"
+                element={
+                  <>
+                    <GroupChat />
+                  </>
+                }
+              />
               <Route path="/" element={<Stats />} />
               <Route
                 path="/users"
@@ -95,7 +102,6 @@ export default function Dashboard() {
                   </>
                 }
               />
-
             </Routes>
           </div>
         </div>

@@ -16,7 +16,6 @@ const {
 
   getMostLiked,
   getMostComments,
-
 } = require("../controllers/posts");
 
 const authentication = require("../middleware/authentication");
@@ -52,6 +51,11 @@ postRouter.get(
 );
 postRouter.put("/:id", authentication, authorization("CREATE"), updatePostById);
 postRouter.delete("/:id", authentication, authorization("CREATE"), deletePost);
-postRouter.delete("/undelete/:id", authentication, authorization("CREATE"), unDeletePost);
+postRouter.delete(
+  "/undelete/:id",
+  authentication,
+  authorization("CREATE"),
+  unDeletePost
+);
 
 module.exports = postRouter;
