@@ -61,7 +61,6 @@ import BurstModeIcon from "@mui/icons-material/BurstMode";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUserData,
-  setFollowing,
   setFollowing_plus1,
   setFollowing_minus1,
   setFollowingData,
@@ -105,50 +104,40 @@ export default function Profile() {
 
   //==============================================================
   const [follow, setFollow] = useState(false);
-  const [showFollowing, setShowFollowing] = useState(false);
-  const [showFollower, setShowFollower] = useState(false);
+  const [showFollowerOrFollowing, setShowFollowerOrFollowing] = useState(false)
+  const [showFollow, setShowFollow] = useState(false);
   const [followerOrFollowingHolder, setFollowerOrFollowingHolder] = useState(false);
 
   //===============================================================
 
   const dispatch = useDispatch();
-  const ListItem = styled("li")(({ theme }) => ({
-    margin: theme.spacing(0.5),
-  }));
+  const ListItem = styled("li")(({ theme }) => ({margin: theme.spacing(0.5),}));
 
   //=============================posts===============================
 
   const [show, setShow] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClick = (event) => {setAnchorEl(event.currentTarget);};
+  const handleClose = () => {setAnchorEl(null);};
 
 
   //===============================================================
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false);
-  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
-    useState(false);
-  const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] =
-    useState(false);
-  const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] =
-    useState(false);
+  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =useState(false);
+  const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] =useState(false);
+  const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] =useState(false);
   const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
-
+    let inFollowingState_0 =false
   //===============================================================
   const state = useSelector((state) => {
     return {
       dataUser: state.profile.UserData,
       postsUser: state.posts.posts,
-      following: state.profile.following,
       allFollower: state.profile.allFollower,
       allFollowing: state.profile.allFollowing,
     };
@@ -204,7 +193,6 @@ export default function Profile() {
           id={tag.id}
           onClick={(e) => {
             navigate(`/tag/${tag.id}`)
-            console.log(e.target.id)
           }}
           className="list-filter"
         >
@@ -280,21 +268,53 @@ export default function Profile() {
     };
   };
 
-
-
   //===============================================================
-  const loop = () => {
-    state.following.forEach((element) => {
-      if (element.id == personPage * 1) {
-        setFollow(true);
+  const all_Following=()=>{
+    axios
+    .get(
+      `${BACKEND}/users/following/${personPage}`,
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
       }
+    )
+    .then(function (response) {
+      dispatch(setFollowingData(response.data.followers));
+      setFollowerOrFollowingHolder(response.data.followers);
+      
+    })
+    .catch(function (error) {
+      console.log(error);
     });
-  };
+  }
+  
+  
+    //=======================================================
+  const allFollowers=()=>{
+    axios
+    .get(`${BACKEND}/users/followers/${personPage}`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    })
+    .then(function (response) {
+      console.log(showFollow)
+
+      if(showFollow || inFollowingState_0){
+          dispatch(setFollowerData(response.data.followers));
+          setFollowerOrFollowingHolder(response.data.followers);
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 
   //===============================================================
 
   useEffect(() => {
-
+    setShowFollowerOrFollowing(false)
     axios
       .get(`${BACKEND}/users/${personPage}`, {
         headers: {
@@ -319,54 +339,40 @@ export default function Profile() {
       })
       .then(function (response) {
         dispatch(setPosts(response?.data?.result));
-        console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
-
       })
       .catch(function (error) {
         console.log(error);
       });
 
-    //---------------------------------------------------------------
+
+    //==============================================================
     axios
-      .get(`${BACKEND}/users/followers/${personPage}`, {
+    .get(
+      `${BACKEND}/users/followers/${personPage}`,
+      {
         headers: {
           Authorization: `${token}`,
         },
-      })
-      .then(function (response) {
-
-
-        dispatch(setFollowerData(response.data.followers));
-        // setShowFollower(false);
-
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    //===============================================================
-    axios
-      .get(
-        `${BACKEND}/users/following/${personPage}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
+      }
+    )
+    .then(function (response) {
+      dispatch(setFollowingData());
+      console.log(response.data.followers)
+      if(response.data.followers.length===0){setFollow(false);}
+      response.data.followers.forEach((element) => {
+        console.log(element.id == user_Id_Number * 1,element.id , user_Id_Number * 1)
+        if (element.id == user_Id_Number * 1) {
+          setFollow(true);
+          return
         }
-      )
-      .then(function (response) {
-        dispatch(setFollowing(response?.data?.followers));
-        dispatch(setFollowingData(response?.data?.followers));
-        // setShowFollowing(false);
-        loop();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+        });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-    //=============================================================
 
   }, [personPage]);
-
 
   //=======================================================
 
@@ -381,10 +387,10 @@ export default function Profile() {
           },
         }
       )
-      .then(function (response) {
+      .then(function (response) { 
         dispatch(setFollowing_plus1());
         setFollow(true);
-        // getAllUserFollowing()
+        allFollowers()
       })
       .catch(function (error) {
         console.log(error);
@@ -403,8 +409,10 @@ export default function Profile() {
         }
       )
       .then(function (response) {
+        // FollowAndChangeState =true
         dispatch(setFollowing_minus1());
         setFollow(false);
+        allFollowers()
       })
       .catch(function (error) {
         console.log(error);
@@ -570,8 +578,10 @@ export default function Profile() {
                     <Chip
                       icon={<PeopleIcon />}
                       onClick={() => {
-                        setFollowerOrFollowingHolder(state.allFollower);
-                        setShowFollower(!showFollower);
+                        setShowFollow(true)
+                        inFollowingState_0 =true
+                        allFollowers()
+                        setShowFollowerOrFollowing(true)
                       }}
                       label={"followers: " + state.dataUser.followers_count}
                     />
@@ -580,8 +590,10 @@ export default function Profile() {
                     <Chip
                       icon={<PeopleIcon />}
                       onClick={() => {
-                        setFollowerOrFollowingHolder(state.allFollowing);
-                        setShowFollowing(!showFollowing);
+                        inFollowingState_0=false
+                        setShowFollow(false)
+                        setShowFollowerOrFollowing(true)
+                        all_Following()
                       }}
                       label={"following: " + state.dataUser.following_count}
                     />
@@ -590,8 +602,7 @@ export default function Profile() {
                     <Chip
                       icon={<BurstModeIcon />}
                       onClick={() => {
-                        setShowFollower(false);
-                        setShowFollowing(false);
+                        setShowFollowerOrFollowing(false)
                       }}
                       label={"posts: " + state.postsUser.length}
                     />
@@ -609,13 +620,13 @@ export default function Profile() {
       <hr style={{ backgroundColor: "black", fontSize: "2em" }} />
 
       {/* ******************************* showFollower || showFollowing of user *************************** */}
-      {showFollower || showFollowing ? (
+      {showFollowerOrFollowing ? (
         <>
           {/* //*************************************************************************** */}
           <Container>
             {followerOrFollowingHolder.length <= 0 ? (
               <>
-                <h2>No results in {showFollower ? "Follower" : "Following"}</h2>
+                <h2>No results in {showFollow ? "Follower" : "Following"}</h2>
               </>
             ) : (
               <>
@@ -630,7 +641,9 @@ export default function Profile() {
                       {followerOrFollowingHolder.map((user) => {
                         return (
                           <Card
-                            onClick={(e) => navigate(`/profile/${user.id}`)}
+                            onClick={(e) => {
+                              setShowFollowerOrFollowing(false)
+                              navigate(`/profile/${user.id}`)}}
                             key={user.id}
                             sx={{
                               width: 275,
@@ -740,7 +753,6 @@ export default function Profile() {
                         Delete Post
                       </MenuItem>
                     </Menu>
-
                     <CardMedia
                       component="img"
                       // height="194"
@@ -763,7 +775,7 @@ export default function Profile() {
                                   },
                                 })
                                 .then((result) => {
-                                  console.log(result);
+                                  // console.log(result);
                                   dispatch(removeLikePost(post.id));
                                   dispatch(removeLike(post.id));
                                 })
@@ -798,7 +810,7 @@ export default function Profile() {
                                   }
                                 )
                                 .then((result) => {
-                                  console.log(result);
+                                  // console.log(result);
                                   dispatch(addLikePost(post.id));
                                   dispatch(addLike(payload));
                                 })
@@ -917,7 +929,6 @@ export default function Profile() {
                                                   <Form
                                                     onSubmit={(e) => {
                                                       e.preventDefault();
-                                                      console.log(e.target[0].value);
                                                       updateCommentFunction(
                                                         comment.id,
                                                         post.id,
