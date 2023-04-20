@@ -65,18 +65,18 @@ function Users() {
 
 
     const Admin = (e) => {
-console.log(e.targrt.value)
+console.log(e.target.value)
      }
     const NotAdmin = (e) => {
-        console.log(e.targrt.value)
+        console.log(e.target.value)
 
      }
     const disband = (e) => {
-        console.log(e.targrt.value)
+        console.log(e.target.value)
 
      }
     const band = (e) => {
-        console.log(e.targrt.value)
+        console.log(e.target.value)
 
      }
 
