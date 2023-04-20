@@ -15,8 +15,8 @@ function GroupChat() {
     //===============================================================
     const [allChat, setAllChat] = useState(false)
 
-    useEffect(() => {
-        axios
+    const getAllChatsFunction =()=>{
+axios
             .get(`${process.env.REACT_APP_BACKEND}/chats/`, {
                 headers: {
                     Authorization: `${token}`,
@@ -30,13 +30,33 @@ function GroupChat() {
             .catch(function (error) {
                 console.log(error);
             });
-        //===============================================================
+   
+    }
+        
+
+    //===============================================================
+useEffect(() => {
+    getAllChatsFunction()
+     }, []);
+    //===============================================================
 
 
-    }, []);
-
-
-    const deleteChatGroup = () => { }
+    const deleteChatGroup = (e) => { 
+console.log(e.target.value)
+axios
+.delete(`${process.env.REACT_APP_BACKEND}/chats/${e.target.value}`,{
+    headers: {
+        Authorization: `${token}`,
+    },
+})
+.then(function (response) {
+    console.log(response.data.result, "chats")
+    getAllChatsFunction()
+})
+.catch(function (error) {
+    console.log(error);
+});
+    }
 
 
 
@@ -51,7 +71,6 @@ function GroupChat() {
 
             {allChat ? <>
                 {
-
                     allChat.map((chat) => {
                         console.log(chat)
                         return (
@@ -66,7 +85,7 @@ function GroupChat() {
                                 </div>
                                 <div >
                             <Stack spacing={2} direction="column">
-                                <Button variant="outlined">Delete Chat</Button>
+                                <Button variant="outlined" value={chat._id} onClick={(e)=>{deleteChatGroup(e)}}>Delete Chat</Button>
                             </Stack>
                             </div>
 
