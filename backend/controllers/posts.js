@@ -309,8 +309,6 @@ ORDER BY p.created_at DESC;
     });
 };
 
-
-
 const unDeletePost = (req, res) => {
   const id = req.params.id;
   // const user_id = req.token.userId;
@@ -336,6 +334,15 @@ const unDeletePost = (req, res) => {
           result: result.rows,
         });
       }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
 
 const getMostLiked = (req, res) => {
   const query = `SELECT p.id, p.img, p.description, COUNT(l.id) AS total_likes
@@ -354,7 +361,6 @@ const getMostLiked = (req, res) => {
         message: `done`,
         result: rows[0],
       });
-
     })
     .catch((err) => {
       res.status(500).json({
@@ -364,8 +370,6 @@ const getMostLiked = (req, res) => {
       });
     });
 };
-
-
 
 const getMostComments = (req, res) => {
   const query = `SELECT posts.*, COUNT(comments.id) AS comment_count
@@ -402,10 +406,7 @@ module.exports = {
   updatePostById,
   getPostsByTag,
   getPostForUser,
-
   unDeletePost,
-
   getMostLiked,
   getMostComments,
-
 };
