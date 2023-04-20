@@ -309,6 +309,34 @@ ORDER BY p.created_at DESC;
     });
 };
 
+
+
+const unDeletePost = (req, res) => {
+  const id = req.params.id;
+  // const user_id = req.token.userId;
+
+  const query = `
+    UPDATE posts 
+    SET is_deleted = 0
+    WHERE id=$1 AND is_deleted=1 RETURNING *;`;
+  const data = [Number(id)];
+  console.log(data);
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: `The post with id: ${id} is not found`,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: `get the post with id: ${id} successfully`,
+          result: result.rows,
+        });
+      }
+
 const getMostLiked = (req, res) => {
   const query = `SELECT p.id, p.img, p.description, COUNT(l.id) AS total_likes
   FROM posts AS p
@@ -326,6 +354,7 @@ const getMostLiked = (req, res) => {
         message: `done`,
         result: rows[0],
       });
+
     })
     .catch((err) => {
       res.status(500).json({
@@ -335,6 +364,8 @@ const getMostLiked = (req, res) => {
       });
     });
 };
+
+
 
 const getMostComments = (req, res) => {
   const query = `SELECT posts.*, COUNT(comments.id) AS comment_count
@@ -361,6 +392,7 @@ const getMostComments = (req, res) => {
       });
     });
 };
+
 module.exports = {
   createNewPost,
   getAllPost,
@@ -370,6 +402,10 @@ module.exports = {
   updatePostById,
   getPostsByTag,
   getPostForUser,
+
+  unDeletePost,
+
   getMostLiked,
   getMostComments,
+
 };
