@@ -99,7 +99,12 @@ export default function Chat() {
               <>
                 <div
                   id="message-body"
-                  style={{ overflowX: "auto", height: "520px" }}
+                  style={{
+                    overflowX: "auto",
+                    height: "520px",
+                    display: "flex",
+                    flexDirection: "column-reverse",
+                  }}
                 >
                   <ListGroup>
                     {messages.map((element, i) => {
