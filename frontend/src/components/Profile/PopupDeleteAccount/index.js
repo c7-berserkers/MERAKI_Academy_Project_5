@@ -70,7 +70,7 @@ const Popup_Delete_Profile = (props) => {
             }
         })
             .then(function (response) {
-                console.log(response.data)
+                localStorage.clear()
                 setColorMassage("success")
                 setAlert(' deleted successful')
                 setTimeout(()=>{ navigate("/register")},3000)

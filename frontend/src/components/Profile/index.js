@@ -455,12 +455,14 @@ export default function Profile() {
                     show={modalShowEditPopupImage}
                     onHide={() => setModalShowEditPopupImage(false)} />
                   <Popup_Edit_Data
+                    set={setModalShowEditPopupMyProfile}
                     show={modalShowEditPopupMyProfile}
                     onHide={() => setModalShowEditPopupMyProfile(false)} />
                   <Popup_Delete_Profile
                     show={modalShowEditPopupDeleteProfile}
                     onHide={() => setModalShowEditPopupDeleteProfile(false)} />
                   <Popup_Edit_MyPassword
+                  set={setModalShowEditPopupEditMyPassword}
                     show={modalShowEditPopupEditMyPassword}
                     onHide={() => setModalShowEditPopupEditMyPassword(false)} />
                   <h4>

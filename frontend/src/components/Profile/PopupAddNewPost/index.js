@@ -84,7 +84,6 @@ const Popup_Add_New_Post = (props) => {
         })
             .then(function (response) {
                 props.set(false)
-                console.log(response.data.result, "my data")
                 const addPost=response.data.result[0]
                 addPost.user_first_name=userName
                 addPost.user_id=userId
@@ -112,7 +111,6 @@ setImgURL("")
         formData.append("file" ,img_Select )
         formData.append("upload_preset" ,"vledn3tb" )
         axios.post("https://api.cloudinary.com/v1_1/dy9hkpipf/image/upload",formData).then((result)=>{
-        console.log(result.data.url,"url_img")
         if(result.data.url){
             setLoading(false)
             setImgURL(result.data.url)
@@ -140,7 +138,6 @@ setImgURL("")
                 'Authorization': `${localStorage.getItem("userId")}`
             }
         }).then((result)=>{
-            console.log(result.data.result)
             setTags(result.data.result)
     }).catch((err)=>{
         console.log(err)

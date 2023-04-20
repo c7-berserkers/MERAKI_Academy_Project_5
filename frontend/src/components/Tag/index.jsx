@@ -146,7 +146,6 @@ return tags.length>0?tags.map((tag,i)=>{
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
-        console.log(result.data.result)
         dispatch(setPosts(result.data.result));
       } else throw Error;
     } catch (error) {
@@ -334,7 +333,7 @@ return tags.length>0?tags.map((tag,i)=>{
                               },
                             })
                             .then((result) => {
-                              console.log(result);
+                              ;
                               dispatch(removeLikePost(post.id));
                               dispatch(removeLike(post.id));
                             })
@@ -370,7 +369,6 @@ return tags.length>0?tags.map((tag,i)=>{
                               }
                             )
                             .then((result) => {
-                              console.log(result);
                               dispatch(addLikePost(post.id));
                               dispatch(addLike(payload));
                             })
@@ -504,7 +502,7 @@ return tags.length>0?tags.map((tag,i)=>{
                                             <Form
                                               onSubmit={(e) => {
                                                 e.preventDefault();
-                                                console.log(e.target[0].value);
+                                                
                                                 updateCommentFunction(
                                                   comment.id,
                                                   post.id,

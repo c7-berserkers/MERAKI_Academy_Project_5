@@ -10,7 +10,7 @@ import "./style.css";
 //===============================================================
 
 
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { setUserData } from "../../redux/reducers/profile/index";
 import { setUser_first_name } from "../../redux/reducers/auth/index";
 //=================================================================
@@ -22,12 +22,22 @@ const Popup_Edit_Data = (props) => {
     const dispatch = useDispatch();
 
     //===============================================================
+    const state = useSelector((state) => {
+        return {
+          dataUser: state.profile.UserData,
+          postsUser: state.posts.posts,
+          allFollower: state.profile.allFollower,
+          allFollowing: state.profile.allFollowing,
+        };
+      });
 
-    let user_test = {
-        first_name: undefined,
-        last_name: undefined,
-        age: undefined,
-        country: undefined,
+      console.log(state.dataUser)
+
+    const user_test = {
+        first_name: state.dataUser.first_name,
+        last_name:state.dataUser.last_name,
+        age: state.dataUser.age,
+        country: state.dataUser.country,
     }
     const [userDataHolder, setUserDataHolder] = useState(user_test)
 
@@ -50,10 +60,10 @@ const Popup_Edit_Data = (props) => {
             }
         })
             .then(function (response) {
-                // userData
-                console.log(response.data.user, "my data")
                 dispatch(setUserData(response.data.user))
                 dispatch(setUser_first_name(response.data.user))
+                props.set(false)
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -78,13 +88,13 @@ const Popup_Edit_Data = (props) => {
 
                 <form onSubmit={(event) => event.preventDefault()} className="myProfileAreaEdit">
                     <label htmlFor="first_name" >first_name: </label>
-                    <Form.Control name="first_name" placeholder="your first_name" onChange={handleChange} />
+                    <Form.Control defaultValue={user_test.first_name} name="first_name" placeholder="your first_name" onChange={handleChange} />
                     <label htmlFor="last_name" >last_name:</label>
-                    <Form.Control name="last_name" placeholder="your last_name" onChange={handleChange} />
+                    <Form.Control defaultValue={user_test.last_name} name="last_name" placeholder="your last_name" onChange={handleChange} />
                     <label htmlFor="age" >age:</label>
-                    <Form.Control name="age" placeholder="your age" type="number" onChange={handleChange} />
+                    <Form.Control defaultValue={user_test.age} name="age" placeholder="your age" type="number" onChange={handleChange} />
                     <label htmlFor="country" >country:</label>
-                    <Form.Control name="country" placeholder="your country" onChange={handleChange} />
+                    <Form.Control defaultValue={user_test.country} name="country" placeholder="your country" onChange={handleChange} />
                 </form>
             </Modal.Body>
             <Modal.Footer>

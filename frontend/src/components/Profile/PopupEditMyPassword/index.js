@@ -76,6 +76,9 @@ const Popup_Edit_MyPassword = (props) => {
                 dispatch(setUserData(response.data.user))
                 setOneError("edit is done")
                 setColorMassage("success")
+                setUserDataHolder("")
+                setOneError(false)
+                props.set(false)
             })
             .catch(function (error) {
                 console.log(error);
@@ -101,9 +104,9 @@ const Popup_Edit_MyPassword = (props) => {
                     <label htmlFor="email"   >email:</label>
                     <Form.Control name="email" placeholder="your email" onChange={handleChange} />
                     <label htmlFor="password" >password:</label>
-                    <Form.Control name="password"  placeholder="your password" onChange={handleChange} />
+                    <Form.Control type="password" name="password"  placeholder="your password" onChange={handleChange} />
                     <label htmlFor="password" >password:</label>
-                    <Form.Control name="password_confirmed"  placeholder="your password" onChange={handleChange} />
+                    <Form.Control type="password" name="password_confirmed"  placeholder="your password" onChange={handleChange} />
                     {oneError ? <Alert key={colorMassage} style={{ margin: "12px 0px" }} variant={colorMassage}>{oneError}</Alert> : <> </>}
 
                 </form>

@@ -123,7 +123,7 @@ return tags.length>0?tags.map((tag,i)=>{
                     key={tag.id}
                     id={tag.id}
                     onClick={(e) => {navigate(`/tag/${tag.id}`)
-                  console.log(e.target.id)}}
+                    handleClose22()}}
                     className="list-filter"
                   >
                     <strong>{tag.tag}</strong>
@@ -233,7 +233,6 @@ return tags.length>0?tags.map((tag,i)=>{
   useEffect(() => {
     getPosts();
   }, []);
-  console.log(likes);
   return (
     <div>
       {" "}
@@ -336,7 +335,7 @@ return tags.length>0?tags.map((tag,i)=>{
                               },
                             })
                             .then((result) => {
-                              console.log(result);
+                              
                               dispatch(removeLikePost(post.id));
                               dispatch(removeLike(post.id));
                             })
@@ -372,7 +371,7 @@ return tags.length>0?tags.map((tag,i)=>{
                               }
                             )
                             .then((result) => {
-                              console.log(result);
+                              
                               dispatch(addLikePost(post.id));
                               dispatch(addLike(payload));
                             })
