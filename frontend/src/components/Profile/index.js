@@ -31,7 +31,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Tooltip from "@mui/material/Tooltip";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { MdDelete, MdEdit } from "react-icons/md";
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import Offcanvas from "react-bootstrap/Offcanvas";
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
 import List from "@mui/material/List";
@@ -77,10 +77,7 @@ import {
   addLikePost,
   removeLikePost,
 } from "../redux/reducers/posts";
-import {
-  removeLike,
-  addLike
-} from "../redux/reducers/auth";
+import { removeLike, addLike } from "../redux/reducers/auth";
 
 //=========================posts======================================
 const ExpandMore = styled((props) => {
@@ -98,41 +95,55 @@ const ExpandMore = styled((props) => {
 
 export default function Profile() {
   const navigate = useNavigate();
-  let personPage = window.location.pathname.split("/")[window.location.pathname.split("/").length - 1];
+  let personPage =
+    window.location.pathname.split("/")[
+      window.location.pathname.split("/").length - 1
+    ];
   let user_Id_Number = localStorage.getItem("userId");
-
 
   //==============================================================
   const [follow, setFollow] = useState(false);
-  const [showFollowerOrFollowing, setShowFollowerOrFollowing] = useState(false)
+  const [showFollowerOrFollowing, setShowFollowerOrFollowing] = useState(false);
   const [showFollow, setShowFollow] = useState(false);
-  const [followerOrFollowingHolder, setFollowerOrFollowingHolder] = useState(false);
+  const [followerOrFollowingHolder, setFollowerOrFollowingHolder] =
+    useState(false);
 
   //===============================================================
 
   const dispatch = useDispatch();
-  const ListItem = styled("li")(({ theme }) => ({margin: theme.spacing(0.5),}));
+  const ListItem = styled("li")(({ theme }) => ({
+    margin: theme.spacing(0.5),
+  }));
 
   //=============================posts===============================
 
   const [show, setShow] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {setAnchorEl(event.currentTarget);};
-  const handleClose = () => {setAnchorEl(null);};
-
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   //===============================================================
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [modalShowEditPopupImage, setModalShowEditPopupImage] = useState(false);
-  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =useState(false);
-  const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] =useState(false);
-  const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] =useState(false);
-  const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false);
+  const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
+    useState(false);
+  const [modalShowEditPopupMyProfile, setModalShowEditPopupMyProfile] =
+    useState(false);
+  const [modalShowEditPopupDeleteProfile, setModalShowEditPopupDeleteProfile] =
+    useState(false);
+  const [
+    modalShowEditPopupEditMyPassword,
+    setModalShowEditPopupEditMyPassword,
+  ] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
-    let inFollowingState_0 =false
+  let inFollowingState_0 = false;
   //===============================================================
   const state = useSelector((state) => {
     return {
@@ -186,21 +197,23 @@ export default function Profile() {
   };
   // ====================
   const tagsFunction = () => {
-    return tags.length > 0 ? tags.map((tag, i) => {
-      return (
-        <ListGroup.Item
-          key={tag.id}
-          id={tag.id}
-          onClick={(e) => {
-            navigate(`/tag/${tag.id}`)
-          }}
-          className="list-filter"
-        >
-          <strong>{tag.tag}</strong>
-        </ListGroup.Item>
-      )
-    }) : ""
-  }
+    return tags.length > 0
+      ? tags.map((tag, i) => {
+          return (
+            <ListGroup.Item
+              key={tag.id}
+              id={tag.id}
+              onClick={(e) => {
+                navigate(`/tag/${tag.id}`);
+              }}
+              className="list-filter"
+            >
+              <strong>{tag.tag}</strong>
+            </ListGroup.Item>
+          );
+        })
+      : "";
+  };
 
   // ===================
   const updateCommentFunction = async (id, post_id, comment) => {
@@ -269,52 +282,47 @@ export default function Profile() {
   };
 
   //===============================================================
-  const all_Following=()=>{
+  const all_Following = () => {
     axios
-    .get(
-      `${BACKEND}/users/following/${personPage}`,
-      {
+      .get(`${BACKEND}/users/following/${personPage}`, {
         headers: {
           Authorization: `${token}`,
         },
-      }
-    )
-    .then(function (response) {
-      dispatch(setFollowingData(response.data.followers));
-      setFollowerOrFollowingHolder(response.data.followers);
-      
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-  
-  
-    //=======================================================
-  const allFollowers=()=>{
-    axios
-    .get(`${BACKEND}/users/followers/${personPage}`, {
-      headers: {
-        Authorization: `${token}`,
-      },
-    })
-    .then(function (response) {
-      console.log(showFollow)
+      })
+      .then(function (response) {
+        dispatch(setFollowingData(response.data.followers));
+        setFollowerOrFollowingHolder(response.data.followers);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-      if(showFollow || inFollowingState_0){
+  //=======================================================
+  const allFollowers = () => {
+    axios
+      .get(`${BACKEND}/users/followers/${personPage}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then(function (response) {
+        console.log(showFollow);
+
+        if (showFollow || inFollowingState_0) {
           dispatch(setFollowerData(response.data.followers));
           setFollowerOrFollowingHolder(response.data.followers);
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   //===============================================================
 
   useEffect(() => {
-    setShowFollowerOrFollowing(false)
+    setShowFollowerOrFollowing(false);
     axios
       .get(`${BACKEND}/users/${personPage}`, {
         headers: {
@@ -323,7 +331,6 @@ export default function Profile() {
       })
       .then(function (response) {
         dispatch(setUserData(response?.data?.user));
-
       })
       .catch(function (error) {
         console.log(error);
@@ -338,40 +345,41 @@ export default function Profile() {
         },
       })
       .then(function (response) {
+        console.log(response?.data?.result);
         dispatch(setPosts(response?.data?.result));
       })
       .catch(function (error) {
         console.log(error);
       });
 
-
     //==============================================================
     axios
-    .get(
-      `${BACKEND}/users/followers/${personPage}`,
-      {
+      .get(`${BACKEND}/users/followers/${personPage}`, {
         headers: {
           Authorization: `${token}`,
         },
-      }
-    )
-    .then(function (response) {
-      dispatch(setFollowingData());
-      console.log(response.data.followers)
-      if(response.data.followers.length===0){setFollow(false);}
-      response.data.followers.forEach((element) => {
-        console.log(element.id == user_Id_Number * 1,element.id , user_Id_Number * 1)
-        if (element.id == user_Id_Number * 1) {
-          setFollow(true);
-          return
+      })
+      .then(function (response) {
+        dispatch(setFollowingData());
+        console.log(response.data.followers);
+        if (response.data.followers.length === 0) {
+          setFollow(false);
         }
+        response.data.followers.forEach((element) => {
+          console.log(
+            element.id == user_Id_Number * 1,
+            element.id,
+            user_Id_Number * 1
+          );
+          if (element.id == user_Id_Number * 1) {
+            setFollow(true);
+            return;
+          }
         });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
-
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, [personPage]);
 
   //=======================================================
@@ -387,10 +395,10 @@ export default function Profile() {
           },
         }
       )
-      .then(function (response) { 
+      .then(function (response) {
         dispatch(setFollowing_plus1());
         setFollow(true);
-        allFollowers()
+        allFollowers();
       })
       .catch(function (error) {
         console.log(error);
@@ -412,7 +420,7 @@ export default function Profile() {
         // FollowAndChangeState =true
         dispatch(setFollowing_minus1());
         setFollow(false);
-        allFollowers()
+        allFollowers();
       })
       .catch(function (error) {
         console.log(error);
@@ -438,7 +446,8 @@ export default function Profile() {
                             onClick={() => {
                               setModalShowEditPopupImage(true);
                             }}
-                            variant="contained">
+                            variant="contained"
+                          >
                             <EditNoteIcon />
                           </Button>
                         </span>
@@ -453,16 +462,20 @@ export default function Profile() {
                   <Popup_Image_Edit
                     set={setModalShowEditPopupImage}
                     show={modalShowEditPopupImage}
-                    onHide={() => setModalShowEditPopupImage(false)} />
+                    onHide={() => setModalShowEditPopupImage(false)}
+                  />
                   <Popup_Edit_Data
                     show={modalShowEditPopupMyProfile}
-                    onHide={() => setModalShowEditPopupMyProfile(false)} />
+                    onHide={() => setModalShowEditPopupMyProfile(false)}
+                  />
                   <Popup_Delete_Profile
                     show={modalShowEditPopupDeleteProfile}
-                    onHide={() => setModalShowEditPopupDeleteProfile(false)} />
+                    onHide={() => setModalShowEditPopupDeleteProfile(false)}
+                  />
                   <Popup_Edit_MyPassword
                     show={modalShowEditPopupEditMyPassword}
-                    onHide={() => setModalShowEditPopupEditMyPassword(false)} />
+                    onHide={() => setModalShowEditPopupEditMyPassword(false)}
+                  />
                   <h4>
                     {" "}
                     {state.dataUser.first_name} {state.dataUser.last_name}{" "}
@@ -578,10 +591,10 @@ export default function Profile() {
                     <Chip
                       icon={<PeopleIcon />}
                       onClick={() => {
-                        setShowFollow(true)
-                        inFollowingState_0 =true
-                        allFollowers()
-                        setShowFollowerOrFollowing(true)
+                        setShowFollow(true);
+                        inFollowingState_0 = true;
+                        allFollowers();
+                        setShowFollowerOrFollowing(true);
                       }}
                       label={"followers: " + state.dataUser.followers_count}
                     />
@@ -590,10 +603,10 @@ export default function Profile() {
                     <Chip
                       icon={<PeopleIcon />}
                       onClick={() => {
-                        inFollowingState_0=false
-                        setShowFollow(false)
-                        setShowFollowerOrFollowing(true)
-                        all_Following()
+                        inFollowingState_0 = false;
+                        setShowFollow(false);
+                        setShowFollowerOrFollowing(true);
+                        all_Following();
                       }}
                       label={"following: " + state.dataUser.following_count}
                     />
@@ -602,7 +615,7 @@ export default function Profile() {
                     <Chip
                       icon={<BurstModeIcon />}
                       onClick={() => {
-                        setShowFollowerOrFollowing(false)
+                        setShowFollowerOrFollowing(false);
                       }}
                       label={"posts: " + state.postsUser.length}
                     />
@@ -637,13 +650,15 @@ export default function Profile() {
                         display: "flex",
                         justifyContent: "space-around",
                         flexWrap: "wrap",
-                      }}>
+                      }}
+                    >
                       {followerOrFollowingHolder.map((user) => {
                         return (
                           <Card
                             onClick={(e) => {
-                              setShowFollowerOrFollowing(false)
-                              navigate(`/profile/${user.id}`)}}
+                              setShowFollowerOrFollowing(false);
+                              navigate(`/profile/${user.id}`);
+                            }}
                             key={user.id}
                             sx={{
                               width: 275,
@@ -655,11 +670,13 @@ export default function Profile() {
                               margin: "20px",
                               padding: "20px",
                               cursor: "pointer",
-                            }}>
+                            }}
+                          >
                             <Avatar
                               sx={{ height: "100px", width: "100px" }}
                               alt="Remy Sharp"
-                              src={user.img} />
+                              src={user.img}
+                            />
                             <h4>
                               {user.first_name} {user.last_name}
                             </h4>
@@ -685,20 +702,22 @@ export default function Profile() {
       ) : (
         <>
           {/* //********************************add post of user******************************************* */}
-          {personPage == user_Id_Number ? <>
-            <Container>
-              <Button
-                style={{ width: "60%" }}
-                onClick={() => {
-                  setModalShowPopupAddNewPost(true);
-                }}>
-                Add New Post
-              </Button>
-            </Container>
-
-
-
-          </> : <></>}
+          {personPage == user_Id_Number ? (
+            <>
+              <Container>
+                <Button
+                  style={{ width: "60%" }}
+                  onClick={() => {
+                    setModalShowPopupAddNewPost(true);
+                  }}
+                >
+                  Add New Post
+                </Button>
+              </Container>
+            </>
+          ) : (
+            <></>
+          )}
 
           {/* ******************************************post of user***************************************** */}
           <div className="feed">
@@ -718,20 +737,20 @@ export default function Profile() {
                         ></Avatar>
                       }
                       action={
-                        role === "Admin" || userId === post.user_id ? (
+                        (role === "Admin" || userId == post.user_id) && (
                           <IconButton
                             aria-controls={open ? "long-menu" : undefined}
                             aria-expanded={open ? "true" : undefined}
                             onClick={handleClick}
-                            aria-label="settings">
+                            aria-label="settings"
+                          >
                             <MoreVertIcon />
                           </IconButton>
-                        ) : (
-                          <></>
                         )
                       }
                       title={post.user_first_name}
-                      subheader={post.created_at} />
+                      subheader={post.created_at}
+                    />
                     <Menu
                       id="long-menu"
                       MenuListProps={{
@@ -744,12 +763,14 @@ export default function Profile() {
                         style: {
                           width: "20ch",
                         },
-                      }}>
+                      }}
+                    >
                       <MenuItem
                         onClick={(e) => {
                           deletePost(post.id);
                           handleClose();
-                        }}>
+                        }}
+                      >
                         Delete Post
                       </MenuItem>
                     </Menu>
@@ -757,7 +778,8 @@ export default function Profile() {
                       component="img"
                       // height="194"
                       image={post.img}
-                      alt="post" />
+                      alt="post"
+                    />
                     <CardContent>
                       <p>
                         <strong>{post.description}</strong>
@@ -783,7 +805,8 @@ export default function Profile() {
                                   console.log(err);
                                 });
                             }}
-                            aria-label="add to favorites">
+                            aria-label="add to favorites"
+                          >
                             <FavoriteIcon style={{ color: "red" }} />
                           </IconButton>
                           <p style={{ margin: "10px" }}>
@@ -818,7 +841,8 @@ export default function Profile() {
                                   console.log(err);
                                 });
                             }}
-                            aria-label="add to favorites">
+                            aria-label="add to favorites"
+                          >
                             <FavoriteIcon />
                           </IconButton>
                           <p style={{ margin: "10px" }}>{post.likes_count}</p>
@@ -829,20 +853,23 @@ export default function Profile() {
                         expand={expanded === post.id}
                         onClick={handleExpandClick(post.id)}
                         aria-expanded={expanded === post.id}
-                        aria-label="show more">
+                        aria-label="show more"
+                      >
                         <MdComment />
                       </ExpandMore>
                     </CardActions>
                     <Collapse
                       in={expanded === post.id}
                       timeout="auto"
-                      unmountOnExit>
+                      unmountOnExit
+                    >
                       <CardContent>
                         <div style={{ display: "flex", marginBottom: "20px" }}>
                           <Avatar
                             style={{ height: "55px", width: "55px" }}
                             alt="user"
-                            src={pfp} />
+                            src={pfp}
+                          />
                           <Form
                             style={{ display: "flex", width: "100%" }}
                             onSubmit={async (e) => {
@@ -852,7 +879,9 @@ export default function Profile() {
                                   `${BACKEND}/comments/${post.id}`,
                                   { comment: e.target[0].value },
                                   {
-                                    headers: { Authorization: `Bearer ${token}` },
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
                                   }
                                 );
                                 if (result.data.success) {
@@ -870,15 +899,18 @@ export default function Profile() {
                               } catch (err) {
                                 console.log(err);
                               }
-                            }}>
+                            }}
+                          >
                             <Form.Control
                               style={{ margin: "0 10px", width: "95%" }}
                               type="text"
-                              placeholder="Add a comment.." />
+                              placeholder="Add a comment.."
+                            />
                             <Button
                               type="submit"
                               variant="contained"
-                              endIcon={<SendIcon />}>
+                              endIcon={<SendIcon />}
+                            >
                               Send
                             </Button>
                           </Form>
@@ -889,7 +921,8 @@ export default function Profile() {
                             sx={{
                               width: "100%",
                               bgcolor: "background.paper",
-                            }}>
+                            }}
+                          >
                             <ListGroup>
                               {post.comments ? (
                                 post.comments.map((comment) => {
@@ -898,29 +931,46 @@ export default function Profile() {
                                       key={comment.id}
                                       style={{
                                         display: "flex",
-                                      }}>
-                                      <ListItem>
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <ListItem
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}
+                                      >
                                         <ListItemAvatar>
                                           <Avatar src={comment.img} />
                                         </ListItemAvatar>
                                         <ListItemText
                                           primary={comment.comment}
-                                          secondary={`By ${comment.first_name}`} />
+                                          secondary={`By ${comment.first_name}`}
+                                        />
                                       </ListItem>
-                                      {(role === "Admin" ||
-                                        userId == comment.user_id) && (
+                                      <div>
+                                        {(role === "Admin" ||
+                                          userId == comment.user_id) && (
                                           <>
-                                            {userId === comment.user_id && (
+                                            {userId == comment.user_id && (
                                               <>
                                                 <IconButton
                                                   onClick={(e) => {
-                                                    handleShowUpdate(comment.id);
-                                                  }} aria-label="edit comment">
+                                                    handleShowUpdate(
+                                                      comment.id
+                                                    );
+                                                  }}
+                                                  aria-label="edit comment"
+                                                >
                                                   <MdEdit />
                                                 </IconButton>
                                                 <Modal
-                                                  show={showUpdate === comment.id}
-                                                  onHide={handleCloseUpdate}>
+                                                  show={
+                                                    showUpdate === comment.id
+                                                  }
+                                                  onHide={handleCloseUpdate}
+                                                >
                                                   <Modal.Header closeButton>
                                                     <Modal.Title>
                                                       Update Comment
@@ -935,11 +985,15 @@ export default function Profile() {
                                                         e.target[0].value
                                                       );
                                                       handleCloseUpdate();
-                                                    }}>
+                                                    }}
+                                                  >
                                                     <Modal.Body>
                                                       <Form.Control
                                                         type="text"
-                                                        defaultValue={comment.comment} />
+                                                        defaultValue={
+                                                          comment.comment
+                                                        }
+                                                      />
                                                     </Modal.Body>
                                                     <Modal.Footer>
                                                       <Button type="submit">
@@ -957,11 +1011,13 @@ export default function Profile() {
                                                   post.id
                                                 );
                                               }}
-                                              aria-label="delete comment">
+                                              aria-label="delete comment"
+                                            >
                                               <MdDelete />
                                             </IconButton>
                                           </>
-                                        )}
+                                        )}{" "}
+                                      </div>
                                     </ListGroup.Item>
                                   );
                                 })
@@ -973,17 +1029,17 @@ export default function Profile() {
                         </div>
                       </CardContent>
                     </Collapse>
-                    <Popup_Add_New_Post set={setModalShowPopupAddNewPost}
+                    <Popup_Add_New_Post
+                      set={setModalShowPopupAddNewPost}
                       show={modalShowPopupAddNewPost}
-                      onHide={() => setModalShowPopupAddNewPost(false)} />
+                      onHide={() => setModalShowPopupAddNewPost(false)}
+                    />
                     <Offcanvas show={show} onHide={handleClose22}>
                       <Offcanvas.Header closeButton>
                         <Offcanvas.Title>Tags</Offcanvas.Title>
                       </Offcanvas.Header>
                       <Offcanvas.Body>
-                        <ListGroup>
-                          {tagsFunction()}
-                        </ListGroup>
+                        <ListGroup>{tagsFunction()}</ListGroup>
                       </Offcanvas.Body>
                     </Offcanvas>
                   </Card>

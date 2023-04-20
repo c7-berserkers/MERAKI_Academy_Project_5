@@ -78,7 +78,7 @@ const getPostByUser = (req, res) => {
   const user_id = req.params.id;
 
   const query = `
-  SELECT p.id, p.img, p.description, p.created_at, COUNT(l.id) AS likes_count, u.img AS user_img, u.first_name AS user_first_name 
+  SELECT p.id,p.user_id, p.img, p.description, p.created_at, COUNT(l.id) AS likes_count, u.img AS user_img, u.first_name AS user_first_name 
 FROM posts p 
 LEFT JOIN likes l ON p.id = l.posts_id 
 INNER JOIN users u ON p.user_id = u.id 
