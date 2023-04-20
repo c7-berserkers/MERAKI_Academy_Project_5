@@ -36,48 +36,61 @@ function Users() {
     //===============================================================
 
 
-    
-
-
-    const deleteUser = (id) => {
-        console.log(id);
-        axios.delete(`${process.env.REACT_APP_BACKEND}/users/${id}`)
-            .then(function (response) {
-                console.log(response.data)
-                setToggle(!toggle)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    const unDeleteUser = (id) => {
-        console.log(id);
-        axios.put(`${process.env.REACT_APP_BACKEND}/users/unDelete/${id}`)
-            .then(function (response) {
-                console.log(response.data)
-                setToggle(!toggle)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-
     const Admin = (e) => {
 console.log(e.target.value)
+axios.put(`${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,{role_id:1} ,{
+    headers: {
+        Authorization: `${token}`,
+    }})
+        .then(function (response) {
+            console.log(response.data)
+            getAllUsers()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
      }
     const NotAdmin = (e) => {
         console.log(e.target.value)
-
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,{role_id:2} ,{
+            headers: {
+                Authorization: `${token}`,
+            }})
+        .then(function (response) {
+            console.log(response.data)
+            getAllUsers()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
      }
     const disband = (e) => {
         console.log(e.target.value)
-
+        axios.put(`${process.env.REACT_APP_BACKEND}/users/unDelete/${e.target.value}`,{
+            headers: {
+                Authorization: `${token}`,
+            }})
+        .then(function (response) {
+            console.log(response.data)
+            getAllUsers()
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
      }
     const band = (e) => {
         console.log(e.target.value)
-
+        axios.delete(`${process.env.REACT_APP_BACKEND}/users/${e.target.value}`,{
+            headers: {
+                Authorization: `${token}`,
+            }})
+            .then(function (response) {
+                console.log(response.data)
+                getAllUsers()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
      }
 
 
@@ -100,14 +113,14 @@ console.log(e.target.value)
                     <div >
                         <Stack spacing={2} direction="column">
 
-                            {user.role_id==1 ? <>
+                        {user.is_deleted==0?user.role_id==1 ? <>
                             <Button variant="outlined" value={user.id} onClick={(e)=>{
                                 NotAdmin(e)
                             }}>unAdmin</Button>
                             </> : <>
                             <Button variant="outlined"  value={user.id} onClick={(e)=>{
                                 Admin(e)
-                            }}>admin</Button></>}
+                            }}>admin</Button></>:""}
 
                             {user.is_deleted ? <>
                             <Button variant="outlined"  value={user.id} onClick={(e)=>{
