@@ -19,9 +19,6 @@ export const profileSlice = createSlice({
         setRandomNumber: (state, action) => {
             state.RandomNumber = action.payload;
         },
-        setFollowing: (state, action) => {
-            state.following = action.payload;
-        },
         setFollowing_plus1: (state, action) => {
             state.UserData.followers_count = state.UserData.followers_count*1+1;
         },setFollowing_minus1: (state, action) => {
@@ -41,7 +38,6 @@ export const {
     setUserData,
     updateUserImage,
     setRandomNumber,
-    setFollowing,
     setFollowing_plus1,
     setFollowing_minus1,
     setFollowingData,
