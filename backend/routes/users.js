@@ -16,6 +16,7 @@ const {
   getFollowersByUserId,
   getFollowingByUserId,
   getMostFollowed,
+  updateRoleUserById
 } = require("../controllers/users");
 
 const authentication = require("../middleware/authentication");
@@ -36,6 +37,7 @@ userRouter.delete("/:id", deleteUser);
 userRouter.put("/unDelete/:id", unDeleteUser);
 userRouter.get("/", authentication, authorization("CREATE"), getAllUsers);
 userRouter.get("/search/:name", authentication, searchUsers);
+userRouter.put("/role/:id", updateRoleUserById);
 
 module.exports = userRouter;
 

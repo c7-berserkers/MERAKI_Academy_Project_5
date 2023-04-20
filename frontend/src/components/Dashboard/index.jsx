@@ -66,7 +66,7 @@ export default function Dashboard() {
           <div className="col-md">
             {" "}
             <Routes>
-              <Route path="/post" element={<Posts />} />
+              <Route path="/posts" element={<Posts />} />
               <Route
                 path="/users"
                 element={
@@ -93,7 +93,7 @@ export default function Dashboard() {
                   </>
                 }
               />
-              <Route path="/posts" element={<h1>hi</h1>} />
+             
               <Route
                 path="/Chats"
                 element={

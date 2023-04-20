@@ -154,7 +154,7 @@ GROUP BY u.id, r.role, r.id`;
 };
 
 const getAllUsers = (req, res) => {
-  const query = `SELECT id, first_name, last_name, age, country, email, created_at, img, is_deleted FROM users ORDER BY created_at DESC`;
+  const query = `SELECT id, first_name, last_name, age, country, email, created_at, img,role_id, is_deleted FROM users ORDER BY created_at DESC`;
   pool
     .query(query)
     .then(({ rows }) => {
@@ -425,6 +425,39 @@ const getMostFollowed = (req, res) => {
     });
 };
 
+const updateRoleUserById = async (req, res) => {
+  const { id } = req.params;
+  const { role_id } =
+    req.body;
+  const query = `UPDATE users SET role_id = COALESCE($1,role_id) WHERE id=$2 RETURNING *`;
+  try {
+    const placeHolders = [
+      role_id,
+      id
+    ];
+    const { rows } = await pool.query(query, placeHolders);
+    if (!rows) {
+      return res.status(404).json({
+        success: false,
+        message: `The user with id: ${id} is not found`,
+      });
+    }
+    res.status(201).json({
+      success: true,
+      message: `User with id: ${id} updated role successfully`,
+      user: rows[0],
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      err: err.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   register,
   login,
@@ -439,4 +472,5 @@ module.exports = {
   getFollowersByUserId,
   getFollowingByUserId,
   getMostFollowed,
+  updateRoleUserById
 };

@@ -114,10 +114,29 @@ const mostChats = (req, res) => {
     });
 };
 
+const deleteRoom = (req, res) => {
+  const _id =req.params.id
+  chatModel.findByIdAndDelete({_id})
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        message: `chat created`,
+        result: result,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+};
 module.exports = {
   createRoom,
   getChatByName,
   getAllChats,
   newMessage,
   mostChats,
+  deleteRoom
 };
