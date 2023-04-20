@@ -269,14 +269,6 @@ export default function Profile() {
   };
 
   //===============================================================
-  const loop = () => {
-    state.allFollowing.forEach((element) => {
-      if (element.id == personPage * 1) {
-        setFollow(true);
-      }
-    });
-  };
-  //===============================================================
   const all_Following=()=>{
     axios
     .get(
@@ -290,7 +282,6 @@ export default function Profile() {
     .then(function (response) {
       dispatch(setFollowingData(response.data.followers));
       setFollowerOrFollowingHolder(response.data.followers);
-      loop();
       
     })
     .catch(function (error) {
@@ -353,7 +344,34 @@ export default function Profile() {
         console.log(error);
       });
 
+
     //==============================================================
+    axios
+    .get(
+      `${BACKEND}/users/followers/${personPage}`,
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    )
+    .then(function (response) {
+      dispatch(setFollowingData());
+      console.log(response.data.followers)
+      if(response.data.followers.length===0){setFollow(false);}
+      response.data.followers.forEach((element) => {
+        console.log(element.id == user_Id_Number * 1,element.id , user_Id_Number * 1)
+        if (element.id == user_Id_Number * 1) {
+          setFollow(true);
+          return
+        }
+        });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
   }, [personPage]);
 
   //=======================================================
@@ -735,7 +753,6 @@ export default function Profile() {
                         Delete Post
                       </MenuItem>
                     </Menu>
-
                     <CardMedia
                       component="img"
                       // height="194"
@@ -758,7 +775,7 @@ export default function Profile() {
                                   },
                                 })
                                 .then((result) => {
-                                  console.log(result);
+                                  // console.log(result);
                                   dispatch(removeLikePost(post.id));
                                   dispatch(removeLike(post.id));
                                 })
@@ -793,7 +810,7 @@ export default function Profile() {
                                   }
                                 )
                                 .then((result) => {
-                                  console.log(result);
+                                  // console.log(result);
                                   dispatch(addLikePost(post.id));
                                   dispatch(addLike(payload));
                                 })
