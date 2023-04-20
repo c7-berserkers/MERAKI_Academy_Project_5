@@ -104,8 +104,8 @@ export default function Profile() {
 
   //==============================================================
   const [follow, setFollow] = useState(false);
-  const [showFollowing, setShowFollowing] = useState(false);
-  const [showFollower, setShowFollower] = useState(false);
+  const [showFollowerOrFollowing, setShowFollowerOrFollowing] = useState(false)
+  const [showFollow, setShowFollow] = useState(false);
   const [followerOrFollowingHolder, setFollowerOrFollowingHolder] = useState(false);
 
   //===============================================================
@@ -132,9 +132,7 @@ export default function Profile() {
   const [modalShowEditPopupEditMyPassword, setModalShowEditPopupEditMyPassword] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
-  const [inFollowingState, setInFollowingState] = useState(false)
-  let FollowAndChangeState =false
-  let inFollowingState_0 =false
+    let inFollowingState_0 =false
   //===============================================================
   const state = useSelector((state) => {
     return {
@@ -195,7 +193,6 @@ export default function Profile() {
           id={tag.id}
           onClick={(e) => {
             navigate(`/tag/${tag.id}`)
-            console.log(e.target.id)
           }}
           className="list-filter"
         >
@@ -311,14 +308,12 @@ export default function Profile() {
       },
     })
     .then(function (response) {
-      console.log((!FollowAndChangeState) , inFollowingState)
-      if((!FollowAndChangeState) || inFollowingState_0){
+      console.log(showFollow)
+
+      if(showFollow || inFollowingState_0){
           dispatch(setFollowerData(response.data.followers));
           setFollowerOrFollowingHolder(response.data.followers);
-        }
-        FollowAndChangeState=false
-        setInFollowingState(false)
-        inFollowingState_0=false
+      }
     })
     .catch(function (error) {
       console.log(error);
@@ -328,7 +323,7 @@ export default function Profile() {
   //===============================================================
 
   useEffect(() => {
-    setFollowerOrFollowingHolder(false)
+    setShowFollowerOrFollowing(false)
     axios
       .get(`${BACKEND}/users/${personPage}`, {
         headers: {
@@ -353,8 +348,6 @@ export default function Profile() {
       })
       .then(function (response) {
         dispatch(setPosts(response?.data?.result));
-        console.log(response?.data?.result, "xxxxxxxxxxxxxxxxxxxxx");
-
       })
       .catch(function (error) {
         console.log(error);
@@ -362,8 +355,6 @@ export default function Profile() {
 
     //==============================================================
   }, [personPage]);
-
-
 
   //=======================================================
 
@@ -379,7 +370,6 @@ export default function Profile() {
         }
       )
       .then(function (response) { 
-        FollowAndChangeState =true
         dispatch(setFollowing_plus1());
         setFollow(true);
         allFollowers()
@@ -401,7 +391,7 @@ export default function Profile() {
         }
       )
       .then(function (response) {
-        FollowAndChangeState =true
+        // FollowAndChangeState =true
         dispatch(setFollowing_minus1());
         setFollow(false);
         allFollowers()
@@ -570,11 +560,10 @@ export default function Profile() {
                     <Chip
                       icon={<PeopleIcon />}
                       onClick={() => {
-                        setInFollowingState(true)
+                        setShowFollow(true)
                         inFollowingState_0 =true
                         allFollowers()
-                        setShowFollower(!showFollower);
-                        
+                        setShowFollowerOrFollowing(true)
                       }}
                       label={"followers: " + state.dataUser.followers_count}
                     />
@@ -583,8 +572,10 @@ export default function Profile() {
                     <Chip
                       icon={<PeopleIcon />}
                       onClick={() => {
+                        inFollowingState_0=false
+                        setShowFollow(false)
+                        setShowFollowerOrFollowing(true)
                         all_Following()
-                        setShowFollowing(!showFollowing);
                       }}
                       label={"following: " + state.dataUser.following_count}
                     />
@@ -593,8 +584,7 @@ export default function Profile() {
                     <Chip
                       icon={<BurstModeIcon />}
                       onClick={() => {
-                        setShowFollower(false);
-                        setShowFollowing(false);
+                        setShowFollowerOrFollowing(false)
                       }}
                       label={"posts: " + state.postsUser.length}
                     />
@@ -612,13 +602,13 @@ export default function Profile() {
       <hr style={{ backgroundColor: "black", fontSize: "2em" }} />
 
       {/* ******************************* showFollower || showFollowing of user *************************** */}
-      {showFollower || showFollowing ? (
+      {showFollowerOrFollowing ? (
         <>
           {/* //*************************************************************************** */}
           <Container>
             {followerOrFollowingHolder.length <= 0 ? (
               <>
-                <h2>No results in {showFollower ? "Follower" : "Following"}</h2>
+                <h2>No results in {showFollow ? "Follower" : "Following"}</h2>
               </>
             ) : (
               <>
@@ -633,8 +623,8 @@ export default function Profile() {
                       {followerOrFollowingHolder.map((user) => {
                         return (
                           <Card
-                            onClick={(e) => {setShowFollower(false);
-                              setShowFollowing(false);
+                            onClick={(e) => {
+                              setShowFollowerOrFollowing(false)
                               navigate(`/profile/${user.id}`)}}
                             key={user.id}
                             sx={{
@@ -922,7 +912,6 @@ export default function Profile() {
                                                   <Form
                                                     onSubmit={(e) => {
                                                       e.preventDefault();
-                                                      console.log(e.target[0].value);
                                                       updateCommentFunction(
                                                         comment.id,
                                                         post.id,
