@@ -43,7 +43,6 @@ axios.put(`${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,{role_
         Authorization: `${token}`,
     }})
         .then(function (response) {
-            console.log(response.data)
             getAllUsers()
         })
         .catch(function (error) {
@@ -57,7 +56,6 @@ axios.put(`${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,{role_
                 Authorization: `${token}`,
             }})
         .then(function (response) {
-            console.log(response.data)
             getAllUsers()
         })
         .catch(function (error) {
@@ -71,7 +69,6 @@ axios.put(`${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,{role_
                 Authorization: `${token}`,
             }})
         .then(function (response) {
-            console.log(response.data)
             getAllUsers()
         })
         .catch(function (error) {
@@ -85,7 +82,6 @@ axios.put(`${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,{role_
                 Authorization: `${token}`,
             }})
             .then(function (response) {
-                console.log(response.data)
                 getAllUsers()
             })
             .catch(function (error) {
