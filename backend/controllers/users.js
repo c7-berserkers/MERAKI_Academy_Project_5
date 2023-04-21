@@ -400,13 +400,14 @@ const getFollowingByUserId = (req, res) => {
 };
 
 const getMostFollowed = (req, res) => {
-  const query = `SELECT followed_user_id, COUNT(*) AS num_followers
-  FROM follows
-  WHERE is_deleted = 0
-  GROUP BY followed_user_id
-  ORDER BY num_followers DESC
-  LIMIT 1;
-  `;
+  const query = `SELECT u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id, COUNT(f.id) as followers_count
+  FROM users u
+  JOIN follows f ON u.id = f.followed_user_id
+  WHERE u.is_deleted = 0 AND f.is_deleted = 0
+  GROUP BY u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id
+  ORDER BY followers_count DESC
+  LIMIT 1;   
+`;
   pool
     .query(query)
     .then(({ rows }) => {
@@ -424,17 +425,32 @@ const getMostFollowed = (req, res) => {
       });
     });
 };
-
+const getUsersCount = (req, res) => {
+  const query = `SELECT COUNT(*) FROM users;
+`;
+  pool
+    .query(query)
+    .then(({ rows }) => {
+      res.status(200).json({
+        success: true,
+        message: `most followed user`,
+        result: rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
 const updateRoleUserById = async (req, res) => {
   const { id } = req.params;
-  const { role_id } =
-    req.body;
+  const { role_id } = req.body;
   const query = `UPDATE users SET role_id = COALESCE($1,role_id) WHERE id=$2 RETURNING *`;
   try {
-    const placeHolders = [
-      role_id,
-      id
-    ];
+    const placeHolders = [role_id, id];
     const { rows } = await pool.query(query, placeHolders);
     if (!rows) {
       return res.status(404).json({
@@ -456,8 +472,6 @@ const updateRoleUserById = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   register,
   login,
@@ -472,5 +486,6 @@ module.exports = {
   getFollowersByUserId,
   getFollowingByUserId,
   getMostFollowed,
-  updateRoleUserById
+  updateRoleUserById,
+  getUsersCount,
 };
