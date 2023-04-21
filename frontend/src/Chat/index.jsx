@@ -68,12 +68,19 @@ export default function Chat() {
         console.log(result.data.result.messages);
         setMessages(result.data.result.messages);
         socket.emit("JOIN_ROOM", name);
-        socket.on("RECEIVE_MESSAGE", (data) => {
-          setMessages((oldMes) => [...oldMes, data]);
-        });
       })
       .catch((err) => console.log(err.response.data.message));
   }, []);
+  useEffect(() => {
+    socket.on("RECEIVE_MESSAGE", (data) => {
+      setMessages((oldMes) => [...oldMes, data]);
+    });
+    window.scrollTo({
+      top: mainRef.offsetTop,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [messages]);
   return (
     <div style={{ height: "80vh" }}>
       <Container>
@@ -109,13 +116,18 @@ export default function Chat() {
                     {messages.map((element, i) => {
                       return (
                         <ListGroup.Item
+                          ref={mainRef}
                           key={i}
                           style={{
                             display: "flex",
                           }}
                         >
                           <ListItem>
-                            <ListItemAvatar onClick={(e) => console.log("x")}>
+                            <ListItemAvatar
+                              onClick={(e) =>
+                                navigate(`/profile/${element.sender_id}`)
+                              }
+                            >
                               <Avatar src={element.sender_pfp} />
                             </ListItemAvatar>
                             <ListItemText
