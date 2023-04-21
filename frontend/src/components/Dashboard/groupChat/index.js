@@ -23,8 +23,6 @@ axios
                 },
             })
             .then(function (response) {
-
-                console.log(response.data.result, "chats")
                 setAllChat(response.data.result)
             })
             .catch(function (error) {
@@ -50,7 +48,6 @@ axios
     },
 })
 .then(function (response) {
-    console.log(response.data.result, "chats")
     getAllChatsFunction()
 })
 .catch(function (error) {
@@ -72,7 +69,6 @@ axios
             {allChat ? <>
                 {
                     allChat.map((chat) => {
-                        console.log(chat)
                         return (
                             <ListGroup.Item
                                 key={chat._id}
@@ -81,7 +77,6 @@ axios
                             >
                                 <div className="ms-2 me-auto">
                                     <div className="fw-bold">{chat.chat_name}</div>
-                                    ********************
                                 </div>
                                 <div >
                             <Stack spacing={2} direction="column">

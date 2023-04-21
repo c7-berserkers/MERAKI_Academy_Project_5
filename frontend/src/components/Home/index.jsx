@@ -115,25 +115,22 @@ export default function Home() {
     }
   }, [tags]);
   // --------------------
-  const tagsFunction = () => {
-    return tags.length > 0
-      ? tags.map((tag, i) => {
-          return (
-            <ListGroup.Item
-              key={tag.id}
-              id={tag.id}
-              onClick={(e) => {
-                navigate(`/tag/${tag.id}`);
-                console.log(e.target.id);
-              }}
-              className="list-filter"
-            >
-              <strong>{tag.tag}</strong>
-            </ListGroup.Item>
-          );
-        })
-      : "";
-  };
+const tagsFunction =()=>{
+return tags.length>0?tags.map((tag,i)=>{
+  return (
+    <ListGroup.Item
+                    key={tag.id}
+                    id={tag.id}
+                    onClick={(e) => {navigate(`/tag/${tag.id}`)
+                    handleClose22()}}
+                    className="list-filter"
+                  >
+                    <strong>{tag.tag}</strong>
+                  </ListGroup.Item>
+  )
+}):""
+}
+
 
   // --------------------
   const isLiked = (arr, id) => {
@@ -239,7 +236,6 @@ export default function Home() {
   useEffect(() => {
     getPosts();
   }, []);
-  console.log(likes);
   return (
     <div>
       {" "}
@@ -300,6 +296,7 @@ export default function Home() {
                       title={post.user_first_name}
                       subheader={post.created_at}
                     />
+
 
                     {}
                     <Menu
