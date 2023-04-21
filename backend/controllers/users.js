@@ -400,16 +400,12 @@ const getFollowingByUserId = (req, res) => {
 };
 
 const getMostFollowed = (req, res) => {
-  const query = `SELECT u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img
-  FROM users u
-  INNER JOIN (
-    SELECT followed_user_id, COUNT(*) AS followers_count
-    FROM follows
-    WHERE is_deleted = 0
-    GROUP BY followed_user_id
-    ORDER BY followers_count DESC
-    LIMIT 1
-  ) f ON f.followed_user_id = u.id;
+  const query = `SELECT followed_user_id, COUNT(*) AS num_followers
+  FROM follows
+  WHERE is_deleted = 0
+  GROUP BY followed_user_id
+  ORDER BY num_followers DESC
+  LIMIT 1;
   `;
   pool
     .query(query)

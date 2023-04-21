@@ -15,6 +15,7 @@ import Form from "react-bootstrap/Form";
 import { io } from "socket.io-client";
 
 export default function Chat() {
+  const mainRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const { token, userId, userName, pfp } = useSelector((state) => {
@@ -66,11 +67,9 @@ export default function Chat() {
       .then((result) => {
         console.log(result.data.result.messages);
         setMessages(result.data.result.messages);
-        console.log(`before`, messages);
         socket.emit("JOIN_ROOM", name);
         socket.on("RECEIVE_MESSAGE", (data) => {
           setMessages((oldMes) => [...oldMes, data]);
-          console.log(`after receive`, messages);
         });
       })
       .catch((err) => console.log(err.response.data.message));
@@ -99,7 +98,12 @@ export default function Chat() {
               <>
                 <div
                   id="message-body"
-                  style={{ overflowX: "auto", height: "520px" }}
+                  style={{
+                    overflowX: "auto",
+                    height: "520px",
+                    display: "flex",
+                    flexDirection: "column-reverse",
+                  }}
                 >
                   <ListGroup>
                     {messages.map((element, i) => {
