@@ -3,7 +3,12 @@ import "./style.css";
 
 import axios from "axios";
 
-import {setLogin,setUserInfo,setLogout,setUserLikes} from "../redux/reducers/auth/index";
+import {
+  setLogin,
+  setUserInfo,
+  setLogout,
+  setUserLikes,
+} from "../redux/reducers/auth/index";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, Container, Form, Alert, Card } from "react-bootstrap";
@@ -14,13 +19,12 @@ const Login = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  
-    const state = useSelector((state) => {
-      
-      return {
-        isLoggedIn: state.auth.isLoggedIn,
-      };
-    });
+
+  const state = useSelector((state) => {
+    return {
+      isLoggedIn: state.auth.isLoggedIn,
+    };
+  });
 
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -30,30 +34,28 @@ const Login = () => {
   //===============================================================
 
   const login = async (e) => {
-    
     e.preventDefault();
-    console.log(e)
-    console.log(email,
-      password)
+    console.log(e);
+    console.log(email, password);
     try {
       const result = await axios.post("http://localhost:5000/users/login", {
         email,
         password,
       });
       if (result.data) {
-        console.log(result.data)
+        console.log(result.data);
         setMessage("");
-        dispatch(setLogin(result.data.token))
-        dispatch(setUserLikes(result.data.likes))
-        dispatch(setUserInfo(result.data))
-        setStatus(false)
+        dispatch(setLogin(result.data.token));
+        dispatch(setUserLikes(result.data.likes));
+        dispatch(setUserInfo(result.data));
+        setStatus(false);
       } else throw Error;
     } catch (error) {
       if (error.response && error.response.data) {
-        setStatus(true)
+        setStatus(true);
         return setMessage(error.response.data.message);
       }
-      setStatus(true)
+      setStatus(true);
       setMessage("Error happened while Login, please try again");
     }
   };
@@ -67,68 +69,68 @@ const Login = () => {
   });
 
   //===============================================================
-  
+
   return (
-    <div className="login" >
-      <Container style={{minWidth: "400px"}}>
-        <Card style={{ padding: "10px" }}>
-          {" "}
-          <Container
-            style={{
-              padding: "10px 50px",
-              marginBottom: "10px",
-            }}
-          >
-            <Card.Title style={{ fontSize: "50px" }}>Sign In</Card.Title>
-          </Container>
-          <Form>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)}/>
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-            </Form.Group>
-            {status && <Alert variant="danger">{message}</Alert>}
-            <Button  type="submit"  onClick={(e) => {
-              login(e);
-            }}>
-              Sign In
-            </Button>{" "}
-            <div
+    <div className="log-box">
+      <div className="login" style={{ marginTop: "200px" }}>
+        <Container style={{ minWidth: "400px" }}>
+          <Card style={{ padding: "10px" }}>
+            {" "}
+            <Container
               style={{
-                display: "flex",
-                justifyContent: "center",
-                margin: "10px",
+                padding: "10px 50px",
+                marginBottom: "10px",
               }}
             >
-           
-            </div>
-            <Card.Text
-              style={{ fontSize: "15px", padding: "5px", margin: "5px" }}
-            >
-              Don't have an account ? <Link to="/register">Register</Link>
-            </Card.Text>
-          </Form>
-        </Card>
-      </Container>
-    </div>    
+              <Card.Title style={{ fontSize: "50px" }}>Sign In</Card.Title>
+            </Container>
+            <Form>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Group>
+              {status && <Alert variant="danger">{message}</Alert>}
+              <Button
+                type="submit"
+                onClick={(e) => {
+                  login(e);
+                }}
+              >
+                Sign In
+              </Button>{" "}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "10px",
+                }}
+              ></div>
+              <Card.Text
+                style={{ fontSize: "15px", padding: "5px", margin: "5px" }}
+              >
+                Don't have an account ? <Link to="/register">Register</Link>
+              </Card.Text>
+            </Form>
+          </Card>
+        </Container>
+      </div>
+    </div>
   );
 };
 
 export default Login;
-
-
-
-
-
-
-
-
-
-
-

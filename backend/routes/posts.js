@@ -24,13 +24,13 @@ const authorization = require("../middleware/authorization");
 postRouter.post("/", authentication, createNewPost);
 postRouter.get("/", authentication, authorization("CREATE"), getAllPost);
 postRouter.get(
-  "/mostlikes",
+  "/mostlikes/post",
   authentication,
   authorization("CREATE"),
   getMostLiked
 );
 postRouter.get(
-  "/mostcomments",
+  "/mostcomments/post",
   authentication,
   authorization("CREATE"),
   getMostComments

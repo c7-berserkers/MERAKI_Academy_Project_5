@@ -1,190 +1,183 @@
 .flex1 {
-    margin: 0px 110px;
+  margin: 0px 110px;
 }
 
 .flex {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0px 110px;
-    
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0px 110px;
 }
 
-
 .flex2:hover {
-    border-radius: 8px;
-    box-shadow: 25px -29px 15px 0px rgba(0,150,250,0.1),0px 0px 19px -3px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  box-shadow: 25px -29px 15px 0px rgba(0, 150, 250, 0.1),
+    0px 0px 19px -3px rgba(0, 0, 0, 0.1);
 }
 
 .MyProfileImg {
-    /* margin-top: 35px; */
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background-size: cover;
-    margin-left: 18px;
+  /* margin-top: 35px; */
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-size: cover;
+  margin-left: 18px;
 }
 
-.Paper{
-    margin-top: '80px',
+.Paper {
+  margin-top: "80px";
 }
 
 #wrapper {
-    margin-top: 35px;
-    padding: 0px;
-    text-align: center;
-    margin-right: 16px;
+  margin-top: 35px;
+  padding: 0px;
+  text-align: center;
+  margin-right: 16px;
 }
 
 #wrapper h1 {
-    margin-top: 150px;
-    font-size: 55px;
-    color: #0489B1;
+  margin-top: 150px;
+  font-size: 55px;
+  color: #0489b1;
 }
 
 #wrapper h1 a {
-    color: #0489B1;
-    font-size: 18px;
+  color: #0489b1;
+  font-size: 18px;
 }
 
 #image_div .img_wrapper {
-    width: 180px;
-    position: relative;
-    display: inline-block;
+  width: 180px;
+  position: relative;
+  display: inline-block;
 }
 
 #image_div .img_wrapper img {
-    width: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 #image_div .img_wrapper:hover img {
-    -webkit-filter: blur(1.7px);
+  -webkit-filter: blur(1.7px);
 }
 
 #image_div .img_wrapper .MyProfileImgButton {
-    margin-top: 35px;
-    display: none;
-    position: absolute;
-    top: 50px;
-    left: 68px;
+  margin-top: 35px;
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: 68px;
 }
 
 #image_div .img_wrapper:hover .MyProfileImgButton {
-    display: table-cell;
+  display: table-cell;
 }
 
 #image_div .img_wrapper .MyProfileImgButton input[type="button"] {
-    width: 120px;
-    height: 40px;
-    border-radius: 18px;
-    background-color: #28515f;
-    border: none;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    font-size: 17px;
+  width: 120px;
+  height: 40px;
+  border-radius: 18px;
+  background-color: #28515f;
+  border: none;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: 17px;
 }
 
 .userData {
-    margin-left: 70px;
-    padding-top: 60px;
-    display: flex;
-    flex-direction: column;
-    align-content: space-evenly;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin-bottom: 69px;
+  margin-left: 70px;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-content: space-evenly;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 69px;
 }
 
 .userDataEdit {
-    margin-left: 70px;
-    padding-top: 110px;
-    display: flex;
-    flex-direction: column;
-    align-content: space-evenly;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding-bottom: 18px;
+  margin-left: 70px;
+  padding-top: 110px;
+  display: flex;
+  flex-direction: column;
+  align-content: space-evenly;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-bottom: 18px;
 }
 
 @media screen and (max-width: 1005px) {
-    .userDataEdit {
-        padding-top: 1px;
-        margin-left: 276px;
-        padding-bottom: 12px;
-        margin-bottom: 19px;
-    }
+  .userDataEdit {
+    padding-top: 1px;
+    margin-left: 276px;
+    padding-bottom: 12px;
+    margin-bottom: 19px;
+  }
 
-    .userData{
-        margin-bottom: 20px;
-    }
-
+  .userData {
+    margin-bottom: 20px;
+  }
 }
 
 @media screen and (max-width: 818px) {
-    .flex {
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-    }
-    #wrapper {
-        margin-left: 0px;
-    }
-    
+  .flex {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+  }
+  #wrapper {
+    margin-left: 0px;
+  }
 
-    .userDataEdit {
-        padding-top: 20px;
-        padding-bottom: 12px;
-        margin: auto;
-    }
+  .userDataEdit {
+    padding-top: 20px;
+    padding-bottom: 12px;
+    margin: auto;
+  }
 
-    .userData {
-        padding-top: 20px;
-        margin-bottom: auto;
-        margin-left: auto;
-    }
-    h4 {
-        white-space: nowrap;
-    }
+  .userData {
+    padding-top: 20px;
+    margin-bottom: auto;
+    margin-left: auto;
+  }
+  h4 {
+    white-space: nowrap;
+  }
 }
 
-
 @media screen and (max-width: 550px) {
-
-.MyProfileImg {
+  .MyProfileImg {
     width: 200px;
     height: 200px;
     border-radius: 5%;
     background-size: cover;
-}
+  }
 }
 
 @media screen and (max-width: 540px) {
-    .flex {
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-    }
-    #wrapper {
-        margin-left: 0px;
-    }
-    
+  .flex {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+  }
+  #wrapper {
+    margin-left: 0px;
+  }
 
-    .userDataEdit {
-        padding-top: 20px;
-        padding-bottom: 12px;
-        margin: auto;
-    }
+  .userDataEdit {
+    padding-top: 20px;
+    padding-bottom: 12px;
+    margin: auto;
+  }
 
-    .userData {
-        padding-top: 20px;
-        margin-bottom: auto;
-        margin-left: auto;
-    }
-    h4 {
-        white-space: nowrap;
-    }
-    .flex:hover {
-        box-shadow: none;
-    }
-    
+  .userData {
+    padding-top: 20px;
+    margin-bottom: auto;
+    margin-left: auto;
+  }
+  h4 {
+    white-space: nowrap;
+  }
+  .flex:hover {
+    box-shadow: none;
+  }
 }
-
