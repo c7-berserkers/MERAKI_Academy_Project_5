@@ -115,7 +115,7 @@ export default function Chat() {
                           }}
                         >
                           <ListItem>
-                            <ListItemAvatar>
+                            <ListItemAvatar onClick={(e) => console.log("x")}>
                               <Avatar src={element.sender_pfp} />
                             </ListItemAvatar>
                             <ListItemText
