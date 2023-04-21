@@ -101,123 +101,125 @@ export default function Register() {
 
   return (
     <>
-      <div className="register">
-        {" "}
-        <Container>
-          <Card style={{ padding: "10px" }}>
-            <Container
-              style={{
-                padding: "10px 50px",
-                marginBottom: "10px",
-              }}
-            >
-              <Card.Title style={{ fontSize: "50px" }}>Sign Up</Card.Title>
-            </Container>
-
-            <Form
-              onSubmit={(e) => {
-                e.preventDefault();
-                submit();
-              }}
-            >
-              <Row className="mb-3">
-                <Form.Group as={Col} controlId="registerFName">
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="First name"
-                    name="first_name"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="registerLName">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Last name"
-                    name="last_name"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Row>
-
-              <Form.Group className="mb-3" controlId="registerrEmail">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Enter email"
-                  name="email"
-                  onChange={handleChange}
-                />
-                <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
-                </Form.Text>
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="registerPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Enter password"
-                  name="password"
-                  onChange={handleChange}
-                />
-                <Form.Text id="passwordHelpBlock" muted>
-                  Your password must be 8-20 characters long, contain letters
-                  and numbers, and must not contain spaces, special characters,
-                  or emoji.
-                </Form.Text>
-              </Form.Group>
-
-              <Row className="mb-3">
-                <Form.Group as={Col} controlId="registerAge">
-                  <Form.Label>Age</Form.Label>
-                  <Form.Control
-                    placeholder="Age"
-                    name="age"
-                    onChange={handleChange}
-                    type="number"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="registerPhoneNumber">
-                  <Form.Label>Country</Form.Label>
-                  <Form.Control
-                    placeholder="Qatar"
-                    name="country"
-                    className=""
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Row>
-              {oneError ? <Alert variant="danger">{oneError}</Alert> : <> </>}
-              {done ? (
-                <Alert key="success" variant="success">
-                  {done}
-                </Alert>
-              ) : (
-                <> </>
-              )}
-
-              <Button variant="primary" type="submit">
-                Register
-              </Button>
-              <div
+      <div className="log-box">
+        <div className="register" style={{ marginTop: "200px" }}>
+          {" "}
+          <Container>
+            <Card style={{ padding: "10px" }}>
+              <Container
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "10px",
+                  padding: "10px 50px",
+                  marginBottom: "10px",
                 }}
-              ></div>
-              <Card.Text
-                style={{ fontSize: "15px", padding: "5px", margin: "5px" }}
               >
-                Already Have an account ? <Link to="/login">Login</Link>
-              </Card.Text>
-            </Form>
-          </Card>
-        </Container>
+                <Card.Title style={{ fontSize: "50px" }}>Sign Up</Card.Title>
+              </Container>
+
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submit();
+                }}
+              >
+                <Row className="mb-3">
+                  <Form.Group as={Col} controlId="registerFName">
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="First name"
+                      name="first_name"
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="registerLName">
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Last name"
+                      name="last_name"
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Row>
+
+                <Form.Group className="mb-3" controlId="registerrEmail">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    name="email"
+                    onChange={handleChange}
+                  />
+                  <Form.Text className="text-muted">
+                    We'll never share your email with anyone else.
+                  </Form.Text>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="registerPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Enter password"
+                    name="password"
+                    onChange={handleChange}
+                  />
+                  <Form.Text id="passwordHelpBlock" muted>
+                    Your password must be 8-20 characters long, contain letters
+                    and numbers, and must not contain spaces, special
+                    characters, or emoji.
+                  </Form.Text>
+                </Form.Group>
+
+                <Row className="mb-3">
+                  <Form.Group as={Col} controlId="registerAge">
+                    <Form.Label>Age</Form.Label>
+                    <Form.Control
+                      placeholder="Age"
+                      name="age"
+                      onChange={handleChange}
+                      type="number"
+                    />
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="registerPhoneNumber">
+                    <Form.Label>Country</Form.Label>
+                    <Form.Control
+                      placeholder="Qatar"
+                      name="country"
+                      className=""
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Row>
+                {oneError ? <Alert variant="danger">{oneError}</Alert> : <> </>}
+                {done ? (
+                  <Alert key="success" variant="success">
+                    {done}
+                  </Alert>
+                ) : (
+                  <> </>
+                )}
+
+                <Button variant="primary" type="submit">
+                  Register
+                </Button>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: "10px",
+                  }}
+                ></div>
+                <Card.Text
+                  style={{ fontSize: "15px", padding: "5px", margin: "5px" }}
+                >
+                  Already Have an account ? <Link to="/login">Login</Link>
+                </Card.Text>
+              </Form>
+            </Card>
+          </Container>
+        </div>
       </div>
     </>
   );
