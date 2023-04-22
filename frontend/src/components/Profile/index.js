@@ -770,7 +770,7 @@ export default function Profile() {
                         )
                       }
                       title={post.user_first_name}
-                      subheader={post.created_at}
+                      subheader={post.created_at.split("T")[0]}
                     />
                     {personPage == user_Id_Number ?<>(<Menu
                       id="long-menu"
