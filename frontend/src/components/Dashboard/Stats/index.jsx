@@ -5,11 +5,13 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import ListGroup from "react-bootstrap/ListGroup";
 
 export default function Stats() {
+  const navigate = useNavigate();
   const BACKEND = process.env.REACT_APP_BACKEND;
   const [mostFollowedUser, setMostFollowedUser] = useState({});
   const [mostLikedPost, setMostLikedPost] = useState({});
@@ -89,7 +91,10 @@ export default function Stats() {
           </ListGroup.Item>
         </ListGroup>
       </Card>{" "}
-      <Card sx={{ width: "30%" }}>
+      <Card
+        sx={{ width: "30%" }}
+        onClick={(e) => navigate(`/profile/${mostFollowedUser.id}`)}
+      >
         <CardActionArea>
           <CardMedia
             component="img"
