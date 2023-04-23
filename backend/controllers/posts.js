@@ -397,6 +397,29 @@ const getMostComments = (req, res) => {
     });
 };
 
+const getPostCount = (req, res) => {
+  const query = `SELECT 
+  (SELECT COUNT(*) FROM posts) AS post_count, 
+  (SELECT COUNT(*) FROM users) AS user_count;
+`;
+  pool
+    .query(query)
+    .then(({ rows }) => {
+      res.status(200).json({
+        success: true,
+        message: `most followed user`,
+        result: rows[0],
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+
 module.exports = {
   createNewPost,
   getAllPost,
@@ -409,4 +432,5 @@ module.exports = {
   unDeletePost,
   getMostLiked,
   getMostComments,
+  getPostCount,
 };
