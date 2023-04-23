@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { Button, CardActionArea, CardActions } from "@mui/material";
+
 import ListGroup from "react-bootstrap/ListGroup";
 
 export default function Stats() {
@@ -29,19 +33,14 @@ export default function Stats() {
 
   const getUsersCount = () => {
     axios
-      .get(`${BACKEND}/users/mostfollowed/count`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((result) => setUsersCount(result.data.result.count))
-      .catch((err) => setUsersCount(null));
-  };
-  const getPostsCount = () => {
-    axios
       .get(`${BACKEND}/posts/count/post`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((result) => setPostsCount(result.data.result.count))
-      .catch((err) => setPostsCount(null));
+      .then((result) => {
+        setUsersCount(result.data.result.user_count);
+        setPostsCount(result.data.result.post_count);
+      })
+      .catch((err) => setUsersCount(null));
   };
 
   const getMostLikedPost = () => {
@@ -64,16 +63,24 @@ export default function Stats() {
 
   useEffect(() => {
     getMostFollowedUser();
-    getUsersCount();
-    getPostsCount();
     getMostLikedPost();
     getMostCommentsPost();
+    getUsersCount();
+    console.log(mostFollowedUser);
   }, []);
   return (
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {" "}
-      <Card style={{ width: "18rem" }}>
-        <ListGroup variant="flush">
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "10px",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "20px",
+      }}
+    >
+      <Card style={{ width: "90%" }}>
+        <ListGroup>
           <ListGroup.Item>
             <strong>Total Users:</strong> {usersCount}
           </ListGroup.Item>
@@ -81,6 +88,61 @@ export default function Stats() {
             <strong>Total posts:</strong> {postsCount}
           </ListGroup.Item>
         </ListGroup>
+      </Card>{" "}
+      <Card sx={{ width: "30%" }}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="140"
+            image={mostFollowedUser.img}
+            alt="green iguana"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div"></Typography>
+            {mostFollowedUser.first_name} {mostFollowedUser.last_name}
+            <Typography variant="body2" color="text.secondary">
+              Most Followed User <br />
+              <strong>Total Follower:</strong>{" "}
+              {mostFollowedUser.followers_count}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="140"
+            image={mostLikedPost.img}
+            alt="green iguana"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div"></Typography>
+            {mostLikedPost.description}
+            <Typography variant="body2" color="text.secondary">
+              Most liked Post <br />
+              <strong>Total Likes:</strong> {mostLikedPost.total_likes}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="140"
+            image={mostCommentsPost.img}
+            alt="green iguana"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div"></Typography>
+            {mostCommentsPost.description}
+            <Typography variant="body2" color="text.secondary">
+              The Post With The Most Comments <br />
+              <strong>Total Comments:</strong> {mostCommentsPost.comment_count}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
       </Card>
     </div>
   );

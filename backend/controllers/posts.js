@@ -398,7 +398,9 @@ const getMostComments = (req, res) => {
 };
 
 const getPostCount = (req, res) => {
-  const query = `SELECT COUNT(*) FROM posts;
+  const query = `SELECT 
+  (SELECT COUNT(*) FROM posts) AS post_count, 
+  (SELECT COUNT(*) FROM users) AS user_count;
 `;
   pool
     .query(query)
