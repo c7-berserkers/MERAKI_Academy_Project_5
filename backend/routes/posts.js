@@ -11,9 +11,8 @@ const {
   updatePostById,
   getPostsByTag,
   getPostForUser,
-
+  getPostCount,
   unDeletePost,
-
   getMostLiked,
   getMostComments,
 } = require("../controllers/posts");
@@ -28,6 +27,12 @@ postRouter.get(
   authentication,
   authorization("CREATE"),
   getMostLiked
+);
+postRouter.get(
+  "/count/post",
+  authentication,
+  authorization("CREATE"),
+  getPostCount
 );
 postRouter.get(
   "/mostcomments/post",

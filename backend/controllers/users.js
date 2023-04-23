@@ -414,7 +414,7 @@ const getMostFollowed = (req, res) => {
       res.status(200).json({
         success: true,
         message: `most followed user`,
-        result: rows,
+        result: rows[0],
       });
     })
     .catch((err) => {
@@ -434,7 +434,7 @@ const getUsersCount = (req, res) => {
       res.status(200).json({
         success: true,
         message: `most followed user`,
-        result: rows,
+        result: rows[0],
       });
     })
     .catch((err) => {
