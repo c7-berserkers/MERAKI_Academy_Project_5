@@ -6,6 +6,7 @@ import axios from "axios";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import { Link, useNavigate } from "react-router-dom";
 
 function Users() {
   //===============================================================
@@ -13,6 +14,7 @@ function Users() {
   //===============================================================
   const [allUser, setAllUser] = useState(false);
   const [toggle, setToggle] = useState(true);
+  const navigate = useNavigate();
 
   const getAllUsers = () => {
     axios
@@ -120,7 +122,9 @@ function Users() {
           >
             <div className="ms-3 me-auto">
               <Stack spacing={2} direction="row">
-                <Avatar alt="Remy Sharp" src={user.img} />
+                <Avatar alt="Remy Sharp" src={user.img} onClick={()=>{
+                  navigate(`/profile/${user.id}`);}
+                }/>
                 <Stack spacing={2} direction="column">
                   <div>
                     {user.first_name} {user.last_name}
