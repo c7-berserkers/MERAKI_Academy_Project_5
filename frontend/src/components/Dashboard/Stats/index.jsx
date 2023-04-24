@@ -147,7 +147,10 @@ export default function Stats() {
               </CardContent>
             </CardActionArea>
           </Card>
-          <Card sx={{ maxWidth: 345 }}>
+          <Card
+            onClick={(e) => navigate(`/post/${mostLikedPost.id}`)}
+            sx={{ maxWidth: 345 }}
+          >
             <CardActionArea>
               <CardMedia
                 component="img"
@@ -169,7 +172,10 @@ export default function Stats() {
               </CardContent>
             </CardActionArea>
           </Card>
-          <Card sx={{ maxWidth: 345 }}>
+          <Card
+            onClick={(e) => navigate(`/post/${mostCommentsPost.id}`)}
+            sx={{ maxWidth: 345 }}
+          >
             <CardActionArea>
               <CardMedia
                 component="img"

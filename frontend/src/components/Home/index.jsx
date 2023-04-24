@@ -331,6 +331,9 @@ export default function Home() {
                     </Menu>
 
                     <CardMedia
+                      onClick={(e) => {
+                        navigate(`/post/${post.id}`);
+                      }}
                       component="img"
                       // height="194"
                       image={post.img}
