@@ -52,6 +52,11 @@ export default function Chat() {
       .then((response) => {
         console.log(response.data.result);
         socket.emit("SEND_MESSAGE", messageData);
+        window.scrollTo({
+          top: mainRef.offsetTop,
+          left: 0,
+          behavior: "smooth",
+        });
         // setMessages((preMess) => [...preMess, messageData.content]);
 
         console.log(`after send`, messages);

@@ -19,7 +19,7 @@ export const postsSlice = createSlice({
     },
     deletePosts: (state, { payload }) => {
       state.posts = state.posts.filter((post) => {
-        return post.id !== payload;
+        return post.id != payload;
       });
     },
     setComments: (state, { payload }) => {
