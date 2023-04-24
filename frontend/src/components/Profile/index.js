@@ -47,6 +47,8 @@ import Popup_Edit_Data from "./PopupEditMyData/index";
 import Popup_Delete_Profile from "./PopupDeleteAccount/index";
 import Popup_Edit_MyPassword from "./PopupEditMyPassword/index";
 import Popup_Add_New_Post from "./PopupAddNewPost/index";
+import Popup_Post_Edit from "./PopupUpdatePost/index";
+
 
 //===============================================================
 
@@ -141,6 +143,7 @@ export default function Profile() {
     modalShowEditPopupEditMyPassword,
     setModalShowEditPopupEditMyPassword,
   ] = useState(false);
+  const [modalShowEditPopupPostUpdate, setModalShowEditPopupPostUpdate] = useState(false)
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
   let inFollowingState_0 = false;
@@ -345,8 +348,13 @@ export default function Profile() {
         },
       })
       .then(function (response) {
-        console.log(response?.data?.result);
+        if(!response.data.success){
+          dispatch(setPosts([]));
+        }else{
+        console.log(response?.data?.result,"posts");
         dispatch(setPosts(response?.data?.result));
+        }
+        
       })
       .catch(function (error) {
         console.log(error);
@@ -478,6 +486,16 @@ export default function Profile() {
                     show={modalShowEditPopupEditMyPassword}
                     onHide={() => setModalShowEditPopupEditMyPassword(false)}
                   />
+                  <Popup_Add_New_Post
+                      set={setModalShowPopupAddNewPost}
+                      show={modalShowPopupAddNewPost}
+                      onHide={() => setModalShowPopupAddNewPost(false)}
+                    />
+                  <Popup_Post_Edit 
+                  // id={post[0].id} 
+                  // post={post[0].description} 
+                  show={modalShowEditPopupPostUpdate} 
+                  onHide={() => setModalShowEditPopupPostUpdate(false)} />
                   <h4>
                     {" "}
                     {state.dataUser.first_name} {state.dataUser.last_name}{" "}
@@ -724,6 +742,7 @@ export default function Profile() {
           {/* ******************************************post of user***************************************** */}
           <div className="feed">
             <Container>
+              {posts.length>0?<>
               {posts.map((post) => {
                 return (
                   <Card key={post.id} sx={{ margin: "10px 0" }}>
@@ -751,9 +770,9 @@ export default function Profile() {
                         )
                       }
                       title={post.user_first_name}
-                      subheader={post.created_at}
+                      subheader={post.created_at.split("T")[0]}
                     />
-                    <Menu
+                    {personPage == user_Id_Number ?<>(<Menu
                       id="long-menu"
                       MenuListProps={{
                         "aria-labelledby": "long-button",
@@ -775,7 +794,18 @@ export default function Profile() {
                       >
                         Delete Post
                       </MenuItem>
-                    </Menu>
+                      {/* **************************** */}
+                      <MenuItem
+                        onClick={(e) => {
+                          setModalShowEditPopupPostUpdate(true)
+                          handleClose();
+                        }}
+                      >
+                        Update Post
+                      </MenuItem>
+                      {/* ****************************** */}
+                    </Menu>)</>:<></>}
+                    
                     <CardMedia
                       component="img"
                       // height="194"
@@ -1031,11 +1061,6 @@ export default function Profile() {
                         </div>
                       </CardContent>
                     </Collapse>
-                    <Popup_Add_New_Post
-                      set={setModalShowPopupAddNewPost}
-                      show={modalShowPopupAddNewPost}
-                      onHide={() => setModalShowPopupAddNewPost(false)}
-                    />
                     <Offcanvas show={show} onHide={handleClose22}>
                       <Offcanvas.Header closeButton>
                         <Offcanvas.Title>Tags</Offcanvas.Title>
@@ -1047,6 +1072,11 @@ export default function Profile() {
                   </Card>
                 );
               })}
+              </>:(
+            <>
+              <h1 style={{ marginTop: "20px" }}>No Posts Yet</h1>
+            </>
+          )}
             </Container>
           </div>
         </>

@@ -92,7 +92,7 @@ ORDER BY p.created_at DESC;
     .query(query, data)
     .then((result) => {
       if (result.rows.length === 0) {
-        return res.status(404).json({
+        return res.status(200).json({
           success: false,
           message: `The user: ${user_id} has no posts`,
         });
