@@ -57,7 +57,7 @@ const ExpandMore = styled((props) => {
 export default function Home() {
   const navigate = useNavigate();
   const [showUpdate, setShowUpdate] = useState(false);
-
+  const [postPicker, setPostPicker] = useState(null);
   const handleCloseUpdate = () => setShowUpdate(false);
   const handleShowUpdate = (id) => setShowUpdate(id);
   const dispatch = useDispatch();
@@ -83,6 +83,7 @@ export default function Home() {
       };
     }
   );
+  console.log(posts);
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
@@ -90,7 +91,6 @@ export default function Home() {
   const [modalShowPopupAddNewPost, setModalShowPopupAddNewPost] =
     useState(false);
   const [show, setShow] = useState(false);
-  const [tag_id, setTag_id] = useState("");
   const [tags, setTags] = useState([]);
 
   // --------------------
@@ -115,22 +115,25 @@ export default function Home() {
     }
   }, [tags]);
   // --------------------
-const tagsFunction =()=>{
-return tags.length>0?tags.map((tag,i)=>{
-  return (
-    <ListGroup.Item
-                    key={tag.id}
-                    id={tag.id}
-                    onClick={(e) => {navigate(`/tag/${tag.id}`)
-                    handleClose22()}}
-                    className="list-filter"
-                  >
-                    <strong>{tag.tag}</strong>
-                  </ListGroup.Item>
-  )
-}):""
-}
-
+  const tagsFunction = () => {
+    return tags.length > 0
+      ? tags.map((tag, i) => {
+          return (
+            <ListGroup.Item
+              key={tag.id}
+              id={tag.id}
+              onClick={(e) => {
+                navigate(`/tag/${tag.id}`);
+                handleClose22();
+              }}
+              className="list-filter"
+            >
+              <strong>{tag.tag}</strong>
+            </ListGroup.Item>
+          );
+        })
+      : "";
+  };
 
   // --------------------
   const isLiked = (arr, id) => {
@@ -159,7 +162,7 @@ return tags.length>0?tags.map((tag,i)=>{
 
   const deletePost = async (id) => {
     try {
-      const result = await axios.delete(`${BACKEND}/posts/${id}`, {
+      const result = await axios.delete(`${BACKEND}/posts/${Number(id)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
@@ -282,11 +285,14 @@ return tags.length>0?tags.map((tag,i)=>{
                         ></Avatar>
                       }
                       action={
-                        userId == post.user_id && (
+                        (role == "Admin" || userId == post.user_id) && (
                           <IconButton
                             aria-controls={open ? "long-menu" : undefined}
                             aria-expanded={open ? "true" : undefined}
-                            onClick={handleClick}
+                            onClick={(event) => {
+                              handleClick(event);
+                              setPostPicker(post.id);
+                            }}
                             aria-label="settings"
                           >
                             <MoreVertIcon />
@@ -297,12 +303,13 @@ return tags.length>0?tags.map((tag,i)=>{
                       subheader={post.created_at}
                     />
 
-
-                    {}
                     <Menu
                       id="long-menu"
                       MenuListProps={{
                         "aria-labelledby": "long-button",
+                      }}
+                      onClick={() => {
+                        console.log(post.id, "postid");
                       }}
                       anchorEl={anchorEl}
                       open={open}
@@ -315,7 +322,7 @@ return tags.length>0?tags.map((tag,i)=>{
                     >
                       <MenuItem
                         onClick={(e) => {
-                          deletePost(post.id);
+                          deletePost(postPicker);
                           handleClose();
                         }}
                       >

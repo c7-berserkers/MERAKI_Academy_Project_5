@@ -401,13 +401,14 @@ const getFollowingByUserId = (req, res) => {
 
 const getMostFollowed = (req, res) => {
   const query = `SELECT u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id, COUNT(f.id) as followers_count
-  FROM users u
-  JOIN follows f ON u.id = f.followed_user_id
-  WHERE u.is_deleted = 0 AND f.is_deleted = 0
-  GROUP BY u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id
-  ORDER BY followers_count DESC
-  LIMIT 1;   
+FROM users u
+JOIN follows f ON u.id = f.followed_user_id
+WHERE u.is_deleted = 0 AND f.is_deleted = 0
+GROUP BY u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id
+ORDER BY followers_count DESC
+LIMIT 1;   
 `;
+
   pool
     .query(query)
     .then(({ rows }) => {
@@ -471,7 +472,50 @@ const updateRoleUserById = async (req, res) => {
     });
   }
 };
+const adminStats = (req, res) => {
+  const counterQuery = ` 
+SELECT COUNT(id) FROM posts AS post_count; SELECT COUNT(id) FROM users AS user_count;`;
+  const mostLikesQuery = `SELECT p.id, p.img, p.description, COUNT(l.id) AS total_likes
+FROM posts AS p
+INNER JOIN likes AS l ON l.posts_id = p.id
+WHERE p.is_deleted = 0 AND l.is_deleted = 0
+GROUP BY p.id
+ORDER BY total_likes DESC
+LIMIT 1;
+`;
 
+  const mostCommentsQuery = `SELECT posts.*, COUNT(comments.id) AS comment_count
+FROM posts
+JOIN comments ON posts.id = comments.post_id
+GROUP BY posts.id
+ORDER BY comment_count DESC
+LIMIT 1;
+`;
+  const mostFollowedQuery = `SELECT u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id, COUNT(f.id) as followers_count
+  FROM users u
+  JOIN follows f ON u.id = f.followed_user_id
+  WHERE u.is_deleted = 0 AND f.is_deleted = 0
+  GROUP BY u.id, u.first_name, u.last_name, u.age, u.country, u.email, u.img, u.role_id
+  ORDER BY followers_count DESC
+  LIMIT 1;   
+`;
+  pool
+    .query(counterQuery)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: `Done`,
+        result: { coutuser: result[0].rows, coutpost: result[1].rows },
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
 module.exports = {
   register,
   login,
@@ -488,4 +532,5 @@ module.exports = {
   getMostFollowed,
   updateRoleUserById,
   getUsersCount,
+  adminStats,
 };

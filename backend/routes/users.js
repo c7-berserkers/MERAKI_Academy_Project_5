@@ -18,6 +18,7 @@ const {
   getMostFollowed,
   updateRoleUserById,
   getUsersCount,
+  adminStats,
 } = require("../controllers/users");
 
 const authentication = require("../middleware/authentication");
@@ -33,6 +34,7 @@ userRouter.get("/:id", getUserById);
 userRouter.get("/followers/:id", getFollowersByUserId);
 userRouter.get("/following/:id", getFollowingByUserId);
 userRouter.get("/mostfollowed/user", getMostFollowed);
+userRouter.get("/admin/stats", adminStats);
 userRouter.get("/mostfollowed/count", getUsersCount);
 userRouter.put("/:id", updateUserById);
 userRouter.delete("/:id", deleteUser);
