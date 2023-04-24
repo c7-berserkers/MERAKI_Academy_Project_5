@@ -425,6 +425,7 @@ export default function Home() {
                       <CardContent>
                         <div style={{ display: "flex", marginBottom: "20px" }}>
                           <Avatar
+                            onClick={(e) => navigate(`/profile/${userId}`)}
                             style={{ height: "55px", width: "55px" }}
                             alt="user"
                             src={pfp}

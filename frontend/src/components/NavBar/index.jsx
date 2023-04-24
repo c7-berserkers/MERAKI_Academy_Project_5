@@ -55,17 +55,17 @@ export default function NavBar() {
       >
         <Container>
           <Navbar.Brand
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
             onClick={(e) => {
               navigate("/");
             }}
           >
-            {/* <img
+            <img
               style={{ width: "36px", margin: "auto" }}
-              src="logo.png"
+              src="/logo.png"
               alt="logo"
-            /> */}
-            <strong>LOGO</strong>
+            />
+            <strong>SnapFeed</strong>
           </Navbar.Brand>{" "}
           <Form
             onSubmit={(e) => {
