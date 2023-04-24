@@ -1,16 +1,35 @@
-import { useContext, useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Container,Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import Form from 'react-bootstrap/Form';
-import { setPosts, setComments, addComment,updatePosts } from "../redux/reducers/posts";
+import Modal from "react-bootstrap/Modal";
+import {
+  setPosts,
+  setComments,
+  addComment,
+  deletePosts,
+  deleteComment,
+  updateComment,
+  addLikePost,
+  removeLikePost,
+} from "../redux/reducers/posts";
+import { removeLike, addLike } from "../redux/reducers/auth";
+import SendIcon from "@mui/icons-material/Send";
+import { MdComment } from "react-icons/md";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Form from "react-bootstrap/Form";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListGroup from "react-bootstrap/ListGroup";
+import { useNavigate } from "react-router-dom";
 
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
@@ -19,33 +38,27 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
-import Stack from '@mui/material/Stack';
+import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Popup_Comment_Edit from './PopupUpdateComment/index'
 import Popup_Post_Edit from './PopupUpdatePost/index'
-import { MdDelete, MdEdit } from "react-icons/md";
-import Modal from "react-bootstrap/Modal";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Container from "@mui/material/Container";
 
-
-const ExpandMore = styled((props) => {
+  const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
   })(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
+    transform: !expand ? "rotate(0deg)" : "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
     }),
   }));
-
-   
 
 const bull = (
   <Box
@@ -60,45 +73,55 @@ const bull = (
 
 const Post = () => {
 
-  const [modalShowEditPopup, setModalShowEditPopup] = useState(false)
-  const [modalShowEditPopupPost, setModalShowEditPopupPost] = useState(false)
- 
   const navigate = useNavigate();
+  const [showUpdate, setShowUpdate] = useState(false);
 
+  const handleCloseUpdate = () => setShowUpdate(false);
+  const handleShowUpdate = (id) => setShowUpdate(id);
   const dispatch = useDispatch();
-  
-  const { token, post, pfp, userId, userName } = useSelector((state) => {
-      
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const { token, post, pfp, userId, userName, role, likes } = useSelector(
+    (state) => {
       return {
-        userId: state.auth.userId,
         token: state.auth.token,
-        userLikes: state.auth.userLikes,
+        role: state.auth.role,
+        userId: state.auth.userId,
         pfp: state.auth.pfp,
         post: state.posts.posts,
-        
+        userName: state.auth.userName,
+        likes: state.auth.userLikes,
       };
-    });
+    }
+  );
+  const [expanded, setExpanded] = useState(false);
+  const BACKEND = process.env.REACT_APP_BACKEND;
 
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState(false);
-  const [newComment, setNewComment] = useState("");
-
+  const [modalShowEditPopupPostUpdate, setModalShowEditPopupPostUpdate] = useState(false);
   
 
   //===============================================================
 
-  const [expanded, setExpanded] = React.useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+const [show, setShow] = useState(false);
 
+// --------------------
 
+const nwePostId =window.location.pathname.split("/post/")[1]
   //===============================================================
 
   const getPostFunction = async () => {
     try {
-      const result = await axios.get("http://localhost:5000/posts/2", {
+      const result = await axios.get(`${BACKEND}/posts/${nwePostId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -125,100 +148,89 @@ const Post = () => {
    useEffect( ()=>{getPostFunction()},[])
 
   //===============================================================
- const commentFunction= ()=>{
-    return post[0].comments?post[0].comments.length>0? post[0].comments.map((e,i)=>{
-        return (
-          <div key={e.id}>
-        <Card key={e.id} sx={{ minWidth: 275 }}>
-        <CardContent>
-        <CardActions>
-        <Avatar alt="Remy Sharp" src={e.user_img} />
-          <Button size="small">{e.first_name}</Button>
-        </CardActions>
-        <Typography variant="body2">
-          {e.comment}
-          </Typography>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {e.created_at}
-          </Typography>
-          {e.user_id == userId?
-          <Stack direction="row" spacing={2}>
-      <Button value={e.id} variant="outlined" onClick={(e) => {
-              deleteCommentFunction(e);
-            }} startIcon={<DeleteIcon />}>Delete</Button>
-      <Button variant="contained" onClick={() => {
-              setModalShowEditPopup(e.id);
-            }}>update</Button>
-            <Popup_Comment_Edit post_id={post[0].id} id={e.id} comment={e.comment} show={modalShowEditPopup===e.id} onHide={() => setModalShowEditPopup(false)} />
-    </Stack>:""}
-        </CardContent>
-      </Card>
-      <br></br>
-      </div>
-        )
-    }):<p>no comment yet</p>:""
- }
-   //===============================================================
+  const isLiked = (arr, id) => {
+    return arr.findIndex((e) => {
+      return e.posts_id === id;
+    });
+  };
 
-   const addCommentFunction = async(e)=>{
-    if(!addComment){
-      setMessage("please enter you'r comment");
-      setStatus(true)
-      return
-    }
+  //===============================================================
+  const deletePost = async (id) => {
     try {
-      const result = await axios.post(`http://localhost:5000/comments/${e.target.value}`, {comment:newComment},{
+      const result = await axios.delete(`${BACKEND}/posts/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.data.success) {
+        dispatch(deletePosts(id));
+        navigate("/")
+      } else throw Error;
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const getCommentsForPost = async (id) => {
+    try {
+      const result = await axios.get(`${BACKEND}/comments/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (result.data.success) {
+        const comments = result.data.result;
+        dispatch(
+          setComments({
+            comments,
+            post_id: id,
+          })
+        );
+      } else throw Error;
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const deleteCommentFunction = async (id, post_id) => {
+    try {
+      const result = await axios.delete(`${BACKEND}/comments/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (result.data.success) {
-        console.log(result.data.result)
-        const comment = result.data.result
-        comment.img =pfp
-        comment.first_name=userName
-        dispatch(addComment({post_id:post[0].id,comment:comment}));
-        setMessage("");
-        setStatus(false)
-        return
+        dispatch(deleteComment({ id, post_id }));
       } else throw Error;
     } catch (error) {
-      if (!error.response.data.success) {
-        setStatus(true)
-        return setMessage(error.response.data.message);
-      }
-      setStatus(true)
-      setMessage("Error happened while Add Comment, please try again");
+      console.log(error.response.data.message);
     }
-   }
-  //===============================================================
+  };
 
-   const deleteCommentFunction = async(e)=>{
+  const updateCommentFunction = async (id, post_id, comment) => {
     try {
-      const result = await axios.delete(`http://localhost:5000/comments/${e.target.value}`,{
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const result = await axios.put(
+        `${BACKEND}/comments/${id}`,
+        { comment },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (result.data.success) {
-        console.log(result.data)
-        setMessage("");
-        setStatus(false)
+        dispatch(updateComment({ id, post_id, comment }));
       } else throw Error;
     } catch (error) {
-      if (!error.response.data.success) {
-        setStatus(true)
-        return setMessage(error.response.data.message);
+      console.log(error.response.data.message);
+    }
+  };
+  const handleExpandClick = (id) => {
+    return () => {
+      if (expanded) {
+        setExpanded(false);
+      } else {
+        setExpanded(id);
+        getCommentsForPost(id);
       }
-      setStatus(true)
-      setMessage("Error happened while delete Comment, please try again");
-    }
-   }
-
-  //===============================================================
-    const addLikeFunction =()=>{
-      console.log("hi osama")
-    }
+    };
+  };
 
     //===============================================================
 if(post[0]){
@@ -226,83 +238,330 @@ return (
     <div className="post" >
       <Container>
        
-    <Card>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            <Avatar alt="Remy Sharp" src={post[0].user_img} />
-          </Avatar>
-        }
-        action={post[0].user_id==userId?<IconButton aria-label="settings" onClick={() => {
-          setModalShowEditPopupPost(!modalShowEditPopupPost);
-        }}>
-            <MoreVertIcon/>
-          </IconButton>:""
-        }
-        title={post[0].first_name}
-        subheader="September 14, 2016"
-      />
-      <CardMedia
-        component="img"
-        height="194"
-        image={post[0].img}
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {post[0].description}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites"  onClick={() => {
-          addLikeFunction()
-        }}>
-          <FavoriteIcon /><div style={{fontSize:"20px"}}>{post[0].likes}</div>
-        </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>comment:</Typography>
-          {commentFunction()}
-          <br></br>
-    <div style={{ display: "flex", marginBottom: "20px" }}>
-                      <Avatar
-                        style={{ height: "55px", width: "55px" }}
-                        alt="user"
-                        src={pfp}
-                      />
-                      <TextField
-                          onChange={(e) => setNewComment(e.target.value)}
-                        style={{ margin: "0 10px", width: "85%" }}
-                        id="outlined-basic"
-                        label="Add a comment..."
-                        variant="outlined"
-                      />
-                      <Button value={post[0].id} variant="contained" endIcon={<SendIcon />} onClick={(e) => {
-              addCommentFunction(e);
-            }}>
-                        Send
-                      </Button>
-                    </div>
-        </CardContent>
-        <Container>
-                  {status && <Alert variant="danger">{message}</Alert>}
-        </Container>
-      </Collapse>
-    </Card>
+      <Card key={post[0].id} sx={{ margin: "10px 0" }}>
+                    <CardHeader
+                      avatar={
+                        <Avatar
+                        onClick={(e) => {
+                          navigate(`/profile/${post[0].user_id}`);
+                        }}
+                          sx={{ bgcolor: red[500] }}
+                          src={post[0].user_img}
+                          aria-label="recipe"
+                        ></Avatar>
+                      }
+                      action={
+                        userId == post[0].user_id && (
+                          <IconButton
+                            aria-controls={open ? "long-menu" : undefined}
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={handleClick}
+                            aria-label="settings"
+                          >
+                            <MoreVertIcon />
+                          </IconButton>
+                        )
+                      }
+                      title={post[0].user_first_name}
+                      subheader={post[0].created_at}
+                    />
+
+
+                    {}
+                    <Menu
+                      id="long-menu"
+                      MenuListProps={{
+                        "aria-labelledby": "long-button",
+                      }}
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      PaperProps={{
+                        style: {
+                          width: "20ch",
+                        },
+                      }}
+                    >
+                      <MenuItem
+                        onClick={(e) => {
+                          deletePost(post[0].id);
+                          handleClose();
+                        }}
+                      >
+                        Delete Post
+                      </MenuItem>
+                      <MenuItem
+                        onClick={(e) => {
+                          setModalShowEditPopupPostUpdate(true)
+                          handleClose();
+                        }}
+                      >
+                        Update Post
+                      </MenuItem>
+                    </Menu>
+
+                    <CardMedia
+                      component="img"
+                      // height="194"
+                      image={post[0].img}
+                      alt="post"
+                    />
+                    <CardContent>
+                      <p>
+                        <strong>{post[0].description}</strong>
+                      </p>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                      {isLiked(likes, post[0].id) !== -1 ? (
+                        <div style={{ display: "flex" }}>
+                          <IconButton
+                            onClick={(e) => {
+                              axios
+                                .delete(`${BACKEND}/likes/${post[0].id}`, {
+                                  headers: {
+                                    Authorization: `Bearer ${token}`,
+                                  },
+                                })
+                                .then((result) => {
+                                  console.log(result);
+                                  dispatch(removeLikePost(post[0].id));
+                                  dispatch(removeLike(post[0].id));
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            }}
+                            aria-label="add to favorites"
+                          >
+                            <FavoriteIcon style={{ color: "red" }} />
+                          </IconButton>
+                          <p style={{ margin: "10px" }}>
+                            {parseInt(post[0].likes_count)}
+                          </p>
+                        </div>
+                      ) : (
+                        <div style={{ display: "flex" }}>
+                          {" "}
+                          <IconButton
+                            onClick={(e) => {
+                              const payload = {
+                                posts_id: post[0].id,
+                                user_id: userId,
+                              };
+                              axios
+                                .post(
+                                  `${BACKEND}/likes/${post[0].id}`,
+                                  {},
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
+                                  }
+                                )
+                                .then((result) => {
+                                  console.log(result);
+                                  dispatch(addLikePost(post[0].id));
+                                  dispatch(addLike(payload));
+                                })
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            }}
+                            aria-label="add to favorites"
+                          >
+                            <FavoriteIcon />
+                          </IconButton>
+                          <p style={{ margin: "10px" }}>{post[0].likes_count}</p>
+                        </div>
+                      )}
+
+                      <ExpandMore
+                        expand={expanded === post[0].id}
+                        onClick={handleExpandClick(post[0].id)}
+                        aria-expanded={expanded === post[0].id}
+                        aria-label="show more"
+                      >
+                        <MdComment />
+                      </ExpandMore>
+                    </CardActions>
+                    <Collapse
+                      in={expanded === post[0].id}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <CardContent>
+                        <div style={{ display: "flex", marginBottom: "20px" }}>
+                          <Avatar
+                            style={{ height: "55px", width: "55px" }}
+                            alt="user"
+                            src={pfp}
+                          />
+                          <Form
+                            style={{ display: "flex", width: "100%" }}
+                            onSubmit={async (e) => {
+                              e.preventDefault();
+                              try {
+                                const result = await axios.post(
+                                  `${BACKEND}/comments/${post[0].id}`,
+                                  { comment: e.target[0].value },
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`,
+                                    },
+                                  }
+                                );
+                                if (result.data.success) {
+                                  const comment = result.data.result;
+                                  comment.img = pfp;
+                                  comment.first_name = userName;
+                                  dispatch(
+                                    addComment({
+                                      post_id: post[0].id,
+                                      comment,
+                                    })
+                                  );
+                                  e.target[0].value = "";
+                                } else throw Error;
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            }}
+                          >
+                            <Form.Control
+                              style={{ margin: "0 10px", width: "95%" }}
+                              type="text"
+                              placeholder="Add a comment.."
+                            />
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              endIcon={<SendIcon />}
+                            >
+                              Send
+                            </Button>
+                          </Form>
+                        </div>
+                        <div>
+                          {" "}
+                          <List
+                            sx={{
+                              width: "100%",
+
+                              bgcolor: "background.paper",
+                            }}
+                          >
+                            <ListGroup>
+                              {post[0].comments ? (
+                                post[0].comments.map((comment) => {
+                                  return (
+                                    <ListGroup.Item
+                                      key={comment.id}
+                                      style={{
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <ListItem>
+                                        <ListItemAvatar>
+                                          <Avatar onClick={(e) => {
+                          navigate(`/profile/${comment.user_id}`);
+                        }} src={comment.img} />
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                          primary={comment.comment}
+                                          secondary={`By ${comment.first_name}`}
+                                        />
+                                      </ListItem>
+                                      {(role === "Admin" ||
+                                        userId == comment.user_id) && (
+                                        <>
+                                          {userId == comment.user_id && (
+                                            <>
+                                              <IconButton
+                                                onClick={(e) => {
+                                                  handleShowUpdate(comment.id);
+                                                }}
+                                                aria-label="edit comment"
+                                              >
+                                                <MdEdit />
+                                              </IconButton>
+                                              <Modal
+                                                show={showUpdate === comment.id}
+                                                onHide={handleCloseUpdate}
+                                              >
+                                                <Modal.Header closeButton>
+                                                  <Modal.Title>
+                                                    Update Comment
+                                                  </Modal.Title>
+                                                </Modal.Header>
+
+                                                <Form
+                                                  onSubmit={(e) => {
+                                                    e.preventDefault();
+                                                    console.log(
+                                                      e.target[0].value
+                                                    );
+                                                    updateCommentFunction(
+                                                      comment.id,
+                                                      post[0].id,
+                                                      e.target[0].value
+                                                    );
+                                                    handleCloseUpdate();
+                                                  }}
+                                                >
+                                                  <Modal.Body>
+                                                    <Form.Control
+                                                      type="text"
+                                                      defaultValue={
+                                                        comment.comment
+                                                      }
+                                                    />
+                                                  </Modal.Body>
+                                                  <Modal.Footer>
+                                                    <Button type="submit">
+                                                      Save Changes
+                                                    </Button>
+                                                  </Modal.Footer>
+                                                </Form>
+                                              </Modal>
+                                            </>
+                                          )}
+
+                                          <IconButton
+                                            onClick={(e) => {
+                                              deleteCommentFunction(
+                                                comment.id,
+                                                post[0].id
+                                              );
+                                            }}
+                                            aria-label="delete comment"
+                                          >
+                                            <MdDelete />
+                                          </IconButton>
+                                        </>
+                                      )}
+                                    </ListGroup.Item>
+                                  );
+                                })
+                              ) : (
+                                <></>
+                              )}
+                            </ListGroup>
+                          </List>
+                        </div>
+                      </CardContent>
+                    </Collapse>
+                  </Card>
+<Popup_Post_Edit 
+                    set={setModalShowEditPopupPostUpdate}
+                     id={post[0].id} 
+                      post={post[0].description} 
+                      show={modalShowEditPopupPostUpdate} 
+                      onHide={() => setModalShowEditPopupPostUpdate(false)} />
       </Container>
-      <Popup_Post_Edit id={post[0].id} post={post[0].description} show={modalShowEditPopupPost} onHide={() => setModalShowEditPopupPost(false)} />
     </div>    
   );
 }else{
-  return <p>loding</p>
+  return <p>loading</p>
 }
   
   

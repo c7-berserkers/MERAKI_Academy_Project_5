@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
-import { setPosts, setComments, addComment,updatePosts } from "..///./../redux/reducers/posts/index";
+import { setPosts, setComments, addComment,updatePosts } from "../../redux/reducers/posts/index";
 
 
 const Popup_Post_Edit = (props) => {
@@ -33,7 +33,6 @@ const Popup_Post_Edit = (props) => {
           
         };
       });
-  //===============================================================
     
   //===============================================================
 
@@ -49,17 +48,17 @@ const Popup_Post_Edit = (props) => {
             setMessage("");
             setStatus(false)
             try {
-              const result = await axios.get("http://localhost:5000/posts/2", {
+              const result = await axios.get(`http://localhost:5000/posts/${e.target.value}`, {
                 headers: {
                   Authorization: `Bearer ${state.token}`,
                 },
               });
               if (result.data.success) {
-                console.log(result.data)
-                setMessage("");
-                setStatus(false)
                 dispatch(setPosts([result.data.post]));
                 dispatch(setComments({post_id:result.data.post.id,comments:result.data.comments}));
+                props.set(false)
+                setMessage("");
+                setStatus(false)
               } else throw Error;
             } catch (error) {
               if (!error.response.data.success) {
