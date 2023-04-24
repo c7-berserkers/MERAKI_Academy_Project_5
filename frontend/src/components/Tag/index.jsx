@@ -311,6 +311,9 @@ return tags.length>0?tags.map((tag,i)=>{
                 </Menu>
 
                 <CardMedia
+                onClick={(e) => {
+                  navigate(`/post/${post.id}`);
+                }}
                   component="img"
                   // height="194"
                   image={post.img}
