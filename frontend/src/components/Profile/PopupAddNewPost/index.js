@@ -124,11 +124,10 @@ setImgURL("")
             
         })
     }else{
-        setMessage("pleas upload img first")
+        setMessage("please upload img first")
         setStatus(true)
     }
     }
-
     //===============================================================
 
     useEffect(()=>{

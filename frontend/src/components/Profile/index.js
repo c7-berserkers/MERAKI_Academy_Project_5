@@ -146,6 +146,7 @@ export default function Profile() {
   const [modalShowEditPopupPostUpdate, setModalShowEditPopupPostUpdate] = useState(false)
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
+  const [postPicker, setPostPicker] = useState(null);
   let inFollowingState_0 = false;
   //===============================================================
   const state = useSelector((state) => {
@@ -491,11 +492,7 @@ export default function Profile() {
                       show={modalShowPopupAddNewPost}
                       onHide={() => setModalShowPopupAddNewPost(false)}
                     />
-                  <Popup_Post_Edit 
-                  // id={post[0].id} 
-                  // post={post[0].description} 
-                  show={modalShowEditPopupPostUpdate} 
-                  onHide={() => setModalShowEditPopupPostUpdate(false)} />
+                 
                   <h4>
                     {" "}
                     {state.dataUser.first_name} {state.dataUser.last_name}{" "}
@@ -762,7 +759,11 @@ export default function Profile() {
                           <IconButton
                             aria-controls={open ? "long-menu" : undefined}
                             aria-expanded={open ? "true" : undefined}
-                            onClick={handleClick}
+                            onClick={(event) => {
+                              handleClick(event);
+                              setPostPicker(post.id);
+                            }
+                            }
                             aria-label="settings"
                           >
                             <MoreVertIcon />
@@ -772,6 +773,11 @@ export default function Profile() {
                       title={post.user_first_name}
                       subheader={post.created_at.split("T")[0]}
                     />
+                    {/* <Popup_Post_Edit 
+                     // id={post.id} 
+                      // post={post.description} 
+                      show={modalShowEditPopupPostUpdate} 
+                      onHide={() => setModalShowEditPopupPostUpdate(false)} /> */}
                     {personPage == user_Id_Number ?<>(<Menu
                       id="long-menu"
                       MenuListProps={{
@@ -788,7 +794,7 @@ export default function Profile() {
                     >
                       <MenuItem
                         onClick={(e) => {
-                          deletePost(post.id);
+                          deletePost(postPicker);
                           handleClose();
                         }}
                       >
