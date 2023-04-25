@@ -14,6 +14,7 @@ import SearchPage from "./components/SearchPage";
 import ChatsPage from "./ChatsPage";
 import Chat from "./Chat";
 import Dashboard from "./components/Dashboard";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <>
               <NavBar />
               <Home />
+              <Footer />
             </>
           }
         />
@@ -36,7 +38,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <Post />
+              <Post /> <Footer />
             </>
           }
         />
@@ -45,7 +47,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <Tag />
+              <Tag /> <Footer />
             </>
           }
         />
@@ -54,7 +56,7 @@ function App() {
           element={
             <>
               {" "}
-              <NavBar /> <Profile />{" "}
+              <NavBar /> <Profile /> <Footer />{" "}
             </>
           }
         />
@@ -63,7 +65,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <Dashboard />
+              <Dashboard /> <Footer />
             </>
           }
         />
@@ -72,7 +74,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <SearchPage />
+              <SearchPage /> <Footer />
             </>
           }
         />
@@ -81,7 +83,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <ChatsPage />
+              <ChatsPage /> <Footer />
             </>
           }
         />
@@ -90,7 +92,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <Chat />
+              <Chat /> <Footer />
             </>
           }
         />
@@ -101,7 +103,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <NotFound />
+              <NotFound /> <Footer />
             </>
           }
         />

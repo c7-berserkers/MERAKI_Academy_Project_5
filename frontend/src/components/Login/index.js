@@ -82,6 +82,11 @@ const Login = () => {
                 marginBottom: "10px",
               }}
             >
+              <img
+                style={{ width: "150px", margin: "auto" }}
+                src="/logo.png"
+                alt="logo"
+              />
               <Card.Title style={{ fontSize: "50px" }}>Sign In</Card.Title>
             </Container>
             <Form>

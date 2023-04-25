@@ -99,7 +99,7 @@ export default function NavBar() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar src={pfp} sx={{ width: 32, height: 32 }}></Avatar>
+              <Avatar src={pfp} sx={{ width: 38, height: 38 }}></Avatar>
             </IconButton>
           </Tooltip>
           <Menu
