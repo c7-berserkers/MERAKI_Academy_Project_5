@@ -75,7 +75,15 @@ const login = async (req, res) => {
   const placeHolders = [email.toLowerCase()];
   try {
     const { rows } = await pool.query(query, placeHolders);
+    if(rows.length==0){
+      return res.status(403).json({
+        success: false,
+        message:
+          "The email doesn’t exist or the password you’ve entered is incorrect",
+      });
+    }
     const isValid = await bcrypt.compare(password, rows[0].password);
+    
     if (isValid) {
       const token = generateToken(rows);
       const likes = await pool.query(query_2, [rows[0].id]);
@@ -89,7 +97,7 @@ const login = async (req, res) => {
         role: rows[0].role,
         likes: likes.rows,
       });
-    } else {
+    }else {
       res.status(403).json({
         success: false,
         message:
