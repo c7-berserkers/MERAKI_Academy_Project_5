@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -26,7 +26,7 @@ import {
   addLikePost,
   removeLikePost,
 } from "../redux/reducers/posts";
-import { removeLike, addLike } from "../redux/reducers/auth";
+import { removeLike, addLike, setUserLikes } from "../redux/reducers/auth";
 import SendIcon from "@mui/icons-material/Send";
 import { MdComment } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -45,6 +45,9 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
+  // const memo = useMemo(()=>{
+  //   return isLiked()
+  // })
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
@@ -235,7 +238,6 @@ export default function Home() {
       }
     };
   };
-
   useEffect(() => {
     getPosts();
   }, []);
@@ -356,9 +358,19 @@ export default function Home() {
                                   },
                                 })
                                 .then((result) => {
-                                  console.log(result);
-                                  dispatch(removeLikePost(post.id));
-                                  dispatch(removeLike(post.id));
+                                  axios
+                                    .get(`${BACKEND}/likes/`, {
+                                      headers: {
+                                        Authorization: `Bearer ${token}`,
+                                      },
+                                    })
+                                    .then((result) => {
+                                      dispatch(
+                                        setUserLikes(result.data.result)
+                                      );
+                                      dispatch(removeLikePost(post.id));
+                                    })
+                                    .catch((err) => console.log(err));
                                 })
                                 .catch((err) => {
                                   console.log(err);
@@ -392,9 +404,9 @@ export default function Home() {
                                   }
                                 )
                                 .then((result) => {
-                                  console.log(result);
+                                  console.log(result.data.result);
                                   dispatch(addLikePost(post.id));
-                                  dispatch(addLike(payload));
+                                  dispatch(addLike(result.data.result));
                                 })
                                 .catch((err) => {
                                   console.log(err);

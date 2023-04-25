@@ -41,7 +41,9 @@ export const authSlice = createSlice({
       }
     },
     removeLike: (state, { payload }) => {
-      state.userLikes = state.userLikes.filter((e) => e.post_id !== payload);
+      state.userLikes = state.userLikes.filter((e) => {
+        return e.post_id != payload;
+      });
       localStorage.setItem("userLikes", JSON.stringify(state.userLikes));
     },
     setLogout: (state, action) => {
@@ -63,8 +65,6 @@ export const authSlice = createSlice({
     },
   },
 });
-
-
 
 export const {
   setLogin,
