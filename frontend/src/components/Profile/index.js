@@ -47,7 +47,6 @@ import Popup_Edit_Data from "./PopupEditMyData/index";
 import Popup_Delete_Profile from "./PopupDeleteAccount/index";
 import Popup_Edit_MyPassword from "./PopupEditMyPassword/index";
 import Popup_Add_New_Post from "./PopupAddNewPost/index";
-import Popup_Post_Edit from "./PopupUpdatePost/index";
 
 
 //===============================================================
@@ -143,7 +142,6 @@ export default function Profile() {
     modalShowEditPopupEditMyPassword,
     setModalShowEditPopupEditMyPassword,
   ] = useState(false);
-  const [modalShowEditPopupPostUpdate, setModalShowEditPopupPostUpdate] = useState(false)
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
   const [postPicker, setPostPicker] = useState(null);
@@ -493,14 +491,9 @@ export default function Profile() {
                       show={modalShowPopupAddNewPost}
                       onHide={() => setModalShowPopupAddNewPost(false)}
                     />
-                    <Popup_Post_Edit 
-                      id={postPicker} 
-                      post={postDescription}
-                      show={modalShowEditPopupPostUpdate} 
-                      onHide={() => setModalShowEditPopupPostUpdate(false)} />
                   
                   <h4>
-                    {" "}
+                  
                     {state.dataUser.first_name} {state.dataUser.last_name}{" "}
                   </h4>
                   <h4>{state.dataUser.email}</h4>
@@ -801,14 +794,6 @@ export default function Profile() {
                         }}
                       >
                         Delete Post
-                      </MenuItem>
-                      <MenuItem
-                        onClick={(e) => {
-                          setModalShowEditPopupPostUpdate(true)
-                          handleClose();
-                        }}
-                      >
-                        Update Post
                       </MenuItem>
                     </Menu>)</>:<></>}
                   
