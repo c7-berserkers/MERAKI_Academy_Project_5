@@ -36,7 +36,7 @@ const Popup_Comment_Edit = (props) => {
 
     const updateComment = async(e) => {
         try {
-          const result = await axios.put(`http://localhost:5000/comments/${e.target.value}`,{comment:addComment},{
+          const result = await axios.put(`${process.env.REACT_APP_BACKEND}/comments/${e.target.value}`,{comment:addComment},{
             headers: {
               Authorization: `Bearer ${token}`,
             },

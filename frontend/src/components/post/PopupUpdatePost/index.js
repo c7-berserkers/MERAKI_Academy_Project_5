@@ -38,7 +38,7 @@ const Popup_Post_Edit = (props) => {
 
     const updateComment = async(e) => {
         try {
-          const result = await axios.put(`http://localhost:5000/posts/${e.target.value}`,{description:updatePost},{
+          const result = await axios.put(`${process.env.REACT_APP_BACKEND}/posts/${e.target.value}`,{description:updatePost},{
             headers: {
               Authorization: `Bearer ${state.token}`,
             },
@@ -48,7 +48,7 @@ const Popup_Post_Edit = (props) => {
             setMessage("");
             setStatus(false)
             try {
-              const result = await axios.get(`http://localhost:5000/posts/${e.target.value}`, {
+              const result = await axios.get(`${process.env.REACT_APP_BACKEND}/posts/${e.target.value}`, {
                 headers: {
                   Authorization: `Bearer ${state.token}`,
                 },
