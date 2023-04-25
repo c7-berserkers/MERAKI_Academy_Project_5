@@ -235,10 +235,9 @@ export default function Home() {
       }
     };
   };
-
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [likes]);
   return (
     <div>
       {" "}

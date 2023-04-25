@@ -72,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="log-box">
-      <div className="login" style={{ marginTop: "200px" }}>
+      <div className="login" style={{ marginTop: "100px" }}>
         <Container style={{ minWidth: "400px" }}>
           <Card style={{ padding: "10px" }}>
             {" "}
@@ -82,6 +82,11 @@ const Login = () => {
                 marginBottom: "10px",
               }}
             >
+              <img
+                style={{ width: "150px", margin: "auto" }}
+                src="/logo.png"
+                alt="logo"
+              />
               <Card.Title style={{ fontSize: "50px" }}>Sign In</Card.Title>
             </Container>
             <Form>
