@@ -72,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="log-box">
-      <div className="login" style={{ marginTop: "200px" }}>
+      <div className="login" style={{ marginTop: "100px" }}>
         <Container style={{ minWidth: "400px" }}>
           <Card style={{ padding: "10px" }}>
             {" "}
