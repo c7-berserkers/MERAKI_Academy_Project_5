@@ -147,6 +147,7 @@ export default function Profile() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [tags, setTags] = useState([]);
   const [postPicker, setPostPicker] = useState(null);
+  const [postDescription, setPostDescription] = useState("")
   let inFollowingState_0 = false;
   //===============================================================
   const state = useSelector((state) => {
@@ -492,7 +493,12 @@ export default function Profile() {
                       show={modalShowPopupAddNewPost}
                       onHide={() => setModalShowPopupAddNewPost(false)}
                     />
-                 
+                    <Popup_Post_Edit 
+                      id={postPicker} 
+                      post={postDescription}
+                      show={modalShowEditPopupPostUpdate} 
+                      onHide={() => setModalShowEditPopupPostUpdate(false)} />
+                  
                   <h4>
                     {" "}
                     {state.dataUser.first_name} {state.dataUser.last_name}{" "}
@@ -762,6 +768,7 @@ export default function Profile() {
                             onClick={(event) => {
                               handleClick(event);
                               setPostPicker(post.id);
+                              setPostDescription(post.description);
                             }
                             }
                             aria-label="settings"
@@ -773,11 +780,6 @@ export default function Profile() {
                       title={post.user_first_name}
                       subheader={post.created_at.split("T")[0]}
                     />
-                    {/* <Popup_Post_Edit 
-                     // id={post.id} 
-                      // post={post.description} 
-                      show={modalShowEditPopupPostUpdate} 
-                      onHide={() => setModalShowEditPopupPostUpdate(false)} /> */}
                     {personPage == user_Id_Number ?<>(<Menu
                       id="long-menu"
                       MenuListProps={{
@@ -800,7 +802,6 @@ export default function Profile() {
                       >
                         Delete Post
                       </MenuItem>
-                      {/* **************************** */}
                       <MenuItem
                         onClick={(e) => {
                           setModalShowEditPopupPostUpdate(true)
@@ -809,9 +810,8 @@ export default function Profile() {
                       >
                         Update Post
                       </MenuItem>
-                      {/* ****************************** */}
                     </Menu>)</>:<></>}
-                    
+                  
                     <CardMedia
                       component="img"
                       // height="194"

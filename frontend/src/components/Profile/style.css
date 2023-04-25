@@ -103,7 +103,11 @@
   align-items: flex-start;
   padding-bottom: 18px;
 }
-
+@media screen and (min-width: 1218px) {
+  .flex {
+    margin: 0px 310px;
+  }
+}
 @media screen and (max-width: 1005px) {
   .userDataEdit {
     padding-top: 1px;
