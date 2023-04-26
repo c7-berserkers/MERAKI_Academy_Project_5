@@ -50,7 +50,6 @@ export default function Chat() {
         }
       )
       .then((response) => {
-        console.log(response.data.result);
         socket.emit("SEND_MESSAGE", messageData);
         window.scrollTo({
           top: mainRef.offsetTop,
@@ -59,7 +58,6 @@ export default function Chat() {
         });
         // setMessages((preMess) => [...preMess, messageData.content]);
 
-        console.log(`after send`, messages);
         setMessage(``);
       })
       .catch((err) => console.log(err.response.data.message));
@@ -70,7 +68,6 @@ export default function Chat() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((result) => {
-        console.log(result.data.result.messages);
         setMessages(result.data.result.messages);
         socket.emit("JOIN_ROOM", name);
       })

@@ -32,6 +32,8 @@ import { MdComment } from "react-icons/md";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Form from "react-bootstrap/Form";
@@ -83,7 +85,6 @@ export default function Home() {
       };
     }
   );
-  console.log(posts);
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
@@ -148,7 +149,6 @@ export default function Home() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
-        console.log(result.data.success);
         dispatch(setPosts(result.data.result));
       } else throw Error;
     } catch (error) {
@@ -235,15 +235,26 @@ export default function Home() {
       }
     };
   };
-
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [likes]);
   return (
     <div>
       {" "}
       <div className="new-post">
         <Container>
+          <span style={{ position: "fixed", right: "0", bottom: "0" }}>
+            <Fab
+              onClick={(e) => {
+                setModalShowPopupAddNewPost(true);
+              }}
+              style={{ margin: "20px" }}
+              color="primary"
+              aria-label="add"
+            >
+              <AddIcon />
+            </Fab>
+          </span>
           <ButtonGroup
             style={{ width: "60%", marginBottom: "20px" }}
             variant="contained"
@@ -252,14 +263,14 @@ export default function Home() {
             <Button style={{ width: "60%" }} onClick={handleShow}>
               Explore
             </Button>
-            <Button
+            {/* <Button
               style={{ width: "60%" }}
               onClick={() => {
                 setModalShowPopupAddNewPost(true);
               }}
             >
               New Post
-            </Button>
+            </Button> */}
             <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
               Chat Groups
             </Button>
@@ -300,16 +311,13 @@ export default function Home() {
                         )
                       }
                       title={post.user_first_name}
-                      subheader={post.created_at}
+                      subheader={post.created_at.split("T")[0]}
                     />
 
                     <Menu
                       id="long-menu"
                       MenuListProps={{
                         "aria-labelledby": "long-button",
-                      }}
-                      onClick={() => {
-                        console.log(post.id, "postid");
                       }}
                       anchorEl={anchorEl}
                       open={open}
@@ -356,7 +364,6 @@ export default function Home() {
                                   },
                                 })
                                 .then((result) => {
-                                  console.log(result);
                                   dispatch(removeLikePost(post.id));
                                   dispatch(removeLike(post.id));
                                 })
@@ -392,7 +399,6 @@ export default function Home() {
                                   }
                                 )
                                 .then((result) => {
-                                  console.log(result);
                                   dispatch(addLikePost(post.id));
                                   dispatch(addLike(payload));
                                 })
@@ -529,9 +535,6 @@ export default function Home() {
                                                 <Form
                                                   onSubmit={(e) => {
                                                     e.preventDefault();
-                                                    console.log(
-                                                      e.target[0].value
-                                                    );
                                                     updateCommentFunction(
                                                       comment.id,
                                                       post.id,

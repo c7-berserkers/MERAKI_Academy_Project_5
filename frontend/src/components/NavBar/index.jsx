@@ -8,8 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { MdAdminPanelSettings } from "react-icons/md";
-
 import { Button, Navbar, Container, Form, InputGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +42,6 @@ export default function NavBar() {
   useEffect(() => {
     !isLoggedIn && navigate("/login");
   }, []);
-  console.log(role);
   return (
     <>
       <Navbar
@@ -99,7 +96,7 @@ export default function NavBar() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar src={pfp} sx={{ width: 32, height: 32 }}></Avatar>
+              <Avatar src={pfp} sx={{ width: 38, height: 38 }}></Avatar>
             </IconButton>
           </Tooltip>
           <Menu

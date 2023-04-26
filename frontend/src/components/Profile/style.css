@@ -103,6 +103,10 @@
   align-items: flex-start;
   padding-bottom: 18px;
 }
+.flex {
+  display: flex;
+  justify-content: center;
+}
 @media screen and (min-width: 1218px) {
   .flex {
     margin: 0px 310px;

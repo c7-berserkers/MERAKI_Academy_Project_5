@@ -24,7 +24,6 @@ function Users() {
         },
       })
       .then(function (response) {
-        console.log(response.data.users, "users");
         setAllUser(response.data.users);
       })
       .catch(function (error) {
@@ -40,7 +39,6 @@ function Users() {
   //===============================================================
 
   const Admin = (e) => {
-    console.log(e.target.value);
     axios
       .put(
         `${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,
@@ -59,7 +57,6 @@ function Users() {
       });
   };
   const NotAdmin = (e) => {
-    console.log(e.target.value);
     axios
       .put(
         `${process.env.REACT_APP_BACKEND}/users/role/${e.target.value}`,
@@ -78,7 +75,6 @@ function Users() {
       });
   };
   const disband = (e) => {
-    console.log(e.target.value);
     axios
       .put(
         `${process.env.REACT_APP_BACKEND}/users/unDelete/${e.target.value}`,
@@ -96,7 +92,6 @@ function Users() {
       });
   };
   const band = (e) => {
-    console.log(e.target.value);
     axios
       .delete(`${process.env.REACT_APP_BACKEND}/users/${e.target.value}`, {
         headers: {
@@ -122,9 +117,13 @@ function Users() {
           >
             <div className="ms-3 me-auto">
               <Stack spacing={2} direction="row">
-                <Avatar alt="Remy Sharp" src={user.img} onClick={()=>{
-                  navigate(`/profile/${user.id}`);}
-                }/>
+                <Avatar
+                  alt="Remy Sharp"
+                  src={user.img}
+                  onClick={() => {
+                    navigate(`/profile/${user.id}`);
+                  }}
+                />
                 <Stack spacing={2} direction="column">
                   <div>
                     {user.first_name} {user.last_name}

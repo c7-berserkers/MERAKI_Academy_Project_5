@@ -32,7 +32,6 @@ function GroupChat() {
   //===============================================================
 
   const deleteChatGroup = (e) => {
-    console.log(e.target.value);
     axios
       .delete(`${process.env.REACT_APP_BACKEND}/chats/${e.target.value}`, {
         headers: {

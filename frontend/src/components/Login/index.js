@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
 
 import axios from "axios";
@@ -6,7 +6,6 @@ import axios from "axios";
 import {
   setLogin,
   setUserInfo,
-  setLogout,
   setUserLikes,
 } from "../redux/reducers/auth/index";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,15 +34,12 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
-    console.log(e);
-    console.log(email, password);
     try {
       const result = await axios.post(`${process.env.REACT_APP_BACKEND}/users/login`, {
         email,
         password,
       });
       if (result.data) {
-        console.log(result.data);
         setMessage("");
         dispatch(setLogin(result.data.token));
         dispatch(setUserLikes(result.data.likes));
@@ -72,7 +68,7 @@ const Login = () => {
 
   return (
     <div className="log-box">
-      <div className="login" style={{ marginTop: "200px" }}>
+      <div className="login" style={{ marginTop: "100px" }}>
         <Container style={{ minWidth: "400px" }}>
           <Card style={{ padding: "10px" }}>
             {" "}
@@ -82,6 +78,11 @@ const Login = () => {
                 marginBottom: "10px",
               }}
             >
+              <img
+                style={{ width: "150px", margin: "auto" }}
+                src="/logo.png"
+                alt="logo"
+              />
               <Card.Title style={{ fontSize: "50px" }}>Sign In</Card.Title>
             </Container>
             <Form>

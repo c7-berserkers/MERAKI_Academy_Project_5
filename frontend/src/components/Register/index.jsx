@@ -37,7 +37,6 @@ export default function Register() {
 
   const validateData = () => {
     let errors = {};
-    console.log(first_name, last_name, age, country, email, password, img);
     if (!first_name) {
       errors.first_name = "first name is required";
     }
@@ -64,7 +63,6 @@ export default function Register() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((preData) => ({ ...preData, [name]: value }));
-    console.log(userData);
   };
 
   const [oneError, setOneError] = useState(false);
@@ -73,7 +71,6 @@ export default function Register() {
   const submit = () => {
     const errors = validateData();
 
-    console.log(errors);
     if (Object.keys(errors).length) {
       setOneError(Object.values(errors)[0]);
       setErrors(oneError);
@@ -102,7 +99,7 @@ export default function Register() {
   return (
     <>
       <div className="log-box">
-        <div className="register" style={{ marginTop: "150px" }}>
+        <div className="register" style={{ marginTop: "50px" }}>
           {" "}
           <Container>
             <Card style={{ padding: "10px" }}>
@@ -112,6 +109,11 @@ export default function Register() {
                   marginBottom: "10px",
                 }}
               >
+                <img
+                  style={{ width: "150px", margin: "auto" }}
+                  src="/logo.png"
+                  alt="logo"
+                />
                 <Card.Title style={{ fontSize: "50px" }}>Sign Up</Card.Title>
               </Container>
 
