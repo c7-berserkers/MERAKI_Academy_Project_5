@@ -1,17 +1,17 @@
 <p align="center">
 <a href="https://www.meraki-academy.org" target="_blank" rel="noopener noreferrer">
- <img width="400px" height="100px" src="https://www.meraki-academy.org/assets/img/logov02.svg" alt="Project logo">
+ <img width="100px" height="100px" src="./frontend/public/logo.png" alt="Project logo">
  </a>
 </p>
 
-<h3 align="center">Project Title
+<h3 align="center">SnapFeed
 </h3>
 
 ---
 
-<p align="center"> An awesome Project to describe README 
+<p align="center"> Record your unique moment and share it with your community here is your place .
     <br> 
-<a href=''>Demo</a>
+<a href=''>Demo Link</a>
     <br> 
 </p>
 
@@ -27,9 +27,8 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your project.
-
-Ex. Are you looking for a quick and easy way to action, action, and action? The **(name of application)** is the greatest and most accurate application to do this for you. It helps you to **(list of activities)**. The **(name of application)** provides a simple design to ensure having the best user experience.
+It is wonderful to immortalize the moments that we live and share them with those we love if you want an easy and unique way to do all that and more. SnapFeed is the most suitable application for all of that, as it allows you to share moments of joy and pleasure and share them with others. It also allows you to send instant messages to people with whom you have a relationship and communicate with them. 
+SnapFeed, with its unique features, includes a simple design to ensure the best user experience.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -47,7 +46,7 @@ These instructions will get you a copy of the project up and running on your loc
 1. Clone the repo to your local machine using git bash.
 
 ```
-git clone https://github.com/your_username_/Project-Name.git
+git clone https://github.com/AhmadTIsmail/MERAKI_Academy_Project_5.git
 ```
 
 2. Install packeges repeat this step in backend and frontend folder
@@ -72,13 +71,18 @@ Now app ready to use
 
 ## 🎈 Usage <a name="usage"></a>
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. 
 
 Ex.
 
-- You don't have to register to navigate our web app
-- You can click on the **Home** tab provided in the navigation bar to view the home section
-- You can click on the **Add to cart** button to add this product to your cart but you have to be one of our users, so you should create an account
+- You have to register to navigate our web app.
+- You can click on the Snapchat icon **location logo** in the navigation bar to go to the home page.
+- By clicking on your personal account picture available in the navigation bar, you can either enter the dashboard page or profile page.
+-With the search box on the navigation bar, you can search for other users and access their personal profile .
+- On the home page, you will find the posts of the people you follow, in addition to your posts. You can add a comment on any of the posts and add a like.
+- On the personal page, the user can modify all personal information, and he will see the number of people who follow him and follow them, in addition to the user's posts. This page also enables the user to view all followers and following and navigate to their pages.
+- The dashboard page is visible to the admin only and contains statistics and some features that the admin can do.
+
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
@@ -86,16 +90,20 @@ Ex.
 - [Express JS](https://expressjs.com/) - Server Framework
 - [React JS](https://https://reactjs.org/) - Web Framework
 - [Node JS](https://nodejs.org/en/) - Server Environment
+- [postgresql](https://www.postgresql.org/) - Database
+
 
 ## User Story <a name = "#user_story"></a>
 
-Your trello board link
-<a href=''>Trello</a>
+trello board link
+<a href='https://trello.com/b/cXaFlvWN/project-5'>Trello</a>
 
 ## Data Flow <a name = "#data_flow"></a>
 
-<img width=200px height=200px src="https://cacoo.com/assets/site/img/templates/screenshots/er-database-diagram.png" alt="Diagram"></a>
+<img width=300px height=300px src="./frontend/public/databaseImage.jpg" alt="Diagram"></a>
+</br>
+data_flow <a href='https://dbdiagram.io/d/642ca1af5758ac5f1726c444'>Link</a>
 
 ## ⚠️ Guided By <a name = "guided_by"></a>
 
-This project is guided by ©️ **[MERAKI Academy](https://www.meraki-academy.org)**
+This project is guided by ©️ **[berserkers_team](https://github.com/AhmadTIsmail/MERAKI_Academy_Project_5)**
