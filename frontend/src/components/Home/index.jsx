@@ -34,6 +34,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import { BsFillChatLeftFill, BsFillDice6Fill } from "react-icons/bs";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Form from "react-bootstrap/Form";
@@ -243,38 +244,44 @@ export default function Home() {
       {" "}
       <div className="new-post">
         <Container>
-          <span style={{ position: "fixed", right: "0", bottom: "0" }}>
+          <span
+            style={{
+              position: "fixed",
+              right: "0",
+              bottom: "0",
+              display: "flex",
+              flexDirection: "column",
+              marginBottom: "20px",
+              marginRight: "10px",
+            }}
+          >
+            <Fab
+              onClick={handleShow}
+              style={{ margin: "10px" }}
+              color="primary"
+              aria-label="edit"
+            >
+              <BsFillDice6Fill size={"20"} />
+            </Fab>
+            <Fab
+              onClick={(e) => navigate("/chat")}
+              style={{ margin: "10px" }}
+              color="secondary"
+              aria-label="edit"
+            >
+              <BsFillChatLeftFill size={"20"} />
+            </Fab>
             <Fab
               onClick={(e) => {
                 setModalShowPopupAddNewPost(true);
               }}
-              style={{ margin: "20px" }}
+              style={{ margin: "10px" }}
               color="primary"
               aria-label="add"
             >
               <AddIcon />
             </Fab>
           </span>
-          <ButtonGroup
-            style={{ width: "60%", marginBottom: "20px" }}
-            variant="contained"
-            aria-label="outlined primary button group"
-          >
-            <Button style={{ width: "60%" }} onClick={handleShow}>
-              Explore
-            </Button>
-            {/* <Button
-              style={{ width: "60%" }}
-              onClick={() => {
-                setModalShowPopupAddNewPost(true);
-              }}
-            >
-              New Post
-            </Button> */}
-            <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
-              Chat Groups
-            </Button>
-          </ButtonGroup>
         </Container>
       </div>
       <div className="feed">
