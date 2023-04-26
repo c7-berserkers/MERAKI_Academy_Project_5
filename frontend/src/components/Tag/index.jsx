@@ -573,7 +573,13 @@ export default function Tag() {
                     </div>
                   </CardContent>
                 </Collapse>
-                <Offcanvas show={show} onHide={handleClose22}>
+                
+              </Card>
+            );
+          })}
+        </Container>
+      </div>
+      <Offcanvas show={show} onHide={handleClose22}>
                   <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Tags</Offcanvas.Title>
                   </Offcanvas.Header>
@@ -581,11 +587,6 @@ export default function Tag() {
                     <ListGroup>{tagsFunction()}</ListGroup>
                   </Offcanvas.Body>
                 </Offcanvas>
-              </Card>
-            );
-          })}
-        </Container>
-      </div>
     </div>
   );
 }
