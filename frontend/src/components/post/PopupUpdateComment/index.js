@@ -36,15 +36,29 @@ const Popup_Comment_Edit = (props) => {
 
   //===============================================================
 
-  const updateComment = async (e) => {
-    try {
-      const result = await axios.put(
-        `http://localhost:5000/comments/${e.target.value}`,
-        { comment: addComment },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+
+    const updateComment = async(e) => {
+        try {
+          const result = await axios.put(`${process.env.REACT_APP_BACKEND}/comments/${e.target.value}`,{comment:addComment},{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (result.data.success) {
+            console.log(result.data.result)
+            const comment22=result.data.result
+            console.log({post_id:props.post_id,comment:comment22,id:props.id})
+            dispatch(updateComment({post_id:props.post_id,comment:comment22,id:props.id}));
+            setMessage("")
+                  setStatus(false)
+          } else{ throw Error};
+        } catch (error) {
+          if (!error.response.data.success) {
+            setStatus(true)
+            return setMessage(error.response.data.message);
+          }
+          setStatus(true)
+          setMessage("Error happened while update Comment, please try again");
         }
       );
       if (result.data.success) {

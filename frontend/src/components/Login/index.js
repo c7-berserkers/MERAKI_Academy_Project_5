@@ -35,7 +35,7 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post("http://localhost:5000/users/login", {
+      const result = await axios.post(`${process.env.REACT_APP_BACKEND}/users/login`, {
         email,
         password,
       });
