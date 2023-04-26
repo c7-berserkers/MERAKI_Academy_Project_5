@@ -41,6 +41,9 @@ import ListGroup from "react-bootstrap/ListGroup";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import Fab from "@mui/material/Fab";
+
+import { BsFillChatLeftFill, BsFillDice6Fill } from "react-icons/bs";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -239,20 +242,34 @@ export default function Tag() {
     <div>
       {" "}
       <div className="new-post">
-        <Container>
-          <ButtonGroup
-            style={{ width: "60%", marginBottom: "20px" }}
-            variant="contained"
-            aria-label="outlined primary button group"
+        <span
+          style={{
+            position: "fixed",
+            right: "0",
+            bottom: "0",
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "20px",
+            marginRight: "10px",
+          }}
+        >
+          <Fab
+            onClick={handleShow}
+            style={{ margin: "10px" }}
+            color="primary"
+            aria-label="edit"
           >
-            <Button style={{ width: "60%" }} onClick={handleShow}>
-              Explore
-            </Button>
-            <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
-              Chat Groups
-            </Button>
-          </ButtonGroup>
-        </Container>
+            <BsFillDice6Fill size={"20"} />
+          </Fab>
+          <Fab
+            onClick={(e) => navigate("/chat")}
+            style={{ margin: "10px" }}
+            color="secondary"
+            aria-label="edit"
+          >
+            <BsFillChatLeftFill size={"20"} />
+          </Fab>
+        </span>
       </div>
       <div className="feed">
         <Container>
