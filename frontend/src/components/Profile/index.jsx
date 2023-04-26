@@ -767,7 +767,7 @@ export default function Profile() {
                         />
                         {personPage == user_Id_Number ? (
                           <>
-                            (
+                            
                             <Menu
                               id="long-menu"
                               MenuListProps={{
@@ -791,7 +791,7 @@ export default function Profile() {
                                 Delete Post
                               </MenuItem>
                             </Menu>
-                            )
+                            
                           </>
                         ) : (
                           <></>
