@@ -92,7 +92,7 @@ function App() {
           element={
             <>
               <NavBar />
-              <Chat /> <Footer />
+              <Chat />
             </>
           }
         />

@@ -55,6 +55,7 @@ io.on("connection", (socket) => {
       sender_id: data.content.sender_id,
       sender_pfp: data.content.sender_pfp,
       message: data.content.message,
+      createdAt: data.content.createdAt,
     };
     const room = data.room;
 

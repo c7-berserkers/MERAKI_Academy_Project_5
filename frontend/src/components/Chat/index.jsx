@@ -39,6 +39,7 @@ export default function Chat() {
         sender_id: userId,
         sender_pfp: pfp,
         message,
+        createdAt: new Date(),
       },
     };
     axios
@@ -50,6 +51,7 @@ export default function Chat() {
         }
       )
       .then((response) => {
+        console.log(messageData);
         socket.emit("SEND_MESSAGE", messageData);
         window.scrollTo({
           top: mainRef.offsetTop,
@@ -68,6 +70,7 @@ export default function Chat() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((result) => {
+        console.log(result.data.result.messages);
         setMessages(result.data.result.messages);
         socket.emit("JOIN_ROOM", name);
       })
@@ -134,7 +137,9 @@ export default function Chat() {
                             </ListItemAvatar>
                             <ListItemText
                               primary={element.message}
-                              secondary={`By ${element.sender}`}
+                              secondary={`By ${element.sender} at ${
+                                element.createdAt.split("T")[0]
+                              }`}
                             />
                           </ListItem>
                         </ListGroup.Item>
