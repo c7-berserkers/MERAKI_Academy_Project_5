@@ -43,7 +43,6 @@ export default function ChatsPage() {
         setNoResults(true);
       });
   }, []);
-  console.log(chatRooms);
   return (
     <div>
       <Fab
@@ -144,7 +143,6 @@ export default function ChatsPage() {
                   }
                 )
                 .then((result) => {
-                  console.log(result.data);
                   setChatRooms([...chatRooms, result.data.result]);
                   handleClose();
                 })

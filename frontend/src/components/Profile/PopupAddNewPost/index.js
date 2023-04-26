@@ -68,8 +68,6 @@ const Popup_Add_New_Post = (props) => {
   //===============================================================
 
   const add_post = () => {
-    console.log({ img: imgURL, description, tag_id });
-
     axios
       .post(
         `${process.env.REACT_APP_BACKEND}/posts`,

@@ -19,13 +19,11 @@ export default function SearchPage() {
   const [searchResult, setSearchResult] = useState([]);
   const [noResults, setNoResults] = useState(false);
   useEffect(() => {
-    console.log(name);
     axios
       .get(`${BACKEND}/users/search/${name}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((result) => {
-        console.log(result.data);
         setNoResults(false);
         setSearchResult(result.data.users);
       })

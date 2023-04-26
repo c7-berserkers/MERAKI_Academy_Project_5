@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
 
 import axios from "axios";
@@ -6,7 +6,6 @@ import axios from "axios";
 import {
   setLogin,
   setUserInfo,
-  setLogout,
   setUserLikes,
 } from "../redux/reducers/auth/index";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,15 +34,12 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
-    console.log(e);
-    console.log(email, password);
     try {
       const result = await axios.post("http://localhost:5000/users/login", {
         email,
         password,
       });
       if (result.data) {
-        console.log(result.data);
         setMessage("");
         dispatch(setLogin(result.data.token));
         dispatch(setUserLikes(result.data.likes));

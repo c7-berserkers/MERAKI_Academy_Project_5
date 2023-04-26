@@ -85,7 +85,6 @@ export default function Home() {
       };
     }
   );
-  console.log(posts);
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
 
@@ -150,7 +149,6 @@ export default function Home() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (result.data.success) {
-        console.log(result.data.success);
         dispatch(setPosts(result.data.result));
       } else throw Error;
     } catch (error) {
@@ -321,9 +319,6 @@ export default function Home() {
                       MenuListProps={{
                         "aria-labelledby": "long-button",
                       }}
-                      onClick={() => {
-                        console.log(post.id, "postid");
-                      }}
                       anchorEl={anchorEl}
                       open={open}
                       onClose={handleClose}
@@ -369,7 +364,6 @@ export default function Home() {
                                   },
                                 })
                                 .then((result) => {
-                                  console.log(result);
                                   dispatch(removeLikePost(post.id));
                                   dispatch(removeLike(post.id));
                                 })
@@ -405,7 +399,6 @@ export default function Home() {
                                   }
                                 )
                                 .then((result) => {
-                                  console.log(result);
                                   dispatch(addLikePost(post.id));
                                   dispatch(addLike(payload));
                                 })
@@ -542,9 +535,6 @@ export default function Home() {
                                                 <Form
                                                   onSubmit={(e) => {
                                                     e.preventDefault();
-                                                    console.log(
-                                                      e.target[0].value
-                                                    );
                                                     updateCommentFunction(
                                                       comment.id,
                                                       post.id,

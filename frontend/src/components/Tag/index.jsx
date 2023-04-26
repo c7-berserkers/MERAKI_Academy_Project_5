@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
@@ -42,9 +40,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListGroup from "react-bootstrap/ListGroup";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
-import Offcanvas from 'react-bootstrap/Offcanvas';
-
-
+import Offcanvas from "react-bootstrap/Offcanvas";
 
 // ----------------------------------------------
 const ExpandMore = styled((props) => {
@@ -88,50 +84,55 @@ export default function Tag() {
   );
   const [expanded, setExpanded] = useState(false);
   const BACKEND = process.env.REACT_APP_BACKEND;
-  
 
   // --------------------
 
   const [show, setShow] = useState(false);
-  const [tag_id, setTag_id] = useState('');
+  const [tag_id, setTag_id] = useState("");
   const [tags, setTags] = useState([]);
-  const nweTagId =window.location.pathname.split("/tag/")[1]
+  const nweTagId = window.location.pathname.split("/tag/")[1];
   // --------------------
 
   const handleClose22 = () => setShow(false);
   const handleShow = () => setShow(true);
   // --------------------
-  useEffect(()=>{
-    if(tags.length==0){
-        axios.get(`${process.env.REACT_APP_BACKEND}/tags`, {
-        headers: {
-            'Authorization': `${token}`
-        }
-    }).then((result)=>{
-        setTags(result.data.result)
-}).catch((err)=>{
-    console.log(err)
-    })
+  useEffect(() => {
+    if (tags.length == 0) {
+      axios
+        .get(`${process.env.REACT_APP_BACKEND}/tags`, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        })
+        .then((result) => {
+          setTags(result.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    
-},[tags])
+  }, [tags]);
   // --------------------
-const tagsFunction =()=>{
-return tags.length>0?tags.map((tag,i)=>{
-  return (
-    <ListGroup.Item
-                    key={tag.id}
-                    id={tag.id}
-                    onClick={(e) => {navigate(`/tag/${tag.id}`)
-                    setTag_id(e.target.id)
-                    setShow(false)}}
-                    className="list-filter"
-                  >
-                    <strong>{tag.tag}</strong>
-                  </ListGroup.Item>
-  )
-}):""
-}
+  const tagsFunction = () => {
+    return tags.length > 0
+      ? tags.map((tag, i) => {
+          return (
+            <ListGroup.Item
+              key={tag.id}
+              id={tag.id}
+              onClick={(e) => {
+                navigate(`/tag/${tag.id}`);
+                setTag_id(e.target.id);
+                setShow(false);
+              }}
+              className="list-filter"
+            >
+              <strong>{tag.tag}</strong>
+            </ListGroup.Item>
+          );
+        })
+      : "";
+  };
 
   // --------------------
   const isLiked = (arr, id) => {
@@ -244,7 +245,9 @@ return tags.length>0?tags.map((tag,i)=>{
             variant="contained"
             aria-label="outlined primary button group"
           >
-            <Button style={{ width: "60%" }} onClick={handleShow}>Explore</Button>
+            <Button style={{ width: "60%" }} onClick={handleShow}>
+              Explore
+            </Button>
             <Button onClick={(e) => navigate("/chat")} style={{ width: "60%" }}>
               Chat Groups
             </Button>
@@ -311,9 +314,9 @@ return tags.length>0?tags.map((tag,i)=>{
                 </Menu>
 
                 <CardMedia
-                onClick={(e) => {
-                  navigate(`/post/${post.id}`);
-                }}
+                  onClick={(e) => {
+                    navigate(`/post/${post.id}`);
+                  }}
                   component="img"
                   // height="194"
                   image={post.img}
@@ -336,7 +339,6 @@ return tags.length>0?tags.map((tag,i)=>{
                               },
                             })
                             .then((result) => {
-                              ;
                               dispatch(removeLikePost(post.id));
                               dispatch(removeLike(post.id));
                             })
@@ -505,7 +507,7 @@ return tags.length>0?tags.map((tag,i)=>{
                                             <Form
                                               onSubmit={(e) => {
                                                 e.preventDefault();
-                                                
+
                                                 updateCommentFunction(
                                                   comment.id,
                                                   post.id,
@@ -554,16 +556,14 @@ return tags.length>0?tags.map((tag,i)=>{
                     </div>
                   </CardContent>
                 </Collapse>
-                  <Offcanvas show={show} onHide={handleClose22}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Tags</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-        <ListGroup>
-          {tagsFunction()}
-                </ListGroup>
-        </Offcanvas.Body>
-      </Offcanvas>
+                <Offcanvas show={show} onHide={handleClose22}>
+                  <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Tags</Offcanvas.Title>
+                  </Offcanvas.Header>
+                  <Offcanvas.Body>
+                    <ListGroup>{tagsFunction()}</ListGroup>
+                  </Offcanvas.Body>
+                </Offcanvas>
               </Card>
             );
           })}

@@ -310,8 +310,6 @@ export default function Profile() {
         },
       })
       .then(function (response) {
-        console.log(showFollow);
-
         if (showFollow || inFollowingState_0) {
           dispatch(setFollowerData(response.data.followers));
           setFollowerOrFollowingHolder(response.data.followers);
@@ -368,16 +366,10 @@ export default function Profile() {
       })
       .then(function (response) {
         dispatch(setFollowingData());
-        console.log(response.data.followers);
         if (response.data.followers.length === 0) {
           setFollow(false);
         }
         response.data.followers.forEach((element) => {
-          console.log(
-            element.id == user_Id_Number * 1,
-            element.id,
-            user_Id_Number * 1
-          );
           if (element.id == user_Id_Number * 1) {
             setFollow(true);
             return;
@@ -828,7 +820,6 @@ export default function Profile() {
                                       },
                                     })
                                     .then((result) => {
-                                      // console.log(result);
                                       dispatch(removeLikePost(post.id));
                                       dispatch(removeLike(post.id));
                                     })
@@ -864,7 +855,6 @@ export default function Profile() {
                                       }
                                     )
                                     .then((result) => {
-                                      // console.log(result);
                                       dispatch(addLikePost(post.id));
                                       dispatch(addLike(payload));
                                     })

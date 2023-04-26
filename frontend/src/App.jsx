@@ -11,8 +11,8 @@ import Profile from "./components/Profile/index";
 import Tag from "./components/Tag";
 import NotFound from "./components/NotFound";
 import SearchPage from "./components/SearchPage";
-import ChatsPage from "./ChatsPage";
-import Chat from "./Chat";
+import ChatsPage from "./components/ChatsPage";
+import Chat from "./components/Chat";
 import Dashboard from "./components/Dashboard";
 import Footer from "./components/Footer";
 
