@@ -121,6 +121,11 @@ export default function Chat() {
                     {messages.map((element, i) => {
                       return (
                         <ListGroup.Item
+                          variant={
+                            Number(userId) === Number(element.sender_id)
+                              ? `primary`
+                              : ""
+                          }
                           ref={mainRef}
                           key={i}
                           style={{
