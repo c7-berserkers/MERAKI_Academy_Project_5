@@ -3,6 +3,8 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import "./style.css";
 
 //===============================================================
@@ -14,7 +16,7 @@ import { setUser_first_name } from "../../redux/reducers/auth/index";
 
 const Popup_Edit_Data = (props) => {
   //===============================================================
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   //===============================================================
@@ -60,6 +62,7 @@ const Popup_Edit_Data = (props) => {
         dispatch(setUserData(response.data.user));
         dispatch(setUser_first_name(response.data.user));
         props.set(false);
+        document.location.reload();
       })
       .catch(function (error) {
         console.log(error);
