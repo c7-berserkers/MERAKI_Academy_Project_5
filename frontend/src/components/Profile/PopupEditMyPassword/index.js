@@ -24,7 +24,6 @@ const Popup_Edit_MyPassword = (props) => {
   //===============================================================
 
   let user_test = {
-    email: state.dataUser.email,
     password: "",
     password_confirmed: "",
   };
@@ -36,9 +35,6 @@ const Popup_Edit_MyPassword = (props) => {
 
   const validateData = () => {
     let errors = {};
-    if (email == undefined || !validator.isEmail(email)) {
-      errors.email = "A vialed email is required";
-    }
     if (password !== password_confirmed) {
       errors.password = "A password not identical";
     }
@@ -102,12 +98,6 @@ const Popup_Edit_MyPassword = (props) => {
           onSubmit={(event) => event.preventDefault()}
           className="myProfileAreaEdit"
         >
-          <label htmlFor="email">email:</label>
-          <Form.Control
-            name="email"
-            placeholder="your email"
-            onChange={handleChange}
-          />
           <label htmlFor="password">password:</label>
           <Form.Control
             type="password"

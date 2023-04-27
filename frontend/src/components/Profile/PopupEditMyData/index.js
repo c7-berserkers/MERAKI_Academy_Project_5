@@ -28,6 +28,7 @@ const Popup_Edit_Data = (props) => {
   });
 
   const user_test = {
+    email: state.dataUser.email,
     first_name: state.dataUser.first_name,
     last_name: state.dataUser.last_name,
     age: state.dataUser.age,
@@ -81,7 +82,14 @@ const Popup_Edit_Data = (props) => {
         <form
           onSubmit={(event) => event.preventDefault()}
           className="myProfileAreaEdit"
-        >
+        >    
+        <label htmlFor="email">email:</label>
+          <Form.Control
+          name="email"
+          defaultValue={user_test.email}
+          placeholder="your email"
+          onChange={handleChange}
+          />
           <label htmlFor="first_name">first_name: </label>
           <Form.Control
             defaultValue={user_test.first_name}
