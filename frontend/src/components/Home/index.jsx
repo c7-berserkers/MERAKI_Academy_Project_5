@@ -592,7 +592,18 @@ export default function Home() {
                         </div>
                       </CardContent>
                     </Collapse>
-                    <Popup_Add_New_Post
+                  </Card>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              <h1 style={{ marginTop: "200px" }}>No Posts Yet</h1>
+            </>
+          )}
+        </Container>
+      </div>
+      <Popup_Add_New_Post
                       set={setModalShowPopupAddNewPost}
                       show={modalShowPopupAddNewPost}
                       onHide={() => setModalShowPopupAddNewPost(false)}
@@ -605,17 +616,6 @@ export default function Home() {
                         <ListGroup>{tagsFunction()}</ListGroup>
                       </Offcanvas.Body>
                     </Offcanvas>
-                  </Card>
-                );
-              })}
-            </>
-          ) : (
-            <>
-              <h1 style={{ marginTop: "200px" }}>No Posts Yet</h1>
-            </>
-          )}
-        </Container>
-      </div>
     </div>
   );
 }
