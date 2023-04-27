@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import validator from "validator";
 import { Button, Form, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 //===============================================================
 
@@ -13,7 +14,7 @@ import { setUserData } from "../../redux/reducers/profile/index";
 
 const Popup_Edit_MyPassword = (props) => {
   //===============================================================
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const state = useSelector((state) => {
     return {
@@ -75,6 +76,7 @@ const Popup_Edit_MyPassword = (props) => {
         setUserDataHolder("");
         setOneError(false);
         props.set(false);
+        document.location.reload();
       })
       .catch(function (error) {
         console.log(error);
