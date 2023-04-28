@@ -19,12 +19,12 @@ export default function Register() {
   const navigate = useNavigate();
 
   let useStateTestValue = {
-    first_name: undefined,
-    last_name: undefined,
-    age: undefined,
-    country: undefined,
-    email: undefined,
-    password: undefined,
+    first_name: "",
+    last_name: "",
+    age: "",
+    country: "",
+    email: "",
+    password: "",
     img: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
     role_id: "2",
   };
