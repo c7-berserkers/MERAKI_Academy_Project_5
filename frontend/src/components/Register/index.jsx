@@ -19,12 +19,12 @@ export default function Register() {
   const navigate = useNavigate();
 
   let useStateTestValue = {
-    first_name: undefined,
-    last_name: undefined,
-    age: undefined,
-    country: undefined,
-    email: undefined,
-    password: undefined,
+    first_name: "",
+    last_name: "",
+    age: "",
+    country: "",
+    email: "",
+    password: "",
     img: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
     role_id: "2",
   };
@@ -38,23 +38,23 @@ export default function Register() {
   const validateData = () => {
     let errors = {};
     if (!first_name) {
-      errors.first_name = "first name is required";
+      errors.first_name = "All fields are required";
     }
     if (!last_name) {
-      errors.last_name = "last name is required";
+      errors.last_name = "All fields are required";
     }
     if (!validator.isEmail(email)) {
-      errors.email = "A vialed email is required";
+      errors.email = "A valid email is required";
     }
     if (!validator.isStrongPassword(password)) {
-      errors.password = "A vialed strong password is required";
+      errors.password = "A valid strong password is required";
     }
 
     if (isNaN(age)) {
       errors.age = "age in number is required";
     }
     if (!country) {
-      errors.country = "country is required";
+      errors.country = "All fields are required";
     }
 
     return errors;
