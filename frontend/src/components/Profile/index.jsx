@@ -763,7 +763,7 @@ export default function Profile() {
                             )
                           }
                           title={post.user_first_name}
-                          subheader={post.created_at.split("T")[0]}
+                          subheader={post.created_at}
                         />
                         {personPage == user_Id_Number ? (
                           <>
