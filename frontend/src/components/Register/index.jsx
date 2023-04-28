@@ -38,10 +38,10 @@ export default function Register() {
   const validateData = () => {
     let errors = {};
     if (!first_name) {
-      errors.first_name = "first name is required";
+      errors.first_name = "All fields are required";
     }
     if (!last_name) {
-      errors.last_name = "last name is required";
+      errors.last_name = "All fields are required";
     }
     if (!validator.isEmail(email)) {
       errors.email = "A valid email is required";
@@ -54,7 +54,7 @@ export default function Register() {
       errors.age = "age in number is required";
     }
     if (!country) {
-      errors.country = "country is required";
+      errors.country = "All fields are required";
     }
 
     return errors;
