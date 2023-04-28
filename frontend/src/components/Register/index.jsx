@@ -99,7 +99,7 @@ export default function Register() {
   return (
     <>
       <div className="log-box">
-        <div className="register" style={{ marginTop: "50px" }}>
+        <div className="register" style={{ marginTop: "15vh" }}>
           {" "}
           <Container>
             <Card style={{ padding: "10px" }}>

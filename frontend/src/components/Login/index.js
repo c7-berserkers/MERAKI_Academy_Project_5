@@ -35,10 +35,13 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const result = await axios.post(`${process.env.REACT_APP_BACKEND}/users/login`, {
-        email,
-        password,
-      });
+      const result = await axios.post(
+        `${process.env.REACT_APP_BACKEND}/users/login`,
+        {
+          email,
+          password,
+        }
+      );
       if (result.data) {
         setMessage("");
         dispatch(setLogin(result.data.token));
@@ -68,7 +71,7 @@ const Login = () => {
 
   return (
     <div className="log-box">
-      <div className="login" style={{ marginTop: "100px" }}>
+      <div className="login" style={{ marginTop: "20vh" }}>
         <Container style={{ minWidth: "400px" }}>
           <Card style={{ padding: "10px" }}>
             {" "}

@@ -170,7 +170,7 @@ const getPostById = (req, res) => {
   console.log(id);
 
   const query = `
-  SELECT u.first_name,u.img AS user_img,p.id,p.img,p.user_id ,p.description,COUNT(l.posts_id) AS likes_count FROM posts p
+  SELECT u.first_name,u.img AS user_img,p.id,p.img,p.created_at,p.user_id ,p.description,COUNT(l.posts_id) AS likes_count FROM posts p
   LEFT JOIN likes l ON p.id=l.posts_id
   LEFT JOIN users u ON p.user_id=u.id
   WHERE p.id=$1 AND p.is_deleted=0
