@@ -44,10 +44,10 @@ export default function Register() {
       errors.last_name = "last name is required";
     }
     if (!validator.isEmail(email)) {
-      errors.email = "A vialed email is required";
+      errors.email = "A valid email is required";
     }
     if (!validator.isStrongPassword(password)) {
-      errors.password = "A vialed strong password is required";
+      errors.password = "A valid strong password is required";
     }
 
     if (isNaN(age)) {
