@@ -100,7 +100,7 @@ const Post = () => {
   const [status, setStatus] = useState(false);
   const [modalShowEditPopupPostUpdate, setModalShowEditPopupPostUpdate] =
     useState(false);
-
+  console.log(post);
   //===============================================================
 
   const [show, setShow] = useState(false);
@@ -257,7 +257,7 @@ const Post = () => {
                   </IconButton>
                 )
               }
-              title={post[0].user_first_name}
+              title={post[0].first_name}
               subheader={post[0].created_at}
             />
 
@@ -306,67 +306,67 @@ const Post = () => {
               </p>
             </CardContent>
             <CardActions disableSpacing>
-            {isLiked(likes, post[0].id) !== -1 ? (
-                        <div style={{ display: "flex" }}>
-                          <IconButton
-                            onClick={(e) => {
-                              axios
-                                .delete(`${BACKEND}/likes/${post[0].id}`, {
-                                  headers: {
-                                    Authorization: `Bearer ${token}`,
-                                  },
-                                })
-                                .then((result) => {
-                                  dispatch(removeLikePost(post[0].id));
-                                  dispatch(removeLike(post[0].id));
-                                })
-                                .catch((err) => {
-                                  console.log(err);
-                                });
-                            }}
-                            aria-label="add to favorites"
-                          >
-                            <FavoriteIcon style={{ color: "red" }} />
-                          </IconButton>
-                          <p style={{ margin: "10px" }}>
-                            {parseInt(post[0].likes_count)}
-                          </p>
-                        </div>
-                      ) : (
-                        <div style={{ display: "flex" }}>
-                          {" "}
-                          <IconButton
-                            onClick={(e) => {
-                              const payload = {
-                                posts_id: post[0].id,
-                                user_id: userId,
-                              };
-                              axios
-                                .post(
-                                  `${BACKEND}/likes/${post[0].id}`,
-                                  {},
-                                  {
-                                    headers: {
-                                      Authorization: `Bearer ${token}`,
-                                    },
-                                  }
-                                )
-                                .then((result) => {
-                                  dispatch(addLikePost(post[0].id));
-                                  dispatch(addLike(payload));
-                                })
-                                .catch((err) => {
-                                  console.log(err);
-                                });
-                            }}
-                            aria-label="add to favorites"
-                          >
-                            <FavoriteIcon />
-                          </IconButton>
-                          {console.log(post.likes_count)}
-                          <p style={{ margin: "10px" }}>{post.likes_count}</p>
-                        </div>
-                      )}
+              {isLiked(likes, post[0].id) !== -1 ? (
+                <div style={{ display: "flex" }}>
+                  <IconButton
+                    onClick={(e) => {
+                      axios
+                        .delete(`${BACKEND}/likes/${post[0].id}`, {
+                          headers: {
+                            Authorization: `Bearer ${token}`,
+                          },
+                        })
+                        .then((result) => {
+                          dispatch(removeLikePost(post[0].id));
+                          dispatch(removeLike(post[0].id));
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }}
+                    aria-label="add to favorites"
+                  >
+                    <FavoriteIcon style={{ color: "red" }} />
+                  </IconButton>
+                  <p style={{ margin: "10px" }}>
+                    {parseInt(post[0].likes_count)}
+                  </p>
+                </div>
+              ) : (
+                <div style={{ display: "flex" }}>
+                  {" "}
+                  <IconButton
+                    onClick={(e) => {
+                      const payload = {
+                        posts_id: post[0].id,
+                        user_id: userId,
+                      };
+                      axios
+                        .post(
+                          `${BACKEND}/likes/${post[0].id}`,
+                          {},
+                          {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
+                          }
+                        )
+                        .then((result) => {
+                          dispatch(addLikePost(post[0].id));
+                          dispatch(addLike(payload));
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }}
+                    aria-label="add to favorites"
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                  {console.log(post.likes_count)}
+                  <p style={{ margin: "10px" }}>{post.likes_count}</p>
+                </div>
+              )}
 
               <ExpandMore
                 expand={expanded === post[0].id}
